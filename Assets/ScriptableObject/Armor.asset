@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b544d4c82b931241b75b858e3136fc8, type: 3}
+  m_Name: Armor
+  m_EditorClassIdentifier: 
+  itemID: 3
+  itemName: Armor
+  maximumAmount: 1
+  itemPrefab: {fileID: 1932959180255612031, guid: 350027f54ca23fd4997fd4b418c3694c, type: 3}
+  icon: {fileID: 21300000, guid: 698f53a3fa64baa4290b228d7468bf05, type: 3}
+  itemType: 5
+  itemDescription: ARMOR
+  defense: 35
+  nerfSpeed: 3
+  duralbilID: 2

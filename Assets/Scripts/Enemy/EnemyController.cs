@@ -30,7 +30,7 @@ namespace Objects.Enemies
         [SerializeField] private float chaseRange = 5f;
         [SerializeField] private float attackRange = 2;
         [SerializeField] private float attackInterval = 1;
-        [SerializeField] private float changePositionTime = 5f;
+       //never used [SerializeField] private float changePositionTime = 5f;
         [SerializeField] private float moveDistance = 10f;
 
         [Header("Animations")]

@@ -44,8 +44,18 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+        MenuManager.Instance.OpenMenu("main");
+        PhotonNetwork.NickName = $"CoolGuy {Random.Range(0, 1338)}";
+    }
+
+    public void OnPlayButton()
+    {
         MenuManager.Instance.OpenMenu("title");
-        PhotonNetwork.NickName = $"Valas {Random.Range(0, 1338)}";
+    }
+
+    public void OnSettingsButton()
+    {
+        MenuManager.Instance.OpenMenu("settings");
     }
 
     public void CreateRoom()
@@ -87,7 +97,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        MenuManager.Instance.OpenMenu("title");
+        MenuManager.Instance.OpenMenu("main");
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
@@ -123,5 +133,10 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         PhotonNetwork.LoadLevel(1);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

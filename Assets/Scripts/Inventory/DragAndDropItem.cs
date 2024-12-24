@@ -12,9 +12,6 @@ using static UnityEditor.Progress;
 
 namespace Inventory
 {
-    /// IPointerDownHandler - Следит за нажатиями мышки по объекту на котором висит этот скрипт
-    /// IPointerUpHandler - Следит за отпусканием мышки по объекту на котором висит этот скрипт
-    /// IDragHandler - Следит за тем не водим ли мы нажатую мышку по объекту
     public class DragAndDropItem : MonoBehaviourPun, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
         public InventorySlot oldSlot;
@@ -60,12 +57,17 @@ namespace Inventory
                     player.position + Vector3.up + player.forward, Quaternion.identity);
                 itemObject.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.MasterClient);
                 itemObject.GetComponent<Item>().amount = oldSlot.amount;
-                if(itemObject.GetComponent<DefenseItem>() != null) 
-                { 
-                    itemObject.GetComponent<DefenseItem>().ID = oldSlot.defenseID;   
-                }                            
+                if (itemObject.GetComponent<DefenseItem>() != null)
+                {
+                    OnUnWearItem(oldSlot.item);
+                    itemObject.GetComponent<DefenseItem>().ID = oldSlot.defenseID;
+                }
+                else if (itemObject.GetComponent<Item>().item.itemType == ItemType.Charm) 
+                {
+                    OnUnWearItem(oldSlot.item);
+                }
+                NullifySlotData();
                 oldSlot.OnSlotItemChanged();
-                NullifySlotData();                   
             }
             else if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.GetComponent<InventorySlot>() != null)
             {
@@ -144,6 +146,11 @@ namespace Inventory
                         playerView.RPC("BuffJumpForce", playerView.Owner, itemCharm.buffJumpForce);
                         break;
                     }
+                default:
+                    {
+                        Debug.Log("This is not buffer");
+                        break;
+                    }
             }            
         }
         private void OnUnWearItem(ItemScriptableObject item) 
@@ -177,6 +184,11 @@ namespace Inventory
                         playerView.RPC("NerfJumpForce", playerView.Owner, itemCharm.buffJumpForce);
                         break;
                     }
+                default: 
+                    {
+                        Debug.Log("This is not buffer");
+                        break;
+                    }
             }           
         }       
         void NullifySlotData()
@@ -187,6 +199,7 @@ namespace Inventory
             oldSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
             oldSlot.iconGO.GetComponent<Image>().sprite = null;
             oldSlot.itemAmountText.text = "";
+            oldSlot.defenseID = 0;
         }
         void ExchangeSlotData(InventorySlot newSlot)
         {

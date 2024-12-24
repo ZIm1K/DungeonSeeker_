@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 namespace Inventory
 {
@@ -30,6 +31,6 @@ namespace Inventory
         public void OnSlotItemChanged() 
         {
             OnChangeItems?.Invoke();           
-        }
+        }       
     }
 }

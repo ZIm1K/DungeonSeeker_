@@ -36,8 +36,8 @@ namespace Objects.Weapon
 
             //SelectWeapon();
             //UpdateAmmoUI();
-            weaponSlot1.GetComponent<InventorySlot>().OnChangeItems += OnChange;//
-            weaponSlot2.GetComponent<InventorySlot>().OnChangeItems += OnChange2;//
+            weaponSlot1.GetComponent<InventorySlot>().OnChangeItems += OnChangeSlot1;//
+            weaponSlot2.GetComponent<InventorySlot>().OnChangeItems += OnChangeSlot2;//
         }
 
         private void InitializeWeapons()
@@ -102,59 +102,65 @@ namespace Objects.Weapon
                 weapons[currentWeaponIndex].Reload();
             }
         }
-        private void OnChange()//
+        private void OnChangeSlot1()
         {
             if (weaponSlot1.GetComponent<InventorySlot>().item != null)
             {
-                //weapons.Remove(null);
-                AddWeapon();
+                if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "6")
+                {
+                    AddPistol(0);
+                }
+                else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "7") 
+                {
+                    AddFireBall(0);
+                }
                 SelectWeapon();
             }                       
             else
             {
-                RemoveWeapon();
-            }
+                RemoveWeapon(0);
+            }            
             UpdateAmmoUI();
         }
-        private void OnChange2()//
+        private void OnChangeSlot2()
         {
             if (weaponSlot2.GetComponent<InventorySlot>().item != null)
             {
-                //weapons.Remove(null);
-                AddWeapon2();
+                if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "6")
+                {
+                    AddPistol(1);
+                }
+                else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "7")
+                {
+                    AddFireBall(1);
+                }
                 SelectWeapon();
             }
             else
             {
-                RemoveWeapon2();
+                RemoveWeapon(1);
             }
             UpdateAmmoUI();
         }
-        public void AddWeapon() //
+        public void AddPistol(int numberOfSlot)
         {
             SimplePistol pistol = gameObject.AddComponent<SimplePistol>();
             pistol.Initialize(reloadImage);
-            //weapons.Add(pistol);
-            weapons[0] = pistol;
+            weapons[numberOfSlot] = pistol;
         }
-        public void AddWeapon2() //
+        public void AddFireBall(int numberOfSlot)
         {
-            SimplePistol pistol = gameObject.AddComponent<SimplePistol>();
-            pistol.Initialize(reloadImage);
-            //weapons.Add(pistol);
-            weapons[1] = pistol;
+            PlayerShootingFireball fireball = gameObject.AddComponent<PlayerShootingFireball>();
+            fireball.Initialize();
+            weapons[numberOfSlot] = fireball;
         }
-        public void RemoveWeapon() 
+        public void RemoveWeapon(int numberOfSlot) 
         {
-            weapons[0] = null;
-        }
-        public void RemoveWeapon2()
-        {
-            weapons[1] = null;
-        }
+            weapons[numberOfSlot] = null;
+        }        
         void SelectWeapon()
         {
-            for (int i = 0; i < weapons.Length; i++) //Count
+            for (int i = 0; i < weapons.Length; i++)
             {
                 if (weapons[i] != null)
                 {
@@ -172,7 +178,7 @@ namespace Objects.Weapon
             else if (weapons[currentWeaponIndex] is PlayerShootingFireball fireball)
             {
                 fireball.UpdateFireballAmmo("∞");
-            }
+            }          
         }
     }
 }

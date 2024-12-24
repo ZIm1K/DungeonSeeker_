@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 namespace Inventory
 {
@@ -72,30 +73,47 @@ namespace Inventory
                     string itemID = hit.collider.gameObject.GetComponent<Item>().item.itemID;
                     int amount = hit.collider.gameObject.GetComponent<Item>().amount;
 
-                    photonView.RPC("RPC_AddItemToInventory", RpcTarget.All, itemID, amount,defenseID);
-                    
-                    if (!targetPhotonView.IsMine)
+                    if (CheckEmptyInInventory() == true)
                     {
-                        if (PhotonNetwork.IsMasterClient)
+                        photonView.RPC("RPC_AddItemToInventory", RpcTarget.All, itemID, amount, defenseID);
+
+                        if (!targetPhotonView.IsMine)
                         {
-                            PhotonNetwork.Destroy(hit.collider.gameObject);
+                            if (PhotonNetwork.IsMasterClient)
+                            {
+                                PhotonNetwork.Destroy(hit.collider.gameObject);
+                            }
+                            else
+                            {
+                                targetPhotonView.RPC("RPC_RequestDestroy", RpcTarget.MasterClient, targetPhotonView.ViewID);
+                            }
                         }
                         else
                         {
-                            targetPhotonView.RPC("RPC_RequestDestroy", RpcTarget.MasterClient, targetPhotonView.ViewID);                           
+                            PhotonNetwork.Destroy(hit.collider.gameObject);
                         }
                     }
-                    else
+                    else 
                     {
-                        PhotonNetwork.Destroy(hit.collider.gameObject);
+                        Debug.Log("You have full inventory!!!");
                     }
                 }
             }
         }
-
+        bool CheckEmptyInInventory() 
+        {
+            foreach (InventorySlot slot in slots)
+            {
+                if (slot.isEmpty)
+                {
+                    return true;                    
+                }
+            }
+            return false;
+        }
         [PunRPC]
         void RPC_AddItemToInventory(string itemID, int amount, int defenseID)
-        {
+        {           
             AddItem(itemID, amount, defenseID);
         }
         void AddItem(string itemID, int amount, int defenseID)

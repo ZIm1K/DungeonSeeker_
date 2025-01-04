@@ -8,7 +8,6 @@ namespace Objects.PlayerScripts
 {
     public class CharacterModel : MonoBehaviourPun
     {
-        public static CharacterModel Instance;
         [SerializeField] private int health;
         private int defense;
         
@@ -22,23 +21,12 @@ namespace Objects.PlayerScripts
 
         [SerializeField] private DurabilityDefenseDatabase durabilDatabase;
 
-        [SerializeField] private int mana;//
-        [SerializeField] private float speed;//
-        [SerializeField] private float jumpForce;//
-        [SerializeField] private CharacterView view;//
-        [SerializeField] private PlayerControllerWithCC playerController;//
-
-        private void Awake()
-        {
-            if (Instance != null)
-            {
-                Destroy(Instance);
-            }
-            else
-            {
-                Instance = this;
-            }
-        }        
+        private int mana;
+        private float speed;
+        private float jumpForce;
+        private CharacterView view;
+        private PlayerControllerWithCC playerController;
+    
         public int Health
         {
             get { return health; }
@@ -228,9 +216,7 @@ namespace Objects.PlayerScripts
         [PunRPC]
         public void TakeDamage(int damage)
         {
-            Debug.LogWarning("I can take damage");
             if (!photonView.IsMine) return;
-            Debug.LogWarning("Me is me");
             if (Defense > 0)
             {
                 if (HelmetDefense > 0)
@@ -261,7 +247,6 @@ namespace Objects.PlayerScripts
                     Health = 0;
                 }
             }
-            Debug.LogWarning("Damaged");
         }
         public int SubtractTypeDefense(int defense, int damage) 
         {

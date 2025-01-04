@@ -1,13 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
+using Photon.Realtime;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Progress;
+using UnityEngine.UI;
 
 namespace Inventory
 {
-    public class InventoryManager : MonoBehaviourPunCallbacks
+    public class InventoryManager : MonoBehaviourPun
     {
+        [Header("Inventory")]
         [SerializeField] private GameObject UIPanel;
+        [SerializeField] private GameObject CharacterTextsPanel;
         [SerializeField] private Transform inventoryPanel;
         [SerializeField] private float reachDistance = 3f;
         [SerializeField] private ItemDatabase itemDatabase;
@@ -16,14 +22,27 @@ namespace Inventory
         private Camera mainCamera;
         private bool isOpened;
 
+        [Header("Chest Inventory")]
+        [SerializeField] private GameObject ChestInventoryPanel;
+        
+        [SerializeField] private Camera _camera;
+
+        [SerializeField] private float rangeOfOpen;
+
+        public PhotonView currentChest;
+
+        [SerializeField] private GameObject slotPrefab;
+        
         private void Awake()
         {
             UIPanel.SetActive(photonView.IsMine);
+            ChestInventoryPanel.SetActive(!photonView.IsMine);
+            CharacterTextsPanel.SetActive(photonView.IsMine);
         }
 
         void Start()
         {
-            if (!photonView.IsMine) return;
+            if (!photonView.IsMine) return;           
 
             mainCamera = Camera.main;
             for (int i = 0; i < inventoryPanel.childCount; i++)
@@ -42,12 +61,85 @@ namespace Inventory
 
             if (Input.GetKeyDown(KeyCode.I))
             {
+                if (ChestInventoryPanel.activeSelf) 
+                {
+                    isOpened = !isOpened;
+                    UIPanel.SetActive(isOpened);
+                    ChestInventoryPanel.SetActive(isOpened);
+                    CharacterTextsPanel.SetActive(!isOpened);
+                    return;
+                }
+
                 isOpened = !isOpened;
                 UIPanel.SetActive(isOpened);
+                CharacterTextsPanel.SetActive(!isOpened);               
                 Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
                 Cursor.visible = isOpened;
             }
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                if (UIPanel.activeSelf && !ChestInventoryPanel.activeSelf)
+                {
+                    isOpened = !isOpened;
+                    UIPanel.SetActive(isOpened);
+                    CharacterTextsPanel.SetActive(!isOpened);
+                    Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                    Cursor.visible = isOpened;
+                    return;
+                }
+                else if (ChestInventoryPanel.activeSelf && UIPanel.activeSelf) 
+                {
+                    isOpened = !isOpened;
+                    UIPanel.SetActive(isOpened);
+                    ChestInventoryPanel.SetActive(isOpened);
+                    CharacterTextsPanel.SetActive(!isOpened);
+                    Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                    Cursor.visible = isOpened;
+                    currentChest = null;
+                    for (int i = 0; i < ChestInventoryPanel.transform.GetChild(0).childCount; i++)
+                    {
+                        Destroy(ChestInventoryPanel.transform.GetChild(0).GetChild(i).gameObject);
+                    }
+                    return;
+                }
+                Ray ray = new Ray(_camera.transform.position, _camera.transform.forward);
+                
+                if (Physics.Raycast(ray, out RaycastHit hit, rangeOfOpen))
+                {
+                    if (hit.transform.CompareTag("Chest"))
+                    {
+                        isOpened = !isOpened;
+                        UIPanel.SetActive(isOpened);
+                        ChestInventoryPanel.SetActive(isOpened);
+                        CharacterTextsPanel.SetActive(!isOpened);
+                        Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                        Cursor.visible = isOpened;
+                        
+                        currentChest = hit.collider.GetComponent<PhotonView>();
+                        
+                        int countOfItems = hit.collider.GetComponent<Chest>().CountOfItems;
+                        if (countOfItems > 0) 
+                        {
+                            for (int i = 0; i < countOfItems; i++) 
+                            {
+                                InventorySlot slot = Instantiate(slotPrefab, ChestInventoryPanel.transform.
+                                    GetChild(0).transform).GetComponent<InventorySlot>();
 
+                                if (hit.collider.GetComponent<Chest>().saveChestItems[i].isEmpty == false)
+                                {
+                                    ItemScriptableObject item = itemDatabase.GetItemByID(hit.collider.GetComponent<Chest>().saveChestItems[i].ID);
+                                    slot.item = item;
+                                    slot.defenseID = hit.collider.GetComponent<Chest>().saveChestItems[i].defenseID;
+                                    slot.amount = hit.collider.GetComponent<Chest>().saveChestItems[i].ammount;
+                                    slot.isEmpty = item == null ? true : false;
+                                    slot.SetIcon(item.icon);
+                                    slot.itemAmountText.text = slot.amount.ToString();
+                                }                               
+                            }
+                        }
+                    }
+                }
+            }
             if (Input.GetKeyDown(KeyCode.E))
             {
                 TryPickupItem();
@@ -148,6 +240,58 @@ namespace Inventory
                     }
                 }
             }
+        }
+        public void UpdateSlotInOnlineLocalySent(int slotID) 
+        {
+            List<PhotonView> playerPhotonViews = PlayerViewManager.Instance.playersPhotonViews;
+            foreach (PhotonView playerPhotonView in playerPhotonViews) 
+            {
+                if (playerPhotonView.ViewID != photonView.ViewID) 
+                {
+                    playerPhotonView.RPC("UpdateSlotInOnlineLocaly", RpcTarget.Others, currentChest.ViewID, slotID);
+                }                
+            }
+        }
+
+        [PunRPC]       
+        private void UpdateSlotInOnlineLocaly(int chestID, int slotID) 
+        {
+            if (currentChest == null)
+            {
+                return;
+                
+            }
+            else 
+            {
+                if (currentChest.ViewID != chestID)
+                {
+                    return;
+                }
+            }
+            
+            InventorySlot slot = ChestInventoryPanel.transform.GetChild(0).GetChild(slotID).GetComponent<InventorySlot>();
+
+            ItemScriptableObject item = itemDatabase.GetItemByID(currentChest.GetComponent<Chest>().saveChestItems[slotID].ID);
+
+            if (item != null)
+            {
+                slot.item = item;
+                slot.defenseID = currentChest.GetComponent<Chest>().saveChestItems[slotID].defenseID;
+                slot.amount = currentChest.GetComponent<Chest>().saveChestItems[slotID].ammount;
+                slot.isEmpty = false;
+                slot.SetIcon(item.icon);
+                slot.itemAmountText.text = slot.amount.ToString();
+            }
+            else 
+            {
+                slot.item = null;
+                slot.amount = 0;
+                slot.isEmpty = true;
+                slot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                slot.iconGO.GetComponent<Image>().sprite = null;
+                slot.itemAmountText.text = "";
+                slot.defenseID = 0;
+            }           
         }
     }
 }

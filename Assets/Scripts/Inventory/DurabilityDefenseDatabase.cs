@@ -71,6 +71,30 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
     [PunRPC]
     void UpdateValueInOnline(int i, int value) 
     {
+        Debug.LogWarning("Workerdsadwasada");
         allValues[i] = value;
+    }
+    public int OnNewDefenseItemAdded(ItemScriptableObject item) 
+    {
+        switch (item)
+        {
+            case HelmetItem:
+                {
+                    allValues.Add((item as HelmetItem).defense);
+                    break;
+                }
+            case ArmorItem:
+                {
+                    allValues.Add((item as ArmorItem).defense);
+                    break;
+                }
+            case BootsItem:
+                {
+                    allValues.Add((item as BootsItem).defense);
+                    break;
+                }
+        }
+        allItems.Add(item);       
+        return allItems.Count;  //return defense ID
     }
 }

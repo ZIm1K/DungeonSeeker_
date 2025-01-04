@@ -176,10 +176,8 @@ namespace Objects.Enemies
 
                     if (targetPhotonView != null)
                     {
-                        Debug.LogWarning("Start working");
                         targetPhotonView.RPC("TakeDamage", targetPhotonView.Owner, model.Damage);
                         attackTimer = attackInterval;
-                        Debug.LogWarning("Worked wery well");
                     }
                 }
             }

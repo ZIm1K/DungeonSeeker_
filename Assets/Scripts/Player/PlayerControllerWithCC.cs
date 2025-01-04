@@ -113,7 +113,7 @@ namespace Objects.PlayerScripts
             if (Input.GetButtonDown("Jump") && isGrounded)
             {
                 TryJump();
-            }
+            }                 
         }       
         public void UpdateSpeed(float speed) 
         {
@@ -183,7 +183,6 @@ namespace Objects.PlayerScripts
             }
             return false;
         }
-
         private void RotatePlayerRightLeft()
         {
             transform.Rotate(Vector3.up, Input.GetAxisRaw("Mouse X") * cameraSensitivity);
@@ -236,6 +235,6 @@ namespace Objects.PlayerScripts
                     model.AddMana(newMana - model.Mana);
                 }
             }
-        }
-    }
+        }                 
+    }       
 }

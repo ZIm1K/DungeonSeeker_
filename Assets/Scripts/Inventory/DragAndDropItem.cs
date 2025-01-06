@@ -28,6 +28,9 @@ namespace Inventory
         }
         public void OnDrag(PointerEventData eventData)
         {
+            if (eventData.button != PointerEventData.InputButton.Left)
+                return;
+
             if (oldSlot.isEmpty)
                 return;
             GetComponent<RectTransform>().position += new Vector3(eventData.delta.x, eventData.delta.y);
@@ -35,9 +38,12 @@ namespace Inventory
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            if (eventData.button != PointerEventData.InputButton.Left)
+                return;
+
             if (oldSlot.isEmpty)
                 return;           
-
+            
             if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == "ChestInventory")
             {
                 isItemFromChest = true;
@@ -46,15 +52,11 @@ namespace Inventory
 
                 for (int i = 0; i < chestSlots.transform.childCount; i++)
                 {
-                    bool isEnd = false;
-                    if (!isEnd)
+                    if (chestSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
                     {
-                        if (chestSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                        {
-                            player.GetComponent<InventoryManager>().currentChest.RPC("RemoveItemFromChest", RpcTarget.All, i);
-                            player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                            isEnd = true;
-                        }
+                        player.GetComponent<InventoryManager>().currentChest.RPC("RemoveItemFromChest", RpcTarget.All, i);
+                        player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
+                        break;
                     }
                 }
             }
@@ -69,6 +71,9 @@ namespace Inventory
         
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (eventData.button != PointerEventData.InputButton.Left)
+                return;
+
             if (oldSlot.isEmpty)
                 return;
 
@@ -84,16 +89,12 @@ namespace Inventory
 
                 for (int i = 0; i < chestSlots.transform.childCount; i++)
                 {
-                    bool isEnd = false;
-                    if (!isEnd)
+                    if (chestSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
                     {
-                        if (chestSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                        {
-                            player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,
-                            oldSlot.defenseID, oldSlot.amount, oldSlot.isEmpty, i);
-                            player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                            isEnd = true;
-                        }
+                        player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,
+                        oldSlot.defenseID, oldSlot.amount, oldSlot.isEmpty, i);
+                        player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
+                        break;
                     }
                 }
             }
@@ -183,11 +184,7 @@ namespace Inventory
                             {
                                 player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,
                                     oldSlot.defenseID, oldSlot.amount, oldSlot.isEmpty, i);
-                            }
-                            else 
-                            {
-                                //player.GetComponent<InventoryManager>().currentChest.RPC("RemoveItemFromChest", RpcTarget.All, i);
-                            }
+                            }                           
                             player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
                             canBreakIndex++;
                         }
@@ -208,24 +205,7 @@ namespace Inventory
                     isItemFromChest = true;
 
                     return;
-                }
-                //else if (isItemFromChest == true) 
-                //{
-                //    isItemFromChest = false;
-
-                //    GameObject chestsSlots = eventData.pointerCurrentRaycast.gameObject.transform.
-                //        parent.parent.parent.parent.GetChild(0).GetChild(0).gameObject;
-
-                //    for (int i = 0; i < chestsSlots.transform.childCount; i++)
-                //    {
-                //        if (chestsSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                //        {
-                //            //player.GetComponent<InventoryManager>().currentChest.RPC("RemoveItemFromChest", RpcTarget.All, i);
-                //            //player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                //            return;
-                //        }
-                //    }                   
-                //}                
+                }                               
             }
         }       
         private void OnWearItem(ItemScriptableObject item, int defenseID)

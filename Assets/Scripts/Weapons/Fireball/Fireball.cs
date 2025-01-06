@@ -9,7 +9,6 @@ namespace Objects.Weapon.Fireball
     {
         private GameObject explosionPrefab;
         private GameObject decalPrefab;
-        private int damage;
 
         public void Initialize(GameObject explosion, GameObject decal, int damage)
         {

@@ -18,7 +18,7 @@ public class PlayerViewManager : MonoBehaviour
         {
             Instance = this;
         }
-        else 
+        else
         {
             Destroy(Instance);
         }

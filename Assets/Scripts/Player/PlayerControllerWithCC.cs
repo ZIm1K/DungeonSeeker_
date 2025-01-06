@@ -53,10 +53,7 @@ namespace Objects.PlayerScripts
 
         private void Start()
         {
-            _photonView = GetComponent<PhotonView>();
-           
-            //model = gameObject.AddComponent<CharacterModel>();
-            //model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
+            _photonView = GetComponent<PhotonView>();         
 
             controller = GetComponent<CharacterController>();                      
             
@@ -72,14 +69,7 @@ namespace Objects.PlayerScripts
                 Destroy(canvas);
             }
             else
-            {
-                //model = gameObject.AddComponent<CharacterModel>();  
-                //model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce,durabilDatabase);
-
-                //model = gameObject.GetComponent<CharacterModel>();
-                //obj = gameObject;
-                //model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
-
+            {                
                 DurabilityDefenseDatabase durabilDatabase = GameObject.FindWithTag("DurabilBase").GetComponent<DurabilityDefenseDatabase>();
                 model = gameObject.AddComponent<CharacterModel>();
                 model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);

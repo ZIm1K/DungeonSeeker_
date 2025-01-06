@@ -40,7 +40,6 @@ namespace Objects.Weapon.Pistol
             decalPrefab = data.decalPrefab;
             firePoint = GameObject.Find("PistolFirePoint").gameObject.transform;
             
-            //reloadProgressImage = GameObject.Find("ReloadingProgress").GetComponent<Image>();
             reloadProgressImage = reloadImage;
 
             shotSound = data.shotSound;

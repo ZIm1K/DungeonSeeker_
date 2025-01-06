@@ -5,12 +5,17 @@ using UnityEngine;
 using UnityEngine.WSA;
 using static UnityEditor.Progress;
 using Photon.Pun;
+using System;
 
 public class DurabilityDefenseDatabase : MonoBehaviourPun
 {   
     public List<ItemScriptableObject> allItems;
 
     public List<int> allValues;
+
+    public ItemDatabase itemDatabase;
+
+    public Action OnChangeValues;
 
     void Start()
     {
@@ -67,12 +72,37 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
                 }
             }
         }
+        OnChangeValues?.Invoke();
     }
     [PunRPC]
     void UpdateValueInOnline(int i, int value) 
     {
-        Debug.LogWarning("Workerdsadwasada");
         allValues[i] = value;
+    }
+    [PunRPC]
+    void AddNewItemInOnline(string ID)
+    {
+        ItemScriptableObject item = itemDatabase.GetItemByID(ID);
+        switch (item)
+        {
+            case HelmetItem:
+                {
+                    allValues.Add((item as HelmetItem).defense);
+                    break;
+                }
+            case ArmorItem:
+                {
+                    allValues.Add((item as ArmorItem).defense);
+                    break;
+                }
+            case BootsItem:
+                {
+                    allValues.Add((item as BootsItem).defense);
+                    break;
+                }
+        }
+
+        allItems.Add(item);
     }
     public int OnNewDefenseItemAdded(ItemScriptableObject item) 
     {
@@ -94,7 +124,10 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
                     break;
                 }
         }
-        allItems.Add(item);       
+        allItems.Add(item);
+
+        photonView.RPC("AddNewItemInOnline", RpcTarget.Others,item.itemID);
+
         return allItems.Count;  //return defense ID
     }
 }

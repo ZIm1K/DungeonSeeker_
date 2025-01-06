@@ -24,33 +24,12 @@ namespace Objects.Weapon
 
         void Start()
         {
-            //InitializeWeapons();
-
             if (!photonView.IsMine) return;
 
-            //weapons[0] = null;
-            //weapons[1] = null;
-            
-            //weapons.Add(null);
-            //weapons.Add(null);
-
-            //SelectWeapon();
-            //UpdateAmmoUI();
             weaponSlot1.GetComponent<InventorySlot>().OnChangeItems += OnChangeSlot1;//
             weaponSlot2.GetComponent<InventorySlot>().OnChangeItems += OnChangeSlot2;//
         }
-
-        private void InitializeWeapons()
-        {
-            PlayerShootingFireball fireballWeapon = gameObject.AddComponent<PlayerShootingFireball>();
-            fireballWeapon.Initialize();
-            //weapons.Add(fireballWeapon);
-
-            SimplePistol pistol = gameObject.AddComponent<SimplePistol>();
-            //pistol.Initialize();
-            //weapons.Add(pistol);
-        }
-
+        
         void Update()
         {
             if (!photonView.IsMine) return;

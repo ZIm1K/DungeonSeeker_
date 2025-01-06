@@ -256,6 +256,7 @@ GameObject:
   - component: {fileID: 313759827}
   - component: {fileID: 313759826}
   - component: {fileID: 313759828}
+  - component: {fileID: 313759829}
   m_Layer: 0
   m_Name: DurabilityDatabase
   m_TagString: DurabilBase
@@ -318,6 +319,26 @@ MonoBehaviour:
   sceneViewId: 13
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &313759829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313759825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815ec75d2052f9e48bb154fa13c64896, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allItems:
+  - {fileID: 11400000, guid: a11bbc6179fc1094c8f54b610b3cc603, type: 2}
+  - {fileID: 11400000, guid: 792b708f2675dbb4d943a0613b8a5682, type: 2}
+  - {fileID: 11400000, guid: 980d6570953ed1c4aae8629a02b9e002, type: 2}
+  - {fileID: 11400000, guid: b5af09c4c125dbf4081d28c8c482e6ee, type: 2}
+  - {fileID: 11400000, guid: cede4054a3148bf4b9633f1708387453, type: 2}
+  - {fileID: 11400000, guid: 6ac974a03c0014c439eaa2fd857273cd, type: 2}
+  - {fileID: 11400000, guid: 710d00429d26e254aaf1d3812463ea56, type: 2}
 --- !u!1001 &403726905
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -941,7 +962,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   photonView: {fileID: 0}
-  playersPhotonView: []
+  playersPhotonViews: []
 --- !u!4 &1524441041
 Transform:
   m_ObjectHideFlags: 0

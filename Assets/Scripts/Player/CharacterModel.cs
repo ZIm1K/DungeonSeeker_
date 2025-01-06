@@ -19,7 +19,7 @@ namespace Objects.PlayerScripts
         [SerializeField] private int armorID;
         [SerializeField] private int bootsID;
 
-        [SerializeField] private DurabilityDefenseDatabase durabilDatabase;
+        public DurabilityDefenseDatabase durabilDatabase;
 
         private int mana;
         private float speed;

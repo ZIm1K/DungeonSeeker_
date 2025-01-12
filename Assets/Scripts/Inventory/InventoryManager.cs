@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Progress;
 using UnityEngine.UI;
+using System.Net;
 
 namespace Inventory
 {
@@ -21,18 +22,27 @@ namespace Inventory
         private List<InventorySlot> slots = new List<InventorySlot>();
         private Camera mainCamera;
         private bool isOpened;
+        
+        [SerializeField] private GameObject slotPrefab;
+
+        [SerializeField] private float rangeOfOpen;
 
         [Header("Chest Inventory")]
         [SerializeField] private GameObject ChestInventoryPanel;
         
         [SerializeField] private Camera _camera;
-
-        [SerializeField] private float rangeOfOpen;
-
-        public PhotonView currentChest;
-
-        [SerializeField] private GameObject slotPrefab;
         
+        public PhotonView currentChest;
+        
+        [Header("Craft Inventory")]
+        [SerializeField] private GameObject CraftInventoryPanel;
+
+        public PhotonView currentCrafter;
+
+        private bool isOpenedCrafter;
+
+        [SerializeField] private InventorySlot[] craftSlots;
+
         private void Awake()
         {
             UIPanel.SetActive(photonView.IsMine);
@@ -61,12 +71,28 @@ namespace Inventory
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                if (ChestInventoryPanel.activeSelf) 
+                if (ChestInventoryPanel.activeSelf)
                 {
                     isOpened = !isOpened;
                     UIPanel.SetActive(isOpened);
                     ChestInventoryPanel.SetActive(isOpened);
                     CharacterTextsPanel.SetActive(!isOpened);
+                    for (int i = 0; i < ChestInventoryPanel.transform.GetChild(0).childCount; i++)
+                    {
+                        Destroy(ChestInventoryPanel.transform.GetChild(0).GetChild(i).gameObject);
+                    }
+                    Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                    Cursor.visible = isOpened;
+                    return;
+                }
+                else if (CraftInventoryPanel.activeSelf) 
+                {
+                    isOpened = !isOpened;
+                    UIPanel.SetActive(isOpened);
+                    CraftInventoryPanel.SetActive(isOpened);
+                    CharacterTextsPanel.SetActive(!isOpened);
+                    Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                    Cursor.visible = isOpened;
                     return;
                 }
 
@@ -82,12 +108,13 @@ namespace Inventory
                 {
                     isOpened = !isOpened;
                     UIPanel.SetActive(isOpened);
+                    CraftInventoryPanel.SetActive(isOpened);
                     CharacterTextsPanel.SetActive(!isOpened);
                     Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
                     Cursor.visible = isOpened;
                     return;
                 }
-                else if (ChestInventoryPanel.activeSelf && UIPanel.activeSelf) 
+                else if (ChestInventoryPanel.activeSelf && UIPanel.activeSelf)
                 {
                     isOpened = !isOpened;
                     UIPanel.SetActive(isOpened);
@@ -101,9 +128,9 @@ namespace Inventory
                         Destroy(ChestInventoryPanel.transform.GetChild(0).GetChild(i).gameObject);
                     }
                     return;
-                }
+                }               
                 Ray ray = new Ray(_camera.transform.position, _camera.transform.forward);
-                
+
                 if (Physics.Raycast(ray, out RaycastHit hit, rangeOfOpen))
                 {
                     if (hit.transform.CompareTag("Chest"))
@@ -114,13 +141,13 @@ namespace Inventory
                         CharacterTextsPanel.SetActive(!isOpened);
                         Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
                         Cursor.visible = isOpened;
-                        
+
                         currentChest = hit.collider.GetComponent<PhotonView>();
-                        
+
                         int countOfItems = hit.collider.GetComponent<Chest>().CountOfItems;
-                        if (countOfItems > 0) 
+                        if (countOfItems > 0)
                         {
-                            for (int i = 0; i < countOfItems; i++) 
+                            for (int i = 0; i < countOfItems; i++)
                             {
                                 InventorySlot slot = Instantiate(slotPrefab, ChestInventoryPanel.transform.
                                     GetChild(0).transform).GetComponent<InventorySlot>();
@@ -134,9 +161,35 @@ namespace Inventory
                                     slot.isEmpty = item == null ? true : false;
                                     slot.SetIcon(item.icon);
                                     slot.itemAmountText.text = slot.amount.ToString();
-                                }                               
+                                }
                             }
                         }
+                        
+                    }
+                    else if (hit.transform.CompareTag("Crafter"))
+                    {
+                        isOpened = !isOpened;
+                        UIPanel.SetActive(isOpened);
+                        CraftInventoryPanel.SetActive(isOpened);
+                        CharacterTextsPanel.SetActive(!isOpened);
+                        Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                        Cursor.visible = isOpened;
+
+                        currentCrafter = hit.collider.GetComponent<PhotonView>();
+
+                            for (int i = 0; i < craftSlots.Length; i++)
+                            {                              
+                                if (hit.collider.GetComponent<Crafter>().saveCraftItems[i].isEmpty == false)
+                                {
+                                    ItemScriptableObject item = itemDatabase.GetItemByID(hit.collider.GetComponent<Crafter>().saveCraftItems[i].ID);
+                                    craftSlots[i].item = item;
+                                    craftSlots[i].defenseID = 0;
+                                    craftSlots[i].amount = 1;
+                                    craftSlots[i].isEmpty = false;
+                                    craftSlots[i].SetIcon(item.icon);
+                                    craftSlots[i].itemAmountText.text = "1";
+                                }
+                            }                       
                     }
                 }
             }
@@ -192,7 +245,7 @@ namespace Inventory
                 }
             }
         }
-        bool CheckEmptyInInventory() 
+        public bool CheckEmptyInInventory() 
         {
             foreach (InventorySlot slot in slots)
             {
@@ -244,40 +297,76 @@ namespace Inventory
         public void UpdateSlotInOnlineLocalySent(int slotID) 
         {
             List<PhotonView> playerPhotonViews = PlayerViewManager.Instance.playersPhotonViews;
+
             foreach (PhotonView playerPhotonView in playerPhotonViews) 
             {
-                if (playerPhotonView.ViewID != photonView.ViewID) 
+                if (playerPhotonView.ViewID != photonView.ViewID)
                 {
-                    playerPhotonView.RPC("UpdateSlotInOnlineLocaly", RpcTarget.Others, currentChest.ViewID, slotID);
+                    if (currentChest != null)
+                    {
+                        playerPhotonView.RPC("UpdateSlotInOnlineLocaly", RpcTarget.Others, currentChest.ViewID, 0, slotID);
+
+                    }
+                    else if (currentCrafter != null)
+                    {
+                        playerPhotonView.RPC("UpdateSlotInOnlineLocaly", RpcTarget.Others, 0, currentCrafter.ViewID, slotID);
+                    }
+                    else 
+                    {
+                        Debug.LogWarning("You are not opened something");
+                    }
                 }                
             }
         }
 
         [PunRPC]       
-        private void UpdateSlotInOnlineLocaly(int chestID, int slotID) 
+        private void UpdateSlotInOnlineLocaly(int chestID, int crafterID, int slotID) 
         {
+            InventorySlot slot;
+            ItemScriptableObject item;
             if (currentChest == null)
             {
-                return;
-                
-            }
-            else 
-            {
-                if (currentChest.ViewID != chestID)
+                if (currentCrafter != null)
+                {
+                    if (currentCrafter.ViewID != crafterID)
+                    {
+                        return;
+                    }
+                    else 
+                    {
+                        slot = CraftInventoryPanel.transform.GetChild(0).GetChild(slotID).GetComponent<InventorySlot>();
+                        
+                        item = itemDatabase.GetItemByID(currentCrafter.GetComponent<Crafter>().saveCraftItems[slotID].ID);
+                    }
+                }
+                else 
                 {
                     return;
                 }
+            }            
+            else if (currentChest.ViewID != chestID)
+            {
+                return;
             }
-            
-            InventorySlot slot = ChestInventoryPanel.transform.GetChild(0).GetChild(slotID).GetComponent<InventorySlot>();
+            else
+            {
+                slot = ChestInventoryPanel.transform.GetChild(0).GetChild(slotID).GetComponent<InventorySlot>();
 
-            ItemScriptableObject item = itemDatabase.GetItemByID(currentChest.GetComponent<Chest>().saveChestItems[slotID].ID);
-
+                item = itemDatabase.GetItemByID(currentChest.GetComponent<Chest>().saveChestItems[slotID].ID);
+            }
             if (item != null)
             {
                 slot.item = item;
-                slot.defenseID = currentChest.GetComponent<Chest>().saveChestItems[slotID].defenseID;
-                slot.amount = currentChest.GetComponent<Chest>().saveChestItems[slotID].ammount;
+                if (currentChest != null)
+                {
+                    slot.defenseID = currentChest.GetComponent<Chest>().saveChestItems[slotID].defenseID;
+                    slot.amount = currentChest.GetComponent<Chest>().saveChestItems[slotID].ammount;
+                }
+                else if (currentCrafter != null) 
+                {
+                    slot.defenseID = 0;
+                    slot.amount = 1;
+                }
                 slot.isEmpty = false;
                 slot.SetIcon(item.icon);
                 slot.itemAmountText.text = slot.amount.ToString();
@@ -291,7 +380,11 @@ namespace Inventory
                 slot.iconGO.GetComponent<Image>().sprite = null;
                 slot.itemAmountText.text = "";
                 slot.defenseID = 0;
-            }           
+            }
+            if (currentCrafter != null)
+            { 
+                photonView.RPC("CheckForCraftButtonLocaly", photonView.Owner);
+            }
         }
     }
 }

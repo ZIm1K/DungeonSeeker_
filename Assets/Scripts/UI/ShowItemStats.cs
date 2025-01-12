@@ -144,7 +144,7 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
                         }
                     default:
                         {
-                            Debug.LogWarning("Sry but this type of item not founded");
+                            Debug.LogWarning("Sry but this type of item not founded or it is not need text");
                             break;
                         }
                 }   

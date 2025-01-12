@@ -11,7 +11,8 @@ namespace Inventory
         Helmet,
         Armor,
         Boots,
-        Charm
+        Charm,
+        Ore,
     }
 
     [System.Serializable]

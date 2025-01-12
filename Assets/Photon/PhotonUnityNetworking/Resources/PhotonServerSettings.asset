@@ -73,6 +73,11 @@ MonoBehaviour:
   - RemoveItemToChest
   - RemoveItemFromChest
   - AddNewItemInOnline
+  - AddItemToCrafter
+  - RemoveItemFromCrafter
+  - CheckForCraftButton
+  - CheckForCraftButtonLocaly
+  - NullifyAllSlotDatas
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

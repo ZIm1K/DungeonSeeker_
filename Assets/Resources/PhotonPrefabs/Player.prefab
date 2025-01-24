@@ -116,6 +116,7 @@ Transform:
   m_Children:
   - {fileID: 7848199229078097572}
   - {fileID: 2470451078843494288}
+  - {fileID: 5742871828224860638}
   m_Father: {fileID: 3594620084117860896}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &8088597719514674725
@@ -577,6 +578,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cc3dab9eb7a8d774f9efb80e987e27c4, type: 2}
   - {fileID: 11400000, guid: c12b8c76c97473143919a9c2002b663a, type: 2}
   - {fileID: 11400000, guid: 1ee3dbaa50dabaa4f8332e77693587f9, type: 2}
+  - {fileID: 11400000, guid: 50d2c5b6180f8584f9daadc047968084, type: 2}
 --- !u!65 &9047328161107068281
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1992,6 +1994,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1873165239159541653
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5742871828224860638}
+  m_Layer: 7
+  m_Name: SwordFirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5742871828224860638
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873165239159541653}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.2, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4273337616070447546}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2052919930063718308
 GameObject:
   m_ObjectHideFlags: 0

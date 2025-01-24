@@ -81,7 +81,7 @@ namespace Objects.Weapon.Pistol
                                 PhotonView targetPhotonView = hit.collider.gameObject.GetComponent<PhotonView>();
                                 if (targetPhotonView != null)
                                 {
-                                    targetPhotonView.RPC("TakeDamage", RpcTarget.All, damage);
+                                    targetPhotonView.RPC("TakeDamage", RpcTarget.All, pistolDamage);
                                 }
                             }
                             else

@@ -12,12 +12,18 @@ namespace Objects.Weapon
         {
             WeaponEvents.OnAmmoChanged.AddListener(UpdateAmmoText);
             WeaponEvents.OnFireballAmmoChanged.AddListener(UpdateFireballAmmoText);
+            WeaponEvents.OnSwordAmmoChanged.AddListener(UpdateSwordAmmoText);
+
+            WeaponEvents.OnClearAmmo.AddListener(ClearAmmoText);
         }
 
         private void OnDisable()
         {
             WeaponEvents.OnAmmoChanged.RemoveListener(UpdateAmmoText);
             WeaponEvents.OnFireballAmmoChanged.RemoveListener(UpdateFireballAmmoText);
+            WeaponEvents.OnSwordAmmoChanged.RemoveListener(UpdateSwordAmmoText);
+
+            WeaponEvents.OnClearAmmo.RemoveListener(ClearAmmoText);
         }
 
         private void UpdateAmmoText(int currentAmmo, int ammoInBackpack)
@@ -28,6 +34,14 @@ namespace Objects.Weapon
         private void UpdateFireballAmmoText(string ammoText)
         {
             this.ammoText.text = $"{ammoText}";
+        }
+        private void UpdateSwordAmmoText(string ammoText)
+        {
+            this.ammoText.text = $"{ammoText}";
+        }
+        private void ClearAmmoText()
+        {
+            ammoText.text = " ";
         }
     }
 }

@@ -6,14 +6,13 @@ using Objects.Weapon.Pistol;
 using Photon.Pun;
 using ScriptableObjects.Weapons;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 namespace Objects.Weapon
 {
     public class WeaponManager : MonoBehaviourPun
     {
-        //public List<Weapon> weapons = new List<Weapon>();
-
         public Weapon[] weapons;
         private int currentWeaponIndex = 0;
 
@@ -45,10 +44,10 @@ namespace Objects.Weapon
                         currentWeaponIndex = 0;
                     }
                 }
-                else 
+                else
                 {
                     currentWeaponIndex = 0;
-                }
+                }               
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
@@ -62,6 +61,7 @@ namespace Objects.Weapon
                 else
                 {
                     currentWeaponIndex = 1;
+                   
                 }
             }
 
@@ -93,6 +93,10 @@ namespace Objects.Weapon
                 {
                     AddFireBall(0);
                 }
+                else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "11")///
+                {
+                    AddSword(0);
+                }
                 SelectWeapon();
             }                       
             else
@@ -112,6 +116,10 @@ namespace Objects.Weapon
                 else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "7")
                 {
                     AddFireBall(1);
+                }
+                else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "11")///
+                {
+                    AddSword(1);
                 }
                 SelectWeapon();
             }
@@ -133,8 +141,21 @@ namespace Objects.Weapon
             fireball.Initialize();
             weapons[numberOfSlot] = fireball;
         }
+        public void AddSword(int numberOfSlot)
+        {
+            SimpleSword sword = gameObject.AddComponent<SimpleSword>();
+            sword.Initialize();
+            weapons[numberOfSlot] = sword;
+        }
         public void RemoveWeapon(int numberOfSlot) 
         {
+            Destroy(weapons[numberOfSlot]);           
+
+            if (weapons[currentWeaponIndex] == weapons[numberOfSlot])
+            {
+                weapons[currentWeaponIndex].ClearAmmo();
+            }
+
             weapons[numberOfSlot] = null;
         }        
         void SelectWeapon()
@@ -157,7 +178,15 @@ namespace Objects.Weapon
             else if (weapons[currentWeaponIndex] is PlayerShootingFireball fireball)
             {
                 fireball.UpdateFireballAmmo("∞");
-            }          
+            }
+            else if (weapons[currentWeaponIndex] is SimpleSword sword)
+            {
+                sword.UpdateSwordAmmo("∞");
+            }
+            else if (weapons[currentWeaponIndex] == null) 
+            {
+                WeaponEvents.OnClearAmmo.Invoke();
+            }
         }
     }
 }

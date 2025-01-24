@@ -45,5 +45,15 @@ namespace Objects.Weapon
         {
             WeaponEvents.OnFireballAmmoChanged.Invoke(ammoText);
         }
+        
+        public void UpdateSwordAmmo(string ammoText)
+        {
+            WeaponEvents.OnSwordAmmoChanged.Invoke(ammoText);
+        }
+
+        public void ClearAmmo()
+        {
+            WeaponEvents.OnClearAmmo.Invoke();
+        }
     }
 }

@@ -136,6 +136,11 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
                                 statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
                                                                 (curSlot.item as PistolItemData).data.pistolDamage.ToString();  //damage
                             }
+                            else if (curSlot.item as SwordItemData)
+                            {
+                                statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                                                (curSlot.item as SwordItemData).data.swordDamage.ToString();  //damage
+                            }
                             else 
                             {
                                 Debug.LogWarning("Sry but this type of weapon not founded");

@@ -1,8 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,9 +8,9 @@ using Random = UnityEngine.Random;
 public class Launcher : MonoBehaviourPunCallbacks
 {
     public static Launcher Instance;
-    
+
     [SerializeField] private TMP_InputField roomNameInputField;
-    [SerializeField] private TMP_Text errorText;  
+    [SerializeField] private TMP_Text errorText;
     [SerializeField] private TMP_Text roomNameText;
 
     [SerializeField] private Transform roomList;
@@ -61,7 +59,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void CreateRoom()
     {
         if (string.IsNullOrWhiteSpace(roomNameInputField.text)) return;
-        
+
         PhotonNetwork.CreateRoom(roomNameInputField.text);
     }
 
@@ -75,12 +73,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             Destroy(playerList.GetChild(i).gameObject);
         }
-        
+
         foreach (var t in players)
         {
             Instantiate(playerTextPrefab, playerList).GetComponent<PlayerListItem>().SetUp(t);
         }
-        
+
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
@@ -109,15 +107,17 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.JoinRoom(info.Name);
         MenuManager.Instance.OpenMenu("loading");
+
     }
-    
+
+
     public override void OnRoomListUpdate(List<RoomInfo> _roomList)
     {
         for (int i = 0; i < roomList.childCount; i++)
         {
             Destroy(roomList.GetChild(i).gameObject);
         }
-        
+
         for (int i = 0; i < _roomList.Count; i++)
         {
             if (_roomList[i].RemovedFromList) continue;
@@ -130,6 +130,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         Instantiate(playerTextPrefab, playerList).GetComponent<PlayerListItem>().SetUp(player);
     }
 
+
+
     public void StartGame()
     {
         PhotonNetwork.LoadLevel(1);
@@ -139,4 +141,5 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Application.Quit();
     }
+
 }

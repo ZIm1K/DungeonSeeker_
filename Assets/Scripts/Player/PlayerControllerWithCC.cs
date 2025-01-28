@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Unity.VisualScripting;
+using System.Net.Http;
 
 namespace Objects.PlayerScripts
 {
@@ -189,30 +190,78 @@ namespace Objects.PlayerScripts
         [PunRPC]
         private void PlayFootstepSound()
         {
+            if (audioSource == null)
+            {
+                Debug.LogError("AudioSource не знайдено на об'єкті.");
+                return;
+            }
+
+            if (audioSource.isPlaying)
+            {
+                Debug.LogWarning("Звук вже відтворюється.");
+                return;
+            }
+
             RaycastHit hit;
             if (Physics.Raycast(transform.position, Vector3.down, out hit, 2.5f))
             {
-                PhysicMaterial material = hit.collider.sharedMaterial;
-                AudioClip[] clips;
+                if (hit.collider == null)
+                {
+                    Debug.LogWarning("Raycast не потрапив у колайдер.");
+                    return;
+                }
 
+                PhysicMaterial material = hit.collider.sharedMaterial;
+
+                if (material == null)
+                {
+                    Debug.LogWarning("Об'єкт не має PhysicMaterial.");
+                }
+
+                AudioClip[] clips;
                 if (material != null && materialSounds.TryGetValue(material, out clips))
                 {
-                    // Material-specific clips found
+                    if (clips.Length > 0)
+                    {
+                        PlayRandomClip(clips);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Матеріал знайдено, але масив кліпів порожній.");
+                    }
                 }
                 else
                 {
-                    // Use default clips if material is not found
-                    clips = defaultClips;
+                    Debug.LogWarning("Не знайдено відповідного матеріалу або масив кліпів.");
                 }
 
-                if (clips.Length > 0)
-                {
-                    AudioClip clip = clips[Random.Range(0, clips.Length)];
-                    audioSource.clip = clip;
-                    audioSource.Play();
-                }
+            }
+            else
+            {
+                Debug.LogWarning("Raycast не виявив жодного об'єкта.");
             }
         }
+
+        private void PlayRandomClip(AudioClip[] clips)
+        {
+            if (clips == null || clips.Length == 0)
+            {
+                Debug.LogError("Масив кліпів пустий або не встановлений.");
+                return;
+            }
+
+            AudioClip clip = clips[Random.Range(0, clips.Length)];
+
+            if (clip == null)
+            {
+                Debug.LogError("Обраний кліп дорівнює null.");
+                return;
+            }
+
+            audioSource.clip = clip;
+            audioSource.Play();
+        }
+
 
         private IEnumerator RegenerateMana()
         {

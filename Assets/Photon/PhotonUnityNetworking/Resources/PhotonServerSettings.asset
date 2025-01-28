@@ -62,22 +62,8 @@ MonoBehaviour:
   - Kill
   - AddComponentModel
   - UpdateValueInOnline
-  - AddItemToChest
-  - UpdateChestInventory
-  - NullifyOldSlot
-  - UpdateSlotInOnline
-  - UpdateList
-  - AddToList
-  - RemoveFromList
-  - UpdateSlotInOnlineLocaly
-  - RemoveItemToChest
-  - RemoveItemFromChest
-  - AddNewItemInOnline
-  - AddItemToCrafter
-  - RemoveItemFromCrafter
-  - CheckForCraftButton
-  - CheckForCraftButtonLocaly
-  - NullifyAllSlotDatas
+  - PlayerReady
+  - UpdateReadyStatus
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

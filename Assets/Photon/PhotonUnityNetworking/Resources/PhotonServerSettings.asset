@@ -64,6 +64,16 @@ MonoBehaviour:
   - UpdateValueInOnline
   - PlayerReady
   - UpdateReadyStatus
+  - AddItemToChest
+  - AddItemToCrafter
+  - AddNewItemInOnline
+  - AddToList
+  - CheckForCraftButtonLocaly
+  - RemoveFromList
+  - RemoveItemFromChest
+  - RemoveItemFromCrafter
+  - UpdateList
+  - UpdateSlotInOnlineLocaly
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -189,14 +189,46 @@ namespace Objects.PlayerScripts
         [PunRPC]
         private void PlayFootstepSound()
         {
+<<<<<<< Updated upstream
             RaycastHit hit;
             if (Physics.Raycast(transform.position, Vector3.down, out hit, 2.5f))
             {
                 PhysicMaterial material = hit.collider.sharedMaterial;
+=======
+            if (audioSource == null)
+            {
+                Debug.LogError("AudioSource �� �������� �� ��'���.");
+                return;
+            }
+
+            if (audioSource.isPlaying)
+            {
+                Debug.LogWarning("���� ��� ������������.");
+                return;
+            }
+
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, Vector3.down, out hit, 2.5f))
+            {
+                if (hit.collider == null)
+                {
+                    Debug.LogWarning("Raycast �� �������� � ��������.");
+                    return;
+                }
+
+                PhysicMaterial material = hit.collider.sharedMaterial;
+
+                if (material == null)
+                {
+                    Debug.LogWarning("��'��� �� �� PhysicMaterial.");
+                }
+
+>>>>>>> Stashed changes
                 AudioClip[] clips;
 
                 if (material != null && materialSounds.TryGetValue(material, out clips))
                 {
+<<<<<<< Updated upstream
                     // Material-specific clips found
                 }
                 else
@@ -214,6 +246,50 @@ namespace Objects.PlayerScripts
             }
         }
 
+=======
+                    if (clips.Length > 0)
+                    {
+                        PlayRandomClip(clips);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("������� ��������, ��� ����� ���� �������.");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("�� �������� ���������� �������� ��� ����� ����.");
+                }
+
+            }
+            else
+            {
+                Debug.LogWarning("Raycast �� ������ ������� ��'����.");
+            }
+        }
+
+        private void PlayRandomClip(AudioClip[] clips)
+        {
+            if (clips == null || clips.Length == 0)
+            {
+                Debug.LogError("����� ���� ������ ��� �� ������������.");
+                return;
+            }
+
+            AudioClip clip = clips[Random.Range(0, clips.Length)];
+
+            if (clip == null)
+            {
+                Debug.LogError("������� ��� ������� null.");
+                return;
+            }
+
+            audioSource.clip = clip;
+            audioSource.Play();
+        }
+
+
+>>>>>>> Stashed changes
         private IEnumerator RegenerateMana()
         {
             while (true)

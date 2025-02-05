@@ -39,7 +39,5 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnDisable()
     {
         base.OnDisable();
-    }
-    
-    
+    } 
 }

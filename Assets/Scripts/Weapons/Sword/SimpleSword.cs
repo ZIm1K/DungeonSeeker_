@@ -17,7 +17,7 @@ public class SimpleSword : Weapon
 
     [SerializeField] private Transform firePoint;
 
-    private float lastShotTime;
+    private float lastAttackTime;
 
     public void Initialize()
     {
@@ -29,7 +29,7 @@ public class SimpleSword : Weapon
        
         firePoint = GameObject.Find("SwordFirePoint").gameObject.transform;
 
-        lastShotTime = -shotTimeout;
+        lastAttackTime = -shotTimeout;
 
         base.Initialize("Sword", swordDamage, false, 0, attackSound, shotTimeout);
 
@@ -40,11 +40,11 @@ public class SimpleSword : Weapon
     {
         if (!photonView.IsMine || isReloading) return;
 
-        if (Time.time >= lastShotTime + shotTimeout)
+        if (Time.time >= lastAttackTime + shotTimeout)
         {
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                lastShotTime = Time.time;
+                lastAttackTime = Time.time;
 
                 Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
                 RaycastHit hit;
@@ -58,44 +58,16 @@ public class SimpleSword : Weapon
                         {
                             targetPhotonView.RPC("TakeDamage", RpcTarget.All, swordDamage);
                         }
-                    }
-                    //else
-                    //{
-                    //    Quaternion rotation = Quaternion.LookRotation(hit.normal) * Quaternion.Euler(0, 180, 0);
-                    //    Vector3 position = hit.point + hit.normal * 0.06f;
-                    //    GameObject decal = PhotonNetwork.Instantiate(decalPrefab.name, position, rotation);
-                    //    decal.transform.SetParent(hit.collider.transform);
-                    //    PhotonNetwork.Instantiate(hitObjectPrefab.name, decal.transform.position, Quaternion.identity);
-                    //}
+                    }                   
                 }
 
                 if (attackSound != null)
                 {
                     PlayAudioLocally();
                     photonView.RPC("PlayAudio", RpcTarget.Others);
-                }
-                //else
-                //{
-                //    Debug.Log("No bullets left in the pistol.");
-                //}
+                }              
             }
         }
-
-        //Ray ray = new Ray(transform.position, transform.forward);
-        //RaycastHit hit;
-
-        //if (Physics.Raycast(ray, out hit, 2.0f))
-        //{
-        //    if (hit.collider.CompareTag("Enemy"))
-        //    {
-        //        Enemy enemy = hit.collider.GetComponent<Enemy>();
-        //        if (enemy != null)
-        //        {
-        //            enemy.TakeDamage(damage);
-        //            Debug.Log($"Enemy hit! Damage: {damage}");
-        //        }
-        //    }
-        //}
     }
     private void PlayAudioLocally()
     {

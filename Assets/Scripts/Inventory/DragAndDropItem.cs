@@ -285,8 +285,8 @@ namespace Inventory
                 if (isItemFromChest)
                 {
                     int id = CheckForID();
-                    player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, oldSlot.item.itemID,
-                                    oldSlot.isEmpty, id);
+                    player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,oldSlot.defenseID
+                        ,oldSlot.amount,oldSlot.isEmpty, id);
                     player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(id);
                 }
                 else if(isItemFromCrafter)

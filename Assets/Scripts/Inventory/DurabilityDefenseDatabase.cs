@@ -17,9 +17,24 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
 
     public Action OnChangeValues;
 
-    void Start()
+    private static DurabilityDefenseDatabase instance;
+
+    private void Awake()
     {
-        for(int i = 0;i < allItems.Count;i++) 
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); 
+        }
+        else
+        {
+            Destroy(gameObject); 
+        }
+    }
+
+    void Start()
+    {      
+        for (int i = 0;i < allItems.Count;i++) 
         {
             switch (allItems[i])
             {              

@@ -14,12 +14,14 @@ namespace Objects.Weapon
     public class WeaponManager : MonoBehaviourPun
     {
         public Weapon[] weapons;
-        private int currentWeaponIndex = 0;
+        [SerializeField] private int currentWeaponIndex = 0;
 
         [SerializeField] private GameObject weaponSlot1;
         [SerializeField] private GameObject weaponSlot2;
 
         public Image reloadImage;
+
+        public GameObject posTarget;
 
         void Start()
         {
@@ -37,32 +39,43 @@ namespace Objects.Weapon
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                if (weapons[currentWeaponIndex] != null)
-                {
-                    if (!weapons[currentWeaponIndex].IsReloading)
+                    if (weapons[currentWeaponIndex] != null)
+                    {
+                        if (!weapons[currentWeaponIndex].IsReloading)
+                        {
+                            currentWeaponIndex = 0;
+                            posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+                        }
+                    }
+                    else
                     {
                         currentWeaponIndex = 0;
+                    }                                      
+
+                    if (weapons[currentWeaponIndex] != null) 
+                    {
+                        posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);                        
                     }
-                }
-                else
-                {
-                    currentWeaponIndex = 0;
-                }               
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                if (weapons[currentWeaponIndex] != null)
-                {
-                    if (!weapons[currentWeaponIndex].IsReloading)
+            {                
+                    if (weapons[currentWeaponIndex] != null)
+                    {
+                        if (!weapons[currentWeaponIndex].IsReloading)
+                        {
+                            currentWeaponIndex = 1;       
+                            posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+                        }
+                    }
+                    else
                     {
                         currentWeaponIndex = 1;
                     }
-                }
-                else
-                {
-                    currentWeaponIndex = 1;
-                   
-                }
+                    
+                    if (weapons[currentWeaponIndex] != null)
+                    {
+                        posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);                     
+                    }               
             }
 
             if (previousWeaponIndex != currentWeaponIndex)
@@ -83,51 +96,95 @@ namespace Objects.Weapon
         }
         private void OnChangeSlot1()
         {
+            RemoveWeapon(0);
             if (weaponSlot1.GetComponent<InventorySlot>().item != null)
             {
+                GameObject usePref = null;
                 if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "6")
                 {
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as PistolItemData).usePrefab;
                     AddPistol(0);
                 }
-                else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "7") 
+                else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "7")
                 {
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as FireBallItemData).usePrefab;
                     AddFireBall(0);
                 }
                 else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "11")///
                 {
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as SwordItemData).usePrefab;
                     AddSword(0);
                 }
                 SelectWeapon();
-            }                       
+
+                if (posTarget.transform.GetChild(0).childCount > 0) 
+                {
+                    Destroy(posTarget.transform.GetChild(0).GetChild(0).gameObject);
+                }
+                
+                SetObj(0,weaponSlot1,usePref);
+            }
             else
             {
-                RemoveWeapon(0);
-            }            
+                Destroy(posTarget.transform.GetChild(0).GetChild(0).gameObject);
+            }
+
             UpdateAmmoUI();
         }
         private void OnChangeSlot2()
         {
+            RemoveWeapon(1);
             if (weaponSlot2.GetComponent<InventorySlot>().item != null)
             {
+                GameObject usePref = null;
                 if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "6")
                 {
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as PistolItemData).usePrefab;
                     AddPistol(1);
                 }
                 else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "7")
                 {
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as FireBallItemData).usePrefab;
                     AddFireBall(1);
                 }
                 else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "11")///
                 {
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as SwordItemData).usePrefab;
                     AddSword(1);
                 }
                 SelectWeapon();
+
+                if (posTarget.transform.GetChild(1).childCount > 0)
+                {
+                    Destroy(posTarget.transform.GetChild(1).GetChild(0).gameObject);
+                }
+
+                SetObj(1, weaponSlot2, usePref);
             }
-            else
+            else 
             {
-                RemoveWeapon(1);
+                Destroy(posTarget.transform.GetChild(1).GetChild(0).gameObject);
             }
+
             UpdateAmmoUI();
+        }
+
+        private void SetObj(int index, GameObject curSlot, GameObject usePrefab) 
+        {
+            GameObject obj = PhotonNetwork.Instantiate(usePrefab.name,
+                        posTarget.transform.GetChild(index).transform.position, Quaternion.identity);
+            obj.transform.SetParent(posTarget.transform.GetChild(index));
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localEulerAngles = Vector3.zero;
+
+            if (currentWeaponIndex == index)
+            {
+                obj.SetActive(true);
+            }
+            else 
+            {
+                obj.SetActive(false);
+            }
         }
         public void AddPistol(int numberOfSlot)
         {
@@ -149,13 +206,16 @@ namespace Objects.Weapon
         }
         public void RemoveWeapon(int numberOfSlot) 
         {
-            Destroy(weapons[numberOfSlot]);           
+            Destroy(weapons[numberOfSlot]);
 
-            if (weapons[currentWeaponIndex] == weapons[numberOfSlot])
+            if (weapons[currentWeaponIndex] != null) 
             {
-                weapons[currentWeaponIndex].ClearAmmo();
+                if (weapons[currentWeaponIndex] == weapons[numberOfSlot])
+                {
+                    weapons[currentWeaponIndex].ClearAmmo();
+                }
             }
-
+            
             weapons[numberOfSlot] = null;
         }        
         void SelectWeapon()
@@ -168,7 +228,6 @@ namespace Objects.Weapon
                 }
             }
         }
-
         void UpdateAmmoUI()
         {
             if (weapons[currentWeaponIndex] is SimplePistol pistol)
@@ -183,7 +242,7 @@ namespace Objects.Weapon
             {
                 sword.UpdateSwordAmmo("∞");
             }
-            else if (weapons[currentWeaponIndex] == null) 
+            else if (weapons[currentWeaponIndex] == null)
             {
                 WeaponEvents.OnClearAmmo.Invoke();
             }

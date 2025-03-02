@@ -18,9 +18,7 @@ public class SaveCraftItem
     }
 }
 public class Crafter : MonoBehaviour
-{
-    public int CountOfItems;
-
+{ 
     public SaveCraftItem[] saveCraftItems;
 
     private void Start()

@@ -9,6 +9,7 @@ namespace Objects.PlayerScripts
     public class CharacterModel : MonoBehaviourPun
     {
         [SerializeField] private int health;
+        [SerializeField] private int maxHealth;
         private int defense;
         
         [SerializeField] int helmetDefense;
@@ -31,9 +32,17 @@ namespace Objects.PlayerScripts
         {
             get { return health; }
             set
-            {               
-                health = value;                         
+            {
+                health = value;
                 view.UpdateHealthText(health);
+            }
+        }
+        public int MaxHealth
+        {
+            get { return maxHealth; }
+            set
+            {
+                maxHealth = value;
             }
         }
         public int Defense
@@ -120,7 +129,8 @@ namespace Objects.PlayerScripts
         public void Initialize(int health, int mana, CharacterView view, float speed, PlayerControllerWithCC playerController,
             float jumpForce, DurabilityDefenseDatabase durabilDatabase)
         {
-            this.health = health;
+            maxHealth = health;
+            this.health = maxHealth;           
             this.mana = mana;
             this.view = view;
             this.speed = speed;
@@ -242,7 +252,7 @@ namespace Objects.PlayerScripts
                 {
                     Health -= damage;
                 }
-                else 
+                else
                 {
                     Health = 0;
                 }

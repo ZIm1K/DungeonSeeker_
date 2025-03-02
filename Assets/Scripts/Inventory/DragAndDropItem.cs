@@ -46,6 +46,7 @@ namespace Inventory
             if (oldSlot.isEmpty)
                 return;
 
+            player.GetComponent<InventoryManager>().isItemOnDrag = true;
             if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == "ChestInventory")
             {
                 isItemFromChest = true;
@@ -138,7 +139,8 @@ namespace Inventory
                     }
                 }
             }
-
+            
+            player.GetComponent<InventoryManager>().isItemOnDrag = false;
             if (eventData.pointerCurrentRaycast.gameObject == null) return;
             if (eventData.pointerCurrentRaycast.gameObject.name == "UIPanel")
             {
@@ -296,7 +298,7 @@ namespace Inventory
                                     oldSlot.isEmpty, id);
                     player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(id);
                 }
-            }
+            }            
         }
 
         int CheckForID() 

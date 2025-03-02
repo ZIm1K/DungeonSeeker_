@@ -8,4 +8,5 @@ using UnityEngine;
 public class PistolItemData : ItemScriptableObject
 {
     public PistolData data;
+    public GameObject usePrefab;
 }

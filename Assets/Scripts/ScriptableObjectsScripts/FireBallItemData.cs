@@ -8,4 +8,5 @@ using UnityEngine;
 public class FireBallItemData : ItemScriptableObject
 {
     public FireballData data;
+    public GameObject usePrefab;
 }

@@ -16,6 +16,7 @@ MonoBehaviour:
   itemName: Sword
   maximumAmount: 1
   itemPrefab: {fileID: 7620116842255900661, guid: 9e15086e6108822478c9ad49ad4b80e1, type: 3}
+  usePrefab: {fileID: 8164918007202882521, guid: 452bfb60e40e3f54d91dc716cb3fdec2, type: 3}
   icon: {fileID: 21300024, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
   itemType: 2
   itemDescription: This is default sword

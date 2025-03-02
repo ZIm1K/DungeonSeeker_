@@ -7,6 +7,9 @@ using UnityEngine;
 using static UnityEditor.Progress;
 using UnityEngine.UI;
 using System.Net;
+using Objects.PlayerScripts;
+using System;
+using OpenCover.Framework.Model;
 
 namespace Inventory
 {
@@ -17,11 +20,13 @@ namespace Inventory
         [SerializeField] private GameObject CharacterTextsPanel;
         [SerializeField] private Transform inventoryPanel;
         [SerializeField] private float reachDistance = 3f;
+        
         [SerializeField] private ItemDatabase itemDatabase;
 
         private List<InventorySlot> slots = new List<InventorySlot>();
         private Camera mainCamera;
         private bool isOpened;
+        public bool isItemOnDrag = false;
         
         [SerializeField] private GameObject slotPrefab;
 
@@ -69,71 +74,11 @@ namespace Inventory
         {
             if (!photonView.IsMine) return;
 
-            if (Input.GetKeyDown(KeyCode.I))
+            if (isItemOnDrag == false)
             {
-                if (ChestInventoryPanel.activeSelf)
+                if (Input.GetKeyDown(KeyCode.I))
                 {
-                    isOpened = !isOpened;
-                    UIPanel.SetActive(isOpened);
-                    ChestInventoryPanel.SetActive(isOpened);
-                    CharacterTextsPanel.SetActive(!isOpened);
-                    for (int i = 0; i < ChestInventoryPanel.transform.GetChild(0).childCount; i++)
-                    {
-                        Destroy(ChestInventoryPanel.transform.GetChild(0).GetChild(i).gameObject);
-                    }
-                    Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
-                    Cursor.visible = isOpened;
-                    return;
-                }
-                else if (CraftInventoryPanel.activeSelf) 
-                {
-                    isOpened = !isOpened;
-                    UIPanel.SetActive(isOpened);
-                    CraftInventoryPanel.SetActive(isOpened);
-                    CharacterTextsPanel.SetActive(!isOpened);
-                    Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
-                    Cursor.visible = isOpened;
-                    return;
-                }
-
-                isOpened = !isOpened;
-                UIPanel.SetActive(isOpened);
-                CharacterTextsPanel.SetActive(!isOpened);               
-                Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
-                Cursor.visible = isOpened;
-            }
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                if (UIPanel.activeSelf && !ChestInventoryPanel.activeSelf)
-                {
-                    isOpened = !isOpened;
-                    UIPanel.SetActive(isOpened);
-                    CraftInventoryPanel.SetActive(isOpened);
-                    CharacterTextsPanel.SetActive(!isOpened);
-                    Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
-                    Cursor.visible = isOpened;
-                    return;
-                }
-                else if (ChestInventoryPanel.activeSelf && UIPanel.activeSelf)
-                {
-                    isOpened = !isOpened;
-                    UIPanel.SetActive(isOpened);
-                    ChestInventoryPanel.SetActive(isOpened);
-                    CharacterTextsPanel.SetActive(!isOpened);
-                    Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
-                    Cursor.visible = isOpened;
-                    currentChest = null;
-                    for (int i = 0; i < ChestInventoryPanel.transform.GetChild(0).childCount; i++)
-                    {
-                        Destroy(ChestInventoryPanel.transform.GetChild(0).GetChild(i).gameObject);
-                    }
-                    return;
-                }               
-                Ray ray = new Ray(_camera.transform.position, _camera.transform.forward);
-
-                if (Physics.Raycast(ray, out RaycastHit hit, rangeOfOpen))
-                {
-                    if (hit.transform.CompareTag("Chest"))
+                    if (ChestInventoryPanel.activeSelf)
                     {
                         isOpened = !isOpened;
                         UIPanel.SetActive(isOpened);
@@ -141,32 +86,15 @@ namespace Inventory
                         CharacterTextsPanel.SetActive(!isOpened);
                         Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
                         Cursor.visible = isOpened;
-
-                        currentChest = hit.collider.GetComponent<PhotonView>();
-
-                        int countOfItems = hit.collider.GetComponent<Chest>().CountOfItems;
-                        if (countOfItems > 0)
+                        for (int i = 0; i < ChestInventoryPanel.transform.GetChild(0).childCount; i++)
                         {
-                            for (int i = 0; i < countOfItems; i++)
-                            {
-                                InventorySlot slot = Instantiate(slotPrefab, ChestInventoryPanel.transform.
-                                    GetChild(0).transform).GetComponent<InventorySlot>();
-
-                                if (hit.collider.GetComponent<Chest>().saveChestItems[i].isEmpty == false)
-                                {
-                                    ItemScriptableObject item = itemDatabase.GetItemByID(hit.collider.GetComponent<Chest>().saveChestItems[i].ID);
-                                    slot.item = item;
-                                    slot.defenseID = hit.collider.GetComponent<Chest>().saveChestItems[i].defenseID;
-                                    slot.amount = hit.collider.GetComponent<Chest>().saveChestItems[i].ammount;
-                                    slot.isEmpty = item == null ? true : false;
-                                    slot.SetIcon(item.icon);
-                                    slot.itemAmountText.text = slot.amount.ToString();
-                                }
-                            }
+                            Destroy(ChestInventoryPanel.transform.GetChild(0).GetChild(i).gameObject);
                         }
-                        
+                        currentChest = null;
+                        gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = true;
+                        return;
                     }
-                    else if (hit.transform.CompareTag("Crafter"))
+                    else if (CraftInventoryPanel.activeSelf)
                     {
                         isOpened = !isOpened;
                         UIPanel.SetActive(isOpened);
@@ -174,28 +102,147 @@ namespace Inventory
                         CharacterTextsPanel.SetActive(!isOpened);
                         Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
                         Cursor.visible = isOpened;
-
-                        currentCrafter = hit.collider.GetComponent<PhotonView>();
-
-                            for (int i = 0; i < craftSlots.Length; i++)
-                            {                              
-                                if (hit.collider.GetComponent<Crafter>().saveCraftItems[i].isEmpty == false)
-                                {
-                                    ItemScriptableObject item = itemDatabase.GetItemByID(hit.collider.GetComponent<Crafter>().saveCraftItems[i].ID);
-                                    craftSlots[i].item = item;
-                                    craftSlots[i].defenseID = 0;
-                                    craftSlots[i].amount = 1;
-                                    craftSlots[i].isEmpty = false;
-                                    craftSlots[i].SetIcon(item.icon);
-                                    craftSlots[i].itemAmountText.text = "1";
-                                }
-                            }                       
+                        for (int i = 0; i < CraftInventoryPanel.transform.GetChild(0).childCount; i++)
+                        {
+                            craftSlots[i].item = null;
+                            craftSlots[i].defenseID = 0;
+                            craftSlots[i].amount = 0;
+                            craftSlots[i].isEmpty = true;
+                            craftSlots[i].iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                            craftSlots[i].iconGO.GetComponent<Image>().sprite = null;
+                            craftSlots[i].itemAmountText.text = " ";
+                        }
+                        currentCrafter = null;
+                        gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = true;
+                        return;
                     }
+
+                    isOpened = !isOpened;
+                    UIPanel.SetActive(isOpened);
+                    CharacterTextsPanel.SetActive(!isOpened);
+                    Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                    Cursor.visible = isOpened;
+                    gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = !isOpened;
                 }
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    if (UIPanel.activeSelf)
+                    {
+                        if (CraftInventoryPanel.activeSelf)
+                        {
+                            isOpened = !isOpened;
+                            UIPanel.SetActive(isOpened);
+                            CraftInventoryPanel.SetActive(isOpened);
+                            CharacterTextsPanel.SetActive(!isOpened);
+                            Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                            Cursor.visible = isOpened;
+                            currentCrafter = null;
+                            for (int i = 0; i < CraftInventoryPanel.transform.GetChild(0).childCount; i++)
+                            {
+                                craftSlots[i].item = null;
+                                craftSlots[i].defenseID = 0;
+                                craftSlots[i].amount = 0;
+                                craftSlots[i].isEmpty = true;
+                                craftSlots[i].iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                                craftSlots[i].iconGO.GetComponent<Image>().sprite = null;
+                                craftSlots[i].itemAmountText.text = " ";
+                            }
+                            gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = true;
+                            return;
+                        }
+                        else if (ChestInventoryPanel.activeSelf)
+                        {
+                            isOpened = !isOpened;
+                            UIPanel.SetActive(isOpened);
+                            ChestInventoryPanel.SetActive(isOpened);
+                            CharacterTextsPanel.SetActive(!isOpened);
+                            Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                            Cursor.visible = isOpened;
+                            currentChest = null;
+                            for (int i = 0; i < ChestInventoryPanel.transform.GetChild(0).childCount; i++)
+                            {
+                                Destroy(ChestInventoryPanel.transform.GetChild(0).GetChild(i).gameObject);
+                            }
+                            gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = true;
+                            return;
+                        }
+                    }
+                    else 
+                    {
+                        Ray ray = new Ray(_camera.transform.position, _camera.transform.forward);
+
+                        if (Physics.Raycast(ray, out RaycastHit hit, rangeOfOpen))
+                        {
+                            if (hit.transform.CompareTag("Chest"))
+                            {
+                                isOpened = !isOpened;
+                                UIPanel.SetActive(isOpened);
+                                ChestInventoryPanel.SetActive(isOpened);
+                                CharacterTextsPanel.SetActive(!isOpened);
+                                Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                                Cursor.visible = isOpened;
+
+                                currentChest = hit.collider.GetComponent<PhotonView>();
+
+                                int countOfItems = hit.collider.GetComponent<Chest>().CountOfItems;
+                                if (countOfItems > 0)
+                                {
+                                    for (int i = 0; i < countOfItems; i++)
+                                    {
+                                        InventorySlot slot = Instantiate(slotPrefab, ChestInventoryPanel.transform.
+                                            GetChild(0).transform).GetComponent<InventorySlot>();
+
+                                        if (hit.collider.GetComponent<Chest>().saveChestItems[i].isEmpty == false)
+                                        {
+                                            ItemScriptableObject item = itemDatabase.GetItemByID(hit.collider.GetComponent<Chest>().saveChestItems[i].ID);
+                                            slot.item = item;
+                                            slot.defenseID = hit.collider.GetComponent<Chest>().saveChestItems[i].defenseID;
+                                            slot.amount = hit.collider.GetComponent<Chest>().saveChestItems[i].ammount;
+                                            slot.isEmpty = item == null ? true : false;
+                                            slot.SetIcon(item.icon);
+                                            slot.itemAmountText.text = slot.amount.ToString();
+                                        }
+                                    }
+                                }
+                                gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = false;
+                            }
+                            else if (hit.transform.CompareTag("Crafter"))
+                            {
+                                isOpened = !isOpened;
+                                UIPanel.SetActive(isOpened);
+                                CraftInventoryPanel.SetActive(isOpened);
+                                CharacterTextsPanel.SetActive(!isOpened);
+                                Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
+                                Cursor.visible = isOpened;
+
+                                currentCrafter = hit.collider.GetComponent<PhotonView>();
+
+                                for (int i = 0; i < craftSlots.Length; i++)
+                                {
+                                    if (hit.collider.GetComponent<Crafter>().saveCraftItems[i].isEmpty == false)
+                                    {
+                                        ItemScriptableObject item = itemDatabase.GetItemByID(hit.collider.GetComponent<Crafter>().saveCraftItems[i].ID);
+                                        craftSlots[i].item = item;
+                                        craftSlots[i].defenseID = 0;
+                                        craftSlots[i].amount = 1;
+                                        craftSlots[i].isEmpty = false;
+                                        craftSlots[i].SetIcon(item.icon);
+                                        craftSlots[i].itemAmountText.text = "1";
+                                    }
+                                }
+                                photonView.RPC("CheckForCraftButtonLocaly", photonView.Owner);
+                                gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = false;
+                            }
+                        }
+                    }                   
+                }               
             }
             if (Input.GetKeyDown(KeyCode.E))
             {
-                TryPickupItem();
+                if (!UIPanel.activeSelf)
+                {
+                    TryPickupItem();
+                }
             }
         }
 
@@ -385,6 +432,23 @@ namespace Inventory
             { 
                 photonView.RPC("CheckForCraftButtonLocaly", photonView.Owner);
             }
+        }
+
+        [PunRPC]
+        private void PlayAudio(string audioClipPath)
+        {
+            AudioClip clip = Resources.Load<AudioClip>(audioClipPath);
+            PlayAudioLocally(clip);
+        }
+        private void PlayAudioLocally(AudioClip attackSound)
+        {
+            AudioSource source = gameObject.AddComponent<AudioSource>();
+            source.clip = attackSound;
+            source.maxDistance = 20f;
+            source.spatialBlend = 1f;
+            source.volume = 0.1f;
+            source.Play();
+            Destroy(source, attackSound.length);
         }
     }
 }

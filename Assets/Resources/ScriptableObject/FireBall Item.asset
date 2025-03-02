@@ -20,3 +20,4 @@ MonoBehaviour:
   itemType: 2
   itemDescription: This is fireball
   data: {fileID: 11400000, guid: 1a497f2706387634389fadf1e3375c86, type: 2}
+  usePrefab: {fileID: 7714811414807647583, guid: e53aa2a57bbfbb74dadb2b1c928249d2, type: 3}

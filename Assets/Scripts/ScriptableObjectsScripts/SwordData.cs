@@ -7,8 +7,9 @@ namespace ScriptableObjects.Weapons
     [CreateAssetMenu(fileName = "Sword", menuName = "Weapon/sword", order = 1)]
     public class SwordData : ScriptableObject
     {
-        public int swordDamage = 30;
-        public float shotTimeout = 1.5f;
+        public int swordDamage = 15;
+        public float shotTimeout = 0.3f;
         public AudioClip attackSound;
+        public float rangeOfAttack = 50;
     }
 }

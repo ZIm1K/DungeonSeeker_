@@ -20,3 +20,4 @@ MonoBehaviour:
   itemType: 2
   itemDescription: This is just a pistol
   data: {fileID: 11400000, guid: 8cbd3e3fb00c58e479cfb1f9dde1b7aa, type: 2}
+  usePrefab: {fileID: 1268234348741745558, guid: 346b736950044ec449b010ceb57c4bf2, type: 3}

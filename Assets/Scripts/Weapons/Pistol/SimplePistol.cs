@@ -1,4 +1,5 @@
 using System.Collections;
+using Inventory;
 using Objects.Enemies;
 using Photon.Pun;
 using ScriptableObjects.Weapons;
@@ -9,7 +10,7 @@ namespace Objects.Weapon.Pistol
 {
     public class SimplePistol : Weapon
     {
-        [SerializeField] private PistolData data;
+        [SerializeField] private PistolItemData data;
         
         [SerializeField] private int bullets;
         [SerializeField] private int bulletsInBackpack;
@@ -32,26 +33,26 @@ namespace Objects.Weapon.Pistol
 
         public void Initialize(Image reloadImage)
         {
-            data = Resources.Load<PistolData>("Data/Pistol");
-            bullets = data.bullets;
-            bulletsInBackpack = data.bulletsInBackpack;
-            pistolDamage = data.pistolDamage;
-            hitObjectPrefab = data.hitObjectPrefab;
-            decalPrefab = data.decalPrefab;
+            data = Resources.Load<PistolItemData>("ScriptableObject/Pistol Item");
+            bullets = data.data.bullets;
+            bulletsInBackpack = data.data.bulletsInBackpack;
+            pistolDamage = data.data.pistolDamage;
+            hitObjectPrefab = data.data.hitObjectPrefab;
+            decalPrefab = data.data.decalPrefab;
             firePoint = GameObject.Find("PistolFirePoint").gameObject.transform;
             
             reloadProgressImage = reloadImage;
 
-            shotSound = data.shotSound;
-            shotTimeout = data.shotTimeout;
-            reloadTime = data.reloadTime;
+            shotSound = data.data.shotSound;
+            shotTimeout = data.data.shotTimeout;
+            reloadTime = data.data.reloadTime;
             
             base.Initialize("Pistol", pistolDamage, true, reloadTime, shotSound, shotTimeout);
             countOfBulletsInWeapon = bullets;
             countOfBulletsInBackpack = bulletsInBackpack;
             lastShotTime = -shotTimeout;
-
-            UpdateAmmo(countOfBulletsInWeapon, countOfBulletsInBackpack);
+            
+            //UpdateAmmo(countOfBulletsInWeapon, countOfBulletsInBackpack);
 
             if (reloadProgressImage != null)
             {
@@ -100,7 +101,7 @@ namespace Objects.Weapon.Pistol
                         if (shotSound != null)
                         {
                             PlayAudioLocally();
-                            photonView.RPC("PlayAudio", RpcTarget.Others);
+                            gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, "Sounds/Weapons/gun-shot-1-7069");
                         }
                     }
                     else
@@ -121,13 +122,7 @@ namespace Objects.Weapon.Pistol
             source.Play();
             Destroy(source, shotSound.length);
         }
-
-        [PunRPC]
-        private void PlayAudio()
-        {
-            PlayAudioLocally();
-        }
-
+        
         public override void Reload()
         {
             if (countOfBulletsInBackpack > 0 && !isReloading)

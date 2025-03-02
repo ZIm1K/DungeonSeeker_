@@ -8,6 +8,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ShowItemStats : MonoBehaviour, IPointerClickHandler
 {
@@ -41,7 +42,10 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
                 statsPanelValues.nameText.text = curSlot.item.itemName;
                 statsPanelValues.typeText.text = "Type:" + curSlot.item.itemType.ToString();
                 statsPanelValues.descriptionText.text = curSlot.item.itemDescription;
-                
+
+                statsPanelValues.useButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                statsPanelValues.useButton.SetActive(false);
+
                 HideAllTexts();
                 switch (curSlot.item.itemType) 
                 {
@@ -53,6 +57,10 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
 
                             statsPanelValues.foodItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text = 
                                 (curSlot.item as FoodItem).healAmount.ToString();  //heal ammount
+                            
+                            statsPanelValues.useButton.SetActive(true);
+                            
+                            statsPanelValues.useButton.GetComponent<Button>().onClick.AddListener(HealCharacter);
                             break;
                         }
                     case ItemType.Helmet: 
@@ -156,11 +164,50 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
             }
             else
             {
-                HideAllTexts();
-                curSlot = null;
-                statsPanel.SetActive(false);
+                CloseStatsPanel();
             }
         }
+    }
+    void HealCharacter() 
+    {
+        if (gameObject.GetComponent<CharacterModel>().Health == 100) return;
+        
+        curSlot.amount -= 1;        
+
+        if (gameObject.GetComponent<CharacterModel>().MaxHealth - gameObject.GetComponent<CharacterModel>().Health < (curSlot.item as FoodItem).healAmount)
+        {
+            gameObject.GetComponent<CharacterModel>().Heal(gameObject.GetComponent<CharacterModel>().MaxHealth 
+                - gameObject.GetComponent<CharacterModel>().Health);
+        }
+        else 
+        {
+            gameObject.GetComponent<CharacterModel>().Heal((curSlot.item as FoodItem).healAmount);
+        }
+
+        if(curSlot.amount < 1)
+        {
+            curSlot.item = null;
+            curSlot.isEmpty = true;
+            curSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+            curSlot.iconGO.GetComponent<Image>().sprite = null;
+            curSlot.itemAmountText.text = "";
+            curSlot.defenseID = 0;
+
+            CloseStatsPanel();
+        }
+        else
+        {
+            curSlot.itemAmountText.text = curSlot.amount.ToString();
+        }
+    }
+    void CloseStatsPanel() 
+    {
+        durabilDatabase.OnChangeValues -= IfDurabilChanged;
+        HideAllTexts();
+        curSlot = null;
+        statsPanel.GetComponent<StatsList>().useButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        statsPanel.GetComponent<StatsList>().useButton.SetActive(false);
+        statsPanel.SetActive(false);
     }
     void GetDurabilityValue(StatsList statsPanelValues, int defenseID) 
     {

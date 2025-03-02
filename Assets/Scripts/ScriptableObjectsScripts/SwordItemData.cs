@@ -8,4 +8,5 @@ using UnityEngine;
 public class SwordItemData : ItemScriptableObject
 {
     public SwordData data;
+    public GameObject usePrefab;
 }

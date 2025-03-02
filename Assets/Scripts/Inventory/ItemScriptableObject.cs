@@ -21,9 +21,9 @@ namespace Inventory
         public string itemID; 
         public string itemName = "Default";
         public int maximumAmount = 64;
-        public GameObject itemPrefab;
+        public GameObject itemPrefab;        
         public Sprite icon;
         public ItemType itemType = ItemType.Default;
-        public string itemDescription = "None";
+        public string itemDescription = "None";       
     }
 }

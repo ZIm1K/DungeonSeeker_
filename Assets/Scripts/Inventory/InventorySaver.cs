@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro.EditorUtilities;
+using UnityEditorInternal.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
@@ -42,6 +43,7 @@ public class InventorySaver : MonoBehaviour
     private void Start()
     {
         _saveSystem = new BinarySaveSystem();
+        allItems = transform.root.gameObject.GetComponent<ItemDatabase>().allItems;
     }
 
     public void SaveInventory()

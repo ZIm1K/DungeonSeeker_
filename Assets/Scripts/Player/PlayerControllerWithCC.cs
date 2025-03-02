@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Unity.VisualScripting;
 using System.Net.Http;
+using Inventory;
 
 namespace Objects.PlayerScripts
 {
@@ -20,7 +21,9 @@ namespace Objects.PlayerScripts
         [SerializeField] private float cameraSensitivity = 2f;
         [SerializeField] private float slopeForce = 5.0f;
         [SerializeField] private float slopeForceRayLength = 1.5f;
-
+        
+        public bool isCanRotate = true;
+        
         [Header("Footstep Sounds")]
         [SerializeField] private AudioClip[] dirtClips;
         [SerializeField] private AudioClip[] concreteClips;
@@ -96,8 +99,11 @@ namespace Objects.PlayerScripts
         {
             if (!_photonView.IsMine) return;
 
-            RotatePlayerRightLeft();
-            RotateCameraUpDown();
+            if (isCanRotate)
+            {
+                RotatePlayerRightLeft();
+                RotateCameraUpDown();
+            }           
 
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -279,6 +285,6 @@ namespace Objects.PlayerScripts
                     model.AddMana(newMana - model.Mana);
                 }
             }
-        }
+        }    
     }
 }

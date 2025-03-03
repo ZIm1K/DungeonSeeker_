@@ -9,6 +9,8 @@ namespace LevelGenerator
     public class LevelGenerator : MonoBehaviourPun
     {
         [SerializeField] private GameObject[] roomPrefabs;
+        [SerializeField] private GameObject finalRoomPrefab;
+        [SerializeField] private GameObject wallRoomPrefab;
         [SerializeField] private int maxRooms = 10;
 
         private List<Vector3> usedPositions = new List<Vector3>();
@@ -27,6 +29,8 @@ namespace LevelGenerator
             if (PhotonNetwork.IsMasterClient)
             {
                 GenerateLevel();
+                PlaceFinalRoom();
+                PlaceWalls();
                 photonView.RPC("SynchronizeLevel", RpcTarget.Others, usedPositions.ToArray());
             }
         }
@@ -38,7 +42,7 @@ namespace LevelGenerator
             usedPositions.Add(Vector3.zero);
             spawnedRooms.Add(startRoom);
 
-            for (int i = 0; i < maxRooms; i++)
+            for (int i = 0; i < maxRooms - 1; i++)
             {
                 PlaceNextRoom();
             }
@@ -68,6 +72,38 @@ namespace LevelGenerator
 
                 usedPositions.Add(selectedPosition);
                 spawnedRooms.Add(newRoom);
+            }
+        }
+
+        private void PlaceFinalRoom()
+        {
+            if (spawnedRooms.Count > 0)
+            {
+                GameObject lastRoom = spawnedRooms[spawnedRooms.Count - 1];
+                Vector3 lastPosition = lastRoom.transform.position;
+
+                PhotonNetwork.Destroy(lastRoom);
+                GameObject finalRoom = PhotonNetwork.Instantiate(finalRoomPrefab.name, lastPosition, Quaternion.identity);
+
+                spawnedRooms[spawnedRooms.Count - 1] = finalRoom;
+            }
+        }
+
+        private void PlaceWalls()
+        {
+            List<Vector3> wallPositions = new List<Vector3>();
+
+            foreach (Vector3 roomPosition in usedPositions)
+            {
+                foreach (Vector3 direction in directions)
+                {
+                    Vector3 wallPosition = roomPosition + direction;
+                    if (!usedPositions.Contains(wallPosition) && !wallPositions.Contains(wallPosition))
+                    {
+                        wallPositions.Add(wallPosition);
+                        PhotonNetwork.Instantiate(wallRoomPrefab.name, wallPosition, Quaternion.identity);
+                    }
+                }
             }
         }
 

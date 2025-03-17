@@ -40,8 +40,6 @@ namespace Objects.Weapon.Fireball
             shotSound = data.shotSound;
             shotTimeout = data.shotTimeout;
 
-            //UpdateFireballAmmo("∞");
-
             base.Initialize("Fireball", fireballDamage, false, 0f, shotSound, shotTimeout);
             lastShotTime = -shotTimeout;
         }

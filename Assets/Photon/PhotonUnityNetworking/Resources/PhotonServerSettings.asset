@@ -74,6 +74,10 @@ MonoBehaviour:
   - RemoveItemFromCrafter
   - UpdateList
   - UpdateSlotInOnlineLocaly
+  - SyncWeaponState
+  - SpawnForOthers
+  - SetForOthers
+  - Activator
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

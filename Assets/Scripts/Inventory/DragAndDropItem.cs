@@ -149,13 +149,18 @@ namespace Inventory
                 itemObject.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.MasterClient);
                 itemObject.GetComponent<Item>().amount = oldSlot.amount;
                 if (itemObject.GetComponent<DefenseItem>() != null)
-                {
-                    OnUnWearItem(oldSlot.item);
-                    itemObject.GetComponent<DefenseItem>().ID = oldSlot.defenseID;
+                {                  
+                    itemObject.GetComponent<DefenseItem>().ID = oldSlot.defenseID;                    
                 }
-                else if (itemObject.GetComponent<Item>().item.itemType == ItemType.Charm)
+                if (oldSlot.itemTypeToGet != ItemType.Default)
                 {
-                    OnUnWearItem(oldSlot.item);
+                    if (oldSlot.itemTypeToGet == ItemType.Helmet ||
+                        oldSlot.itemTypeToGet == ItemType.Armor ||
+                        oldSlot.itemTypeToGet == ItemType.Boots ||
+                        oldSlot.itemTypeToGet == ItemType.Charm)
+                    {
+                        OnUnWearItem(oldSlot.item);
+                    }
                 }
                 NullifySlotData();
                 oldSlot.OnSlotItemChanged();

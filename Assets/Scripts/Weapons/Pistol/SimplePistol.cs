@@ -19,6 +19,7 @@ namespace Objects.Weapon.Pistol
         [SerializeField] private GameObject decalPrefab;
         [SerializeField] private Transform firePoint;
         [SerializeField] private AudioClip shotSound;
+        [SerializeField] private string shotSoundPath;
         [SerializeField] private float shotTimeout;
         [SerializeField] private float reloadTime;
         [SerializeField] private Image reloadProgressImage;
@@ -34,8 +35,10 @@ namespace Objects.Weapon.Pistol
         public void Initialize(Image reloadImage)
         {
             data = Resources.Load<PistolItemData>("ScriptableObject/Pistol Item");
-            bullets = data.data.bullets;
-            bulletsInBackpack = data.data.bulletsInBackpack;
+            
+            //bullets = data.data.bullets;
+            //bulletsInBackpack = data.data.bulletsInBackpack;
+
             pistolDamage = data.data.pistolDamage;
             hitObjectPrefab = data.data.hitObjectPrefab;
             decalPrefab = data.data.decalPrefab;
@@ -43,7 +46,9 @@ namespace Objects.Weapon.Pistol
             
             reloadProgressImage = reloadImage;
 
-            shotSound = data.data.shotSound;
+            shotSoundPath = data.data.shotSoundPath;
+            shotSound = Resources.Load<AudioClip>(shotSoundPath);
+
             shotTimeout = data.data.shotTimeout;
             reloadTime = data.data.reloadTime;
             
@@ -101,7 +106,7 @@ namespace Objects.Weapon.Pistol
                         if (shotSound != null)
                         {
                             PlayAudioLocally();
-                            gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, "Sounds/Weapons/gun-shot-1-7069");
+                            gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, shotSoundPath);
                         }
                     }
                     else
@@ -173,6 +178,10 @@ namespace Objects.Weapon.Pistol
             {
                 reloadProgressImage.fillAmount = 0;
             }
+        }
+        public void AddBulletsInPistol(int ammount) 
+        {
+            bulletsInBackpack += ammount;
         }
     }
 }

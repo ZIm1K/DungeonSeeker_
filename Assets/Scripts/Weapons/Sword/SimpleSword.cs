@@ -17,6 +17,7 @@ public class SimpleSword : Weapon
     [SerializeField] private float reloadTime;
     
     [SerializeField] private AudioClip attackSound;
+    [SerializeField] private string attackSoundPath;
 
     [SerializeField] private Transform firePoint;
 
@@ -29,15 +30,16 @@ public class SimpleSword : Weapon
         data = Resources.Load<SwordItemData>("ScriptableObject/Sword Item");
 
         swordDamage = data.data.swordDamage;
-        attackSound = data.data.attackSound;
+        
+        attackSoundPath = data.data.attackSoundPath;
+        attackSound = Resources.Load<AudioClip>(attackSoundPath);
+
         shotTimeout = data.data.shotTimeout;
         rangeOfAttack = data.data.rangeOfAttack;
 
         firePoint = GameObject.Find("SwordFirePoint").gameObject.transform;
 
         lastAttackTime = -shotTimeout;
-
-        //UpdateSwordAmmo("∞");
 
         base.Initialize("Sword", swordDamage, false, 0, attackSound, shotTimeout);
     }
@@ -70,7 +72,7 @@ public class SimpleSword : Weapon
                 if (attackSound != null)
                 {
                     PlayAudioLocally();
-                    gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, "FootSteeps/Metal/hit_metal.1");
+                    gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, attackSoundPath);
                 }              
             }
         }

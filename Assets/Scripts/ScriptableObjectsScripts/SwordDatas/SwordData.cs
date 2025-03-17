@@ -9,7 +9,7 @@ namespace ScriptableObjects.Weapons
     {
         public int swordDamage = 15;
         public float shotTimeout = 0.3f;
-        public AudioClip attackSound;
-        public float rangeOfAttack = 50;
+        public string attackSoundPath;
+        public float rangeOfAttack = 10;
     }
 }

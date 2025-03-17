@@ -11,7 +11,7 @@ namespace ScriptableObjects.Weapons
         public GameObject hitObjectPrefab;
         public GameObject decalPrefab;
         public Transform firePoint;
-        public AudioClip shotSound;
+        public string shotSoundPath;
         public float shotTimeout = 0.5f;
         public float reloadTime = 2f;
     }

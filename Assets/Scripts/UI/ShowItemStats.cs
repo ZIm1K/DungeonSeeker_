@@ -149,12 +149,17 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
                                 statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
                                                                 (curSlot.item as SwordItemData).data.swordDamage.ToString();  //damage
                             }
+                            else if (curSlot.item as StaffItem)
+                            {
+                                statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                                                (curSlot.item as StaffItem).data.allyHealAmmount.ToString();  //damage
+                            }
                             else 
                             {
                                 Debug.LogWarning("Sry but this type of weapon not founded");
                             }                                                                                                                                                                 
                             break;
-                        }
+                        }                  
                     default:
                         {
                             Debug.LogWarning("Sry but this type of item not founded or it is not need text");

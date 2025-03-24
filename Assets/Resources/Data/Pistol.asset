@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09a6c9e39d984f7aa019fac5ae7d58a5, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: 
-  bullets: 12
-  bulletsInBackpack: 36
   pistolDamage: 10
   hitObjectPrefab: {fileID: 1040608886635896, guid: 790a13ca077292843b50ec4f075a735c, type: 3}
   decalPrefab: {fileID: 2117697731899656662, guid: 533a6a603ccca56448c55d1df133674f, type: 3}
   firePoint: {fileID: 0}
-  shotSoundPath: Sounds/Weapons/gun-shot-1-7069
+  shotSoundPath: Sounds/Weapons/gun/gun-shot-1-7069
   shotTimeout: 0.5
   reloadTime: 2
+  maxBulletsInWeapon: 12

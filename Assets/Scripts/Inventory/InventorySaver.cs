@@ -35,7 +35,6 @@ public class InventorySaver : MonoBehaviour
     [SerializeField] private List<InventorySlot> weaponSlots;
     [SerializeField] private List<InventorySlot> defaultSlots;
 
-    [SerializeField] private List<ItemScriptableObject> allItems;
     [SerializeField] private List<SavedSlotData> savedSlotsData;
 
     private ISaveManager _saveSystem;
@@ -43,7 +42,6 @@ public class InventorySaver : MonoBehaviour
     private void Start()
     {
         _saveSystem = new BinarySaveSystem();
-        allItems = transform.root.gameObject.GetComponent<ItemDatabase>().allItems;
     }
 
     public void SaveInventory()
@@ -104,7 +102,7 @@ public class InventorySaver : MonoBehaviour
         {
             if (savedSlot.itemID != "0")
             {
-                var item = allItems.Find(x => x.itemID == savedSlot.itemID);
+                var item = transform.root.gameObject.GetComponent<ItemDatabase>().allItems.Find(x => x.itemID == savedSlot.itemID);
                 if (item != null)
                 {
                     switch (savedSlot.slotType)

@@ -13,6 +13,8 @@ namespace Inventory
         Boots,
         Charm,
         Ore,
+        Bullet,
+        ManaPotion,
     }
 
     [System.Serializable]

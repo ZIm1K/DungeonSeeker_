@@ -12,32 +12,29 @@ namespace Objects.Weapon.Pistol
     {
         [SerializeField] private PistolItemData data;
         
-        [SerializeField] private int bullets;
-        [SerializeField] private int bulletsInBackpack;
         [SerializeField] private int pistolDamage;
         [SerializeField] private GameObject hitObjectPrefab;
         [SerializeField] private GameObject decalPrefab;
         [SerializeField] private Transform firePoint;
         [SerializeField] private AudioClip shotSound;
         [SerializeField] private string shotSoundPath;
-        [SerializeField] private float shotTimeout;
         [SerializeField] private float reloadTime;
         [SerializeField] private Image reloadProgressImage;
 
         public int CountOfBulletsInWeapon => countOfBulletsInWeapon;
         public int CountOfBulletsInBackpack => countOfBulletsInBackpack;
-        
+
+        public int MaxBulletsInWeapon => maxBulletsInWeapon;
+
+
         private int countOfBulletsInWeapon;
         private int countOfBulletsInBackpack;
+        private int maxBulletsInWeapon;
         private float lastShotTime;
-        //private bool isReloading = false;
 
         public void Initialize(Image reloadImage)
         {
-            data = Resources.Load<PistolItemData>("ScriptableObject/Pistol Item");
-            
-            //bullets = data.data.bullets;
-            //bulletsInBackpack = data.data.bulletsInBackpack;
+            data = Resources.Load<PistolItemData>("ScriptableObject/Pistol Item");           
 
             pistolDamage = data.data.pistolDamage;
             hitObjectPrefab = data.data.hitObjectPrefab;
@@ -51,13 +48,11 @@ namespace Objects.Weapon.Pistol
 
             shotTimeout = data.data.shotTimeout;
             reloadTime = data.data.reloadTime;
-            
-            base.Initialize("Pistol", pistolDamage, true, reloadTime, shotSound, shotTimeout);
-            countOfBulletsInWeapon = bullets;
-            countOfBulletsInBackpack = bulletsInBackpack;
+
+            maxBulletsInWeapon = data.data.maxBulletsInWeapon;
+
+            base.Initialize("Pistol", pistolDamage, true, reloadTime, shotSound, shotTimeout);           
             lastShotTime = -shotTimeout;
-            
-            //UpdateAmmo(countOfBulletsInWeapon, countOfBulletsInBackpack);
 
             if (reloadProgressImage != null)
             {
@@ -139,6 +134,10 @@ namespace Objects.Weapon.Pistol
                 Debug.Log("No bullets left in backpack to reload.");
             }
         }
+        public void AddBullets(int ammount) 
+        {
+            countOfBulletsInBackpack += ammount;
+        }
 
         private IEnumerator ReloadCoroutine()
         {
@@ -157,7 +156,7 @@ namespace Objects.Weapon.Pistol
                 yield return null;
             }
 
-            int bulletsNeeded = 12 - countOfBulletsInWeapon;
+            int bulletsNeeded = maxBulletsInWeapon - countOfBulletsInWeapon;
 
             if (countOfBulletsInBackpack >= bulletsNeeded)
             {
@@ -178,10 +177,6 @@ namespace Objects.Weapon.Pistol
             {
                 reloadProgressImage.fillAmount = 0;
             }
-        }
-        public void AddBulletsInPistol(int ammount) 
-        {
-            bulletsInBackpack += ammount;
-        }
+        }        
     }
 }

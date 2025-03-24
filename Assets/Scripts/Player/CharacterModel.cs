@@ -50,7 +50,7 @@ namespace Objects.PlayerScripts
             get { return defense; }
             set
             {
-                defense = HelmetDefense + ArmorDefense + BootsDefense;
+                defense = value;
                 view.UpdateDefenseText(defense);
             }
         }      
@@ -271,25 +271,27 @@ namespace Objects.PlayerScripts
             return defense;
         }
 
-        [PunRPC]
         public void Heal(int heal)
         {
             Health += heal;
             Debug.Log("Player healed " + heal + " health. Health is now " + health);
         }
 
-        [PunRPC]
         public void SpendMana(int count)
         {
             Mana -= count;
             Debug.Log($"Player spend {count} of mana");
         }
 
-        [PunRPC]
         public void AddMana(int count)
         {
             Mana += count;
             Debug.Log($"Player added {count} of mana");
+        }
+        public void AddHealth(int count)
+        {
+            Health += count;
+            Debug.Log($"Player added {count} of health");
         }
     }
 }

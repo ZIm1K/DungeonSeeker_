@@ -36,9 +36,14 @@ namespace Objects.PlayerScripts
 
         [Header("Params")]
         [SerializeField] private int maxHealth = 100;
+        [SerializeField] private float healthRegenInterval = 2f;
+        [SerializeField] private int healthaRegenAmount = 1;
+
         [SerializeField] private int maxMana = 100;
-        [SerializeField] private int manaRegenAmount = 1;
+        [SerializeField] private int manaRegenAmount = 1;      
         [SerializeField] private float manaRegenInterval = 0.5f;
+        private float curManaRegenInterval;
+        private float timer;
 
         [Header("UI")]
         [SerializeField] private GameObject canvas;
@@ -84,7 +89,9 @@ namespace Objects.PlayerScripts
                 view.UpdateSpeedText(model.Speed);
                 view.UpdateJumpForceText(model.JumpForce);
 
+                curManaRegenInterval = manaRegenInterval;
                 StartCoroutine(RegenerateMana());
+                StartCoroutine(RegenerateHealth());
             }
 
             materialSounds = new Dictionary<PhysicMaterial, AudioClip[]>
@@ -278,13 +285,57 @@ namespace Objects.PlayerScripts
         {
             while (true)
             {
-                yield return new WaitForSeconds(manaRegenInterval);
+                yield return new WaitForSeconds(curManaRegenInterval);
                 if (model.Mana < maxMana)
                 {
                     int newMana = Mathf.Min(model.Mana + manaRegenAmount, maxMana);
                     model.AddMana(newMana - model.Mana);
                 }
             }
-        }    
+        }
+        private IEnumerator RegenerateHealth()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(healthRegenInterval);
+                if (model.Health < maxHealth)
+                {
+                    int newHealth = Mathf.Min(model.Health + healthaRegenAmount, maxHealth);
+                    model.AddHealth(newHealth - model.Health);
+                }
+            }
+        }
+        public void EnableRegen(float manaRegenInterval, float duration) 
+        {
+            if (curManaRegenInterval == manaRegenInterval) //if poition had the same buff
+            {
+                if (timer < 1)
+                {
+                    curManaRegenInterval = manaRegenInterval;
+                    StartCoroutine(WaitForDuration(duration));
+                }
+                else
+                {
+                    timer += duration;
+                }
+            }
+            else 
+            {
+                timer = duration;
+                curManaRegenInterval = manaRegenInterval;
+                StartCoroutine(WaitForDuration(duration));
+            }
+        }        
+        private IEnumerator WaitForDuration(float duration) 
+        {
+            timer = duration;
+            while (timer > 0)
+            {               
+                view.UpdateTimerText(timer);
+                yield return new WaitForSeconds(1f);
+                timer -= 1;               
+            }            
+            curManaRegenInterval = manaRegenInterval;
+        }
     }
 }

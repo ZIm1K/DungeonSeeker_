@@ -13,8 +13,10 @@ namespace Objects.PlayerScripts
         public TMP_Text ManaText;
         public TMP_Text DefenseText;
         public TMP_Text SpeedText;
-        public TMP_Text JumpForceText;             
-              
+        public TMP_Text JumpForceText;
+        public TMP_Text ManaBuffText;
+        private float time;
+
         public void UpdateHealthText(int health)
         {
             HealthText.text = $"Health: {health}";
@@ -34,6 +36,19 @@ namespace Objects.PlayerScripts
         public void UpdateJumpForceText(float force)
         {
             JumpForceText.text = $"JumpForce: {force}";
-        }           
+        }
+        public void UpdateTimerText(float time)
+        {
+            if (time > 0)
+            {
+                ManaBuffText.gameObject.SetActive(true);                              
+            }
+            else 
+            {
+                ManaBuffText.gameObject.SetActive(false);
+                return;
+            }
+            ManaBuffText.text = $"ManaBuff: {time}";
+        }
     }
 }

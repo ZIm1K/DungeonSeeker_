@@ -4,6 +4,7 @@ using Inventory;
 using Objects.Weapon.Fireball;
 using Objects.Weapon.Pistol;
 using Photon.Pun;
+using Photon.Realtime;
 using ScriptableObjects.Weapons;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -267,6 +268,33 @@ namespace Objects.Weapon
         }
         public void RemoveWeapon(int numberOfSlot) 
         {
+            if (weapons[numberOfSlot] as SimplePistol) 
+            {
+                if ((weapons[numberOfSlot] as SimplePistol).CountOfBulletsInBackpack + (weapons[numberOfSlot] as SimplePistol).CountOfBulletsInWeapon > 0) 
+                {                                   
+                    int allBullets = (weapons[numberOfSlot] as SimplePistol).CountOfBulletsInBackpack + 
+                        (weapons[numberOfSlot] as SimplePistol).CountOfBulletsInWeapon;
+                    while (allBullets > 0)
+                    {
+                        GameObject itemObject = CreateBullet();
+                        if (allBullets > (weapons[numberOfSlot] as SimplePistol).MaxBulletsInWeapon)
+                        {
+                            allBullets -= (weapons[numberOfSlot] as SimplePistol).MaxBulletsInWeapon;
+                            itemObject.GetComponent<PhotonView>().RPC("RPC_Ammount", RpcTarget.All, 
+                                (weapons[numberOfSlot] as SimplePistol).MaxBulletsInWeapon);
+                            //itemObject.GetComponent<Item>().amount = (weapons[numberOfSlot] as SimplePistol).MaxBulletsInWeapon;
+                            //If more than 12
+                        }
+                        else
+                        {
+                            itemObject.GetComponent<PhotonView>().RPC("RPC_Ammount", RpcTarget.All, allBullets);
+                            //itemObject.GetComponent<Item>().amount = allBullets;
+                            allBullets = 0;
+                        }
+                    }
+                }                
+            }
+
             Destroy(weapons[numberOfSlot]);
 
             if (weapons[currentWeaponIndex] != null) 
@@ -278,6 +306,15 @@ namespace Objects.Weapon
             }
             
             weapons[numberOfSlot] = null;
+        }
+        GameObject CreateBullet() 
+        {
+            ItemScriptableObject item = gameObject.GetComponent<InventoryManager>().ItemReturner("14"); //pistol bullet ID
+            GameObject itemObject = PhotonNetwork.Instantiate(item.itemPrefab.name,
+            transform.position + Vector3.up + transform.forward, Quaternion.identity);
+            itemObject.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.MasterClient);
+            itemObject.GetComponent<Item>().item = item;
+            return itemObject;
         }
         public void NullifySlotData(int index)
         {

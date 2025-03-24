@@ -147,10 +147,12 @@ namespace Inventory
                 GameObject itemObject = PhotonNetwork.Instantiate(oldSlot.item.itemPrefab.name,
                     player.position + Vector3.up + player.forward, Quaternion.identity);
                 itemObject.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.MasterClient);
-                itemObject.GetComponent<Item>().amount = oldSlot.amount;
+                itemObject.GetComponent<PhotonView>().RPC("RPC_Ammount", RpcTarget.All, oldSlot.amount);
+                //itemObject.GetComponent<Item>().amount = oldSlot.amount;
                 if (itemObject.GetComponent<DefenseItem>() != null)
-                {                  
-                    itemObject.GetComponent<DefenseItem>().ID = oldSlot.defenseID;                    
+                {
+                    itemObject.GetComponent<PhotonView>().RPC("RPC_DefenseID", RpcTarget.All, oldSlot.defenseID);
+                    //itemObject.GetComponent<DefenseItem>().ID = oldSlot.defenseID;                    
                 }
                 if (oldSlot.itemTypeToGet != ItemType.Default)
                 {

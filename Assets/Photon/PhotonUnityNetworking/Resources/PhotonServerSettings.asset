@@ -78,6 +78,9 @@ MonoBehaviour:
   - SpawnForOthers
   - SetForOthers
   - Activator
+  - AddHealth
+  - RPC_Ammount
+  - RPC_DefenseID
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

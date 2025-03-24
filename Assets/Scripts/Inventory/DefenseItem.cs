@@ -13,5 +13,10 @@ namespace Inventory
         {
             base.RPC_RequestDestroy(viewID);
         }
+        [PunRPC]
+        protected virtual void RPC_DefenseID(int newDefenseID)
+        {
+            ID = newDefenseID;
+        }
     }
 }

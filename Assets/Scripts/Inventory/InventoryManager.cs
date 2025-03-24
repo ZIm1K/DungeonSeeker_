@@ -292,6 +292,10 @@ namespace Inventory
                 }
             }
         }
+        public ItemScriptableObject ItemReturner(string id)
+        {
+            return itemDatabase.GetItemByID(id);
+        }
         public bool CheckEmptyInInventory() 
         {
             foreach (InventorySlot slot in slots)

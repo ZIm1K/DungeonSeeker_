@@ -21,3 +21,4 @@ MonoBehaviour:
   shotSound: {fileID: 0}
   shotTimeout: 0.5
   manaCost: 20
+  pathOfScObj: ScriptableObject/Weapon/FireBall Item

@@ -16,3 +16,4 @@ MonoBehaviour:
   shotTimeout: 0.3
   attackSoundPath: FootSteeps/Metal/hit_metal.1
   rangeOfAttack: 10
+  pathOfScObj: ScriptableObject/Weapon/Iron Sword Item

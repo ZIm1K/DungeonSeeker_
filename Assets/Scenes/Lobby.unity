@@ -915,6 +915,46 @@ PrefabInstance:
       propertyPath: m_Name
       value: DurabilityDatabase
       objectReference: {fileID: 0}
+    - target: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+      propertyPath: allItems.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+      propertyPath: allItems.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: f49d751626743bc449d190efa0cd685b, type: 2}
+    - target: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+      propertyPath: allItems.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: 4c9a1c209496181429936c2dfe1a77ea, type: 2}
+    - target: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+      propertyPath: allItems.Array.data[6]
+      value: 
+      objectReference: {fileID: 11400000, guid: 736e70d2a9720a842b9939be4493d5d9, type: 2}
+    - target: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+      propertyPath: allItems.Array.data[7]
+      value: 
+      objectReference: {fileID: 11400000, guid: ffda5e5e37a737c4790ccdd6991fce15, type: 2}
+    - target: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+      propertyPath: allItems.Array.data[8]
+      value: 
+      objectReference: {fileID: 11400000, guid: 1e1ef2eccf4354e449e1cb8c2c1bc40a, type: 2}
+    - target: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+      propertyPath: allItems.Array.data[9]
+      value: 
+      objectReference: {fileID: 11400000, guid: 706779ae952d48b46a504ed589d32492, type: 2}
+    - target: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+      propertyPath: allItems.Array.data[10]
+      value: 
+      objectReference: {fileID: 11400000, guid: a9d07b6286903e44d847d2730af6963c, type: 2}
+    - target: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+      propertyPath: allItems.Array.data[11]
+      value: 
+      objectReference: {fileID: 11400000, guid: fbf739ab4880a2e4d8c225aceabc0c92, type: 2}
+    - target: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+      propertyPath: allItems.Array.data[12]
+      value: 
+      objectReference: {fileID: 11400000, guid: 81b185921abcf1e4da9bd8829f7a3aec, type: 2}
     - target: {fileID: 7687632756967423998, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
       propertyPath: m_LocalPosition.x
       value: 988.73016

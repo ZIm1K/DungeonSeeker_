@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Inventory;
 using Objects.Weapon.Fireball;
-using Objects.Weapon.Pistol;
+using Objects.Weapon.Bow;
 using Photon.Pun;
 using Photon.Realtime;
 using ScriptableObjects.Weapons;
@@ -80,7 +80,7 @@ namespace Objects.Weapon
                     currentWeaponIndex = 1;
                 }
 
-                if (weapons[currentWeaponIndex] != null)
+                if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
                 {
                     posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
                     photonView.RPC("Activator", RpcTarget.Others,
@@ -112,8 +112,8 @@ namespace Objects.Weapon
                 GameObject usePref = null;
                 if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "6")
                 {
-                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as PistolItemData).usePrefab;
-                    AddPistol(0);
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as BowItemData).usePrefab;
+                    AddBow(0);
                 }
                 else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "7")
                 {
@@ -159,8 +159,8 @@ namespace Objects.Weapon
                 GameObject usePref = null;
                 if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "6")
                 {
-                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as PistolItemData).usePrefab;
-                    AddPistol(1);
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as BowItemData).usePrefab;
+                    AddBow(1);
                 }
                 else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "7")
                 {
@@ -236,52 +236,57 @@ namespace Objects.Weapon
             GameObject obj = PhotonView.Find(viewID).gameObject;
             obj.SetActive(isActive);
         }
-        public void AddPistol(int numberOfSlot)
+        public void AddBow(int numberOfSlot)
         {
-            SimplePistol pistol = gameObject.AddComponent<SimplePistol>();
-            pistol.Initialize(reloadImage);
-            weapons[numberOfSlot] = pistol;
+            SimpleBow bow = gameObject.AddComponent<SimpleBow>();
+            bow.Initialize(reloadImage, numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as BowItemData).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as BowItemData).data.pathOfScObj);
+            weapons[numberOfSlot] = bow;
         }
         public void AddFireBall(int numberOfSlot)
         {
             PlayerShootingFireball fireball = gameObject.AddComponent<PlayerShootingFireball>();
-            fireball.Initialize();
+            fireball.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as FireBallItemData).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as FireBallItemData).data.pathOfScObj);
             weapons[numberOfSlot] = fireball;
         }
         public void AddSword(int numberOfSlot)
         {
             SimpleSword sword = gameObject.AddComponent<SimpleSword>();
-            sword.Initialize();
+            sword.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as SwordItemData).data.pathOfScObj 
+                : (weaponSlot2.GetComponent<InventorySlot>().item as SwordItemData).data.pathOfScObj);
             weapons[numberOfSlot] = sword;
         }
         public void AddStaff(int numberOfSlot)
         {
             SummonerStaf staff = gameObject.AddComponent<SummonerStaf>();
-            staff.Initialize();
+            staff.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as StaffItem).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as StaffItem).data.pathOfScObj);
             weapons[numberOfSlot] = staff;
         }
         public void AddCrucifix(int numberOfSlot)
         {
             CrucifixWeapon crucifix = gameObject.AddComponent<CrucifixWeapon>();
-            crucifix.Initialize();
+            crucifix.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as CrucifixItem).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as CrucifixItem).data.pathOfScObj);
             weapons[numberOfSlot] = crucifix;
         }
         public void RemoveWeapon(int numberOfSlot) 
         {
-            if (weapons[numberOfSlot] as SimplePistol) 
+            if (weapons[numberOfSlot] as SimpleBow) 
             {
-                if ((weapons[numberOfSlot] as SimplePistol).CountOfBulletsInBackpack + (weapons[numberOfSlot] as SimplePistol).CountOfBulletsInWeapon > 0) 
+                if ((weapons[numberOfSlot] as SimpleBow).CountOfBulletsInBackpack + (weapons[numberOfSlot] as SimpleBow).CountOfBulletsInWeapon > 0) 
                 {                                   
-                    int allBullets = (weapons[numberOfSlot] as SimplePistol).CountOfBulletsInBackpack + 
-                        (weapons[numberOfSlot] as SimplePistol).CountOfBulletsInWeapon;
+                    int allBullets = (weapons[numberOfSlot] as SimpleBow).CountOfBulletsInBackpack + 
+                        (weapons[numberOfSlot] as SimpleBow).CountOfBulletsInWeapon;
                     while (allBullets > 0)
                     {
                         GameObject itemObject = CreateBullet();
-                        if (allBullets > (weapons[numberOfSlot] as SimplePistol).MaxBulletsInWeapon)
+                        if (allBullets > (weapons[numberOfSlot] as SimpleBow).MaxBulletsInWeapon)
                         {
-                            allBullets -= (weapons[numberOfSlot] as SimplePistol).MaxBulletsInWeapon;
+                            allBullets -= (weapons[numberOfSlot] as SimpleBow).MaxBulletsInWeapon;
                             itemObject.GetComponent<PhotonView>().RPC("RPC_Ammount", RpcTarget.All, 
-                                (weapons[numberOfSlot] as SimplePistol).MaxBulletsInWeapon);
+                                (weapons[numberOfSlot] as SimpleBow).MaxBulletsInWeapon);
                             //itemObject.GetComponent<Item>().amount = (weapons[numberOfSlot] as SimplePistol).MaxBulletsInWeapon;
                             //If more than 12
                         }
@@ -336,7 +341,7 @@ namespace Objects.Weapon
             slot.amount = 0;
             slot.isEmpty = true;
             slot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-            slot.iconGO.GetComponent<Image>().sprite = null;
+            slot.SetBasedIcon();
             slot.itemAmountText.text = "";
             slot.defenseID = 0;
             slot.OnSlotItemChanged();
@@ -353,7 +358,7 @@ namespace Objects.Weapon
         }
         void UpdateAmmoUI()
         {
-            if (weapons[currentWeaponIndex] is SimplePistol pistol)
+            if (weapons[currentWeaponIndex] is SimpleBow pistol)
             {
                 pistol.UpdateAmmo(pistol.CountOfBulletsInWeapon, pistol.CountOfBulletsInBackpack);
             }

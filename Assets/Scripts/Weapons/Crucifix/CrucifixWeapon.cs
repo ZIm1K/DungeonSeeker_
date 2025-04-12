@@ -21,9 +21,9 @@ public class CrucifixWeapon : Weapon
 
     private CharacterModel model;
 
-    public void Initialize()
+    public void Initialize(string path)
     {
-        data = Resources.Load<CrucifixItem>("ScriptableObject/Crucifix Item");
+        data = Resources.Load<CrucifixItem>(path);
 
         model = GetComponent<CharacterModel>();
 

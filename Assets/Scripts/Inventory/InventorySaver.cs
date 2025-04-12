@@ -168,7 +168,7 @@ public class InventorySaver : MonoBehaviour
                 var image = slot.iconGO.GetComponent<Image>();
                 if (image != null)
                 {
-                    image.sprite = null;
+                    slot.SetBasedIcon();
                     image.color = new Color(1, 1, 1, 1);
                 }
             }

@@ -15,3 +15,4 @@ MonoBehaviour:
   rangeOfAttack: 50
   damage: 1000
   attackSoundPath: FootSteeps/Metal/hit_metal.1
+  pathOfScObj: ScriptableObject/Weapon/Crucifix Item

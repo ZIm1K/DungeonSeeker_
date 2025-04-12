@@ -11,5 +11,6 @@ namespace ScriptableObjects.Weapons
         public float shotTimeout = 0.3f;
         public string attackSoundPath;
         public float rangeOfAttack = 10;
+        public string pathOfScObj;
     }
 }

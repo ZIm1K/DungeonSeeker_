@@ -31,9 +31,9 @@ public class SummonerStaf : Weapon
 
     private GameObject curAlly;
 
-    public void Initialize()
+    public void Initialize(string path)
     {
-        data = Resources.Load<StaffItem>("ScriptableObject/Staff Item");
+        data = Resources.Load<StaffItem>(path);
 
         model = GetComponent<CharacterModel>();
 

@@ -25,9 +25,9 @@ public class SimpleSword : Weapon
 
     private float lastAttackTime;
 
-    public void Initialize()
+    public void Initialize(string path)
     {
-        data = Resources.Load<SwordItemData>("ScriptableObject/Sword Item");
+        data = Resources.Load<SwordItemData>(path);
 
         swordDamage = data.data.swordDamage;
         

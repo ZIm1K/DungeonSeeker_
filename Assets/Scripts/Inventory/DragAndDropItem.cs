@@ -148,11 +148,9 @@ namespace Inventory
                     player.position + Vector3.up + player.forward, Quaternion.identity);
                 itemObject.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.MasterClient);
                 itemObject.GetComponent<PhotonView>().RPC("RPC_Ammount", RpcTarget.All, oldSlot.amount);
-                //itemObject.GetComponent<Item>().amount = oldSlot.amount;
                 if (itemObject.GetComponent<DefenseItem>() != null)
                 {
-                    itemObject.GetComponent<PhotonView>().RPC("RPC_DefenseID", RpcTarget.All, oldSlot.defenseID);
-                    //itemObject.GetComponent<DefenseItem>().ID = oldSlot.defenseID;                    
+                    itemObject.GetComponent<PhotonView>().RPC("RPC_DefenseID", RpcTarget.All, oldSlot.defenseID);                    
                 }
                 if (oldSlot.itemTypeToGet != ItemType.Default)
                 {
@@ -406,7 +404,7 @@ namespace Inventory
             oldSlot.amount = 0;
             oldSlot.isEmpty = true;
             oldSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-            oldSlot.iconGO.GetComponent<Image>().sprite = null;
+            oldSlot.SetBasedIcon();
             oldSlot.itemAmountText.text = "";
             oldSlot.defenseID = 0;
         }
@@ -429,7 +427,7 @@ namespace Inventory
             else
             {
                 newSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 0);
-                newSlot.iconGO.GetComponent<Image>().sprite = null;
+                oldSlot.SetBasedIcon();
                 newSlot.itemAmountText.text = "";
             }
 
@@ -446,7 +444,7 @@ namespace Inventory
             else
             {
                 oldSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                oldSlot.iconGO.GetComponent<Image>().sprite = null;
+                oldSlot.SetBasedIcon();
                 oldSlot.itemAmountText.text = "";
             }
 

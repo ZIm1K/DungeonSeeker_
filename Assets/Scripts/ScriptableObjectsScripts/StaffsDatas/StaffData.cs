@@ -12,4 +12,5 @@ public class StaffData : ScriptableObject
     public int manaCost;
     public string useSoundPath;
     public GameObject allyPrefab;
+    public string pathOfScObj;
 }

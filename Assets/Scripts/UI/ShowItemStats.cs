@@ -2,7 +2,7 @@ using ExitGames.Client.Photon.StructWrapping;
 using Inventory;
 using Objects.PlayerScripts;
 using Objects.Weapon;
-using Objects.Weapon.Pistol;
+using Objects.Weapon.Bow;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -30,175 +30,178 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
         {
             if (eventData.pointerCurrentRaycast.gameObject.name == "Icon")
             {
-                durabilDatabase = gameObject.GetComponent<CharacterModel>().durabilDatabase;
-                
-                statsPanel.SetActive(true);
-
-                curSlot = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.GetComponent<InventorySlot>();
-
-                if (curSlot.item == null) return;
-
-                StatsList statsPanelValues = statsPanel.GetComponent<StatsList>();
-                
-                statsPanelValues.nameText.text = curSlot.item.itemName;
-                statsPanelValues.typeText.text = "Type:" + curSlot.item.itemType.ToString();
-                statsPanelValues.descriptionText.text = curSlot.item.itemDescription;
-
-                statsPanelValues.useButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                statsPanelValues.useButton.SetActive(false);
-                
-                durabilDatabase.OnChangeValues -= IfDurabilChanged;
-                curSlot.OnChangeItems += IfSlotItemChanged;
-
-                HideAllTexts();
-                switch (curSlot.item.itemType) 
+                if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.GetComponent<InventorySlot>().item != null) 
                 {
-                    case ItemType.Food: 
-                        {
-                            //durabilDatabase.OnChangeValues -= IfDurabilChanged;
+                    durabilDatabase = gameObject.GetComponent<CharacterModel>().durabilDatabase;
 
-                            //statsPanelValues.fooodItemTextPanel.SetActive(true);
+                    statsPanel.SetActive(true);
 
-                            statsPanelValues.fooodItemTextPanel.transform.GetChild(0).GetComponent<TMP_Text>().text = 
-                                (curSlot.item as FoodItem).healAmount.ToString();  //heal ammount
-                            
-                            statsPanelValues.useButton.SetActive(true);
-                            
-                            statsPanelValues.useButton.GetComponent<Button>().onClick.AddListener(HealCharacter);
-                            break;
-                        }
-                    case ItemType.Helmet: 
-                        {
-                            durabilDatabase.OnChangeValues += IfDurabilChanged;
+                    curSlot = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.GetComponent<InventorySlot>();
 
-                            statsPanelValues.defenseItemTextPanel.SetActive(true);
+                    if (curSlot.item == null) return;
 
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                (curSlot.item as HelmetItem).defense.ToString();  //defense max ammount
-                            GetDurabilityValue(statsPanelValues, curSlot.defenseID);
-                           
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(2).gameObject.SetActive(false);
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(3).gameObject.SetActive(false);
-                            break;
-                        }
-                    case ItemType.Armor:
-                        {
-                            durabilDatabase.OnChangeValues += IfDurabilChanged;
+                    StatsList statsPanelValues = statsPanel.GetComponent<StatsList>();
 
-                            statsPanelValues.defenseItemTextPanel.SetActive(true);
+                    statsPanelValues.nameText.text = curSlot.item.itemName;
+                    statsPanelValues.typeText.text = "Type:" + curSlot.item.itemType.ToString();
+                    statsPanelValues.descriptionText.text = curSlot.item.itemDescription;
 
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                (curSlot.item as ArmorItem).defense.ToString();  //defense max ammount
-                            GetDurabilityValue(statsPanelValues, curSlot.defenseID);
+                    statsPanelValues.useButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                    statsPanelValues.useButton.SetActive(false);
 
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(2).gameObject.SetActive(true);
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(2).GetComponent<TMP_Text>().text =
-                                (curSlot.item as ArmorItem).nerfSpeed.ToString();  //nerf speed
+                    durabilDatabase.OnChangeValues -= IfDurabilChanged;
+                    curSlot.OnChangeItems += IfSlotItemChanged;
 
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(3).gameObject.SetActive(false);
-                            break;
-                        }
-                    case ItemType.Boots:
-                        {
-                            durabilDatabase.OnChangeValues += IfDurabilChanged;
-
-                            statsPanelValues.defenseItemTextPanel.SetActive(true);
-
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                (curSlot.item as BootsItem).defense.ToString();  //defense max ammount
-                            GetDurabilityValue(statsPanelValues, curSlot.defenseID);
-
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(2).gameObject.SetActive(false);
-
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(3).gameObject.SetActive(true);
-                            statsPanelValues.defenseItemTextPanel.transform.GetChild(3).GetComponent<TMP_Text>().text =
-                                (curSlot.item as BootsItem).buffSpeed.ToString();  //buff speed
-                            break;
-                        }
-                    case ItemType.Charm:
-                        {
-                            statsPanelValues.charmItemTextPanel.SetActive(true);
-                            
-                            //statsPanelValues.charmItemTextPanel.transform.GetChild(0).gameObject.SetActive(true);
-                            statsPanelValues.charmItemTextPanel.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                (curSlot.item as CharmItem).buffSpeed.ToString();  //buff speed
-                                                                                
-                            //statsPanelValues.charmItemTextPanel.transform.GetChild(1).gameObject.SetActive(true);
-                            statsPanelValues.charmItemTextPanel.transform.GetChild(1).GetComponent<TMP_Text>().text =
-                                (curSlot.item as CharmItem).buffJumpForce.ToString();  //buff speed 
-                            break;
-                        }
-                    case ItemType.Weapon:
-                        {
-                            statsPanelValues.weaponItemTexts.SetActive(true);
-                            
-                            //statsPanelValues.weaponItemTexts.transform.GetChild(0).gameObject.SetActive(true);
-
-                            if (curSlot.item as FireBallItemData)
+                    HideAllTexts();
+                    switch (curSlot.item.itemType)
+                    {
+                        case ItemType.Food:
                             {
-                                statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                                                (curSlot.item as FireBallItemData).data.fireballDamage.ToString();  //damage
+                                //durabilDatabase.OnChangeValues -= IfDurabilChanged;
+
+                                statsPanelValues.fooodItemTextPanel.SetActive(true);
+
+                                statsPanelValues.fooodItemTextPanel.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                    (curSlot.item as FoodItem).healAmount.ToString();  //heal ammount
+
+                                statsPanelValues.useButton.SetActive(true);
+
+                                statsPanelValues.useButton.GetComponent<Button>().onClick.AddListener(HealCharacter);
+                                break;
                             }
-                            else if (curSlot.item as PistolItemData)
+                        case ItemType.Helmet:
                             {
-                                statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                                                (curSlot.item as PistolItemData).data.pistolDamage.ToString();  //damage
+                                durabilDatabase.OnChangeValues += IfDurabilChanged;
+
+                                statsPanelValues.defenseItemTextPanel.SetActive(true);
+
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                    (curSlot.item as HelmetItem).defense.ToString();  //defense max ammount
+                                GetDurabilityValue(statsPanelValues, curSlot.defenseID);
+
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(2).gameObject.SetActive(false);
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(3).gameObject.SetActive(false);
+                                break;
                             }
-                            else if (curSlot.item as SwordItemData)
+                        case ItemType.Armor:
                             {
-                                statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                                                (curSlot.item as SwordItemData).data.swordDamage.ToString();  //damage
+                                durabilDatabase.OnChangeValues += IfDurabilChanged;
+
+                                statsPanelValues.defenseItemTextPanel.SetActive(true);
+
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                    (curSlot.item as ArmorItem).defense.ToString();  //defense max ammount
+                                GetDurabilityValue(statsPanelValues, curSlot.defenseID);
+
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(2).gameObject.SetActive(true);
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(2).GetComponent<TMP_Text>().text =
+                                    (curSlot.item as ArmorItem).nerfSpeed.ToString();  //nerf speed
+
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(3).gameObject.SetActive(false);
+                                break;
                             }
-                            else if (curSlot.item as StaffItem)
+                        case ItemType.Boots:
                             {
-                                statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                                                (curSlot.item as StaffItem).data.allyHealAmmount.ToString();  //damage
+                                durabilDatabase.OnChangeValues += IfDurabilChanged;
+
+                                statsPanelValues.defenseItemTextPanel.SetActive(true);
+
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                    (curSlot.item as BootsItem).defense.ToString();  //defense max ammount
+                                GetDurabilityValue(statsPanelValues, curSlot.defenseID);
+
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(2).gameObject.SetActive(false);
+
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(3).gameObject.SetActive(true);
+                                statsPanelValues.defenseItemTextPanel.transform.GetChild(3).GetComponent<TMP_Text>().text =
+                                    (curSlot.item as BootsItem).buffSpeed.ToString();  //buff speed
+                                break;
                             }
-                            else if (curSlot.item as CrucifixItem)
+                        case ItemType.Charm:
                             {
-                                statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                                                (curSlot.item as CrucifixItem).data.damage.ToString();  //damage
+                                statsPanelValues.charmItemTextPanel.SetActive(true);
+
+                                //statsPanelValues.charmItemTextPanel.transform.GetChild(0).gameObject.SetActive(true);
+                                statsPanelValues.charmItemTextPanel.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                    (curSlot.item as CharmItem).buffSpeed.ToString();  //buff speed
+
+                                //statsPanelValues.charmItemTextPanel.transform.GetChild(1).gameObject.SetActive(true);
+                                statsPanelValues.charmItemTextPanel.transform.GetChild(1).GetComponent<TMP_Text>().text =
+                                    (curSlot.item as CharmItem).buffJumpForce.ToString();  //buff speed 
+                                break;
                             }
-                            else 
+                        case ItemType.Weapon:
                             {
-                                Debug.LogWarning("Sry but this type of weapon not founded");
-                            }                                                                                                                                                                 
-                            break;
-                        }
-                    case ItemType.Bullet:
-                        {
-                            statsPanelValues.bulletItemTexts.SetActive(true);
+                                statsPanelValues.weaponItemTexts.SetActive(true);
 
-                            statsPanelValues.bulletItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                                                (curSlot.item as BulletItem).bulletAmmount.ToString();  //bulletAmmount
-                                                                                                                        
-                            statsPanelValues.useButton.SetActive(true);
+                                //statsPanelValues.weaponItemTexts.transform.GetChild(0).gameObject.SetActive(true);
 
-                            statsPanelValues.useButton.GetComponent<Button>().onClick.AddListener(AddBullets);
-                            break;
-                        }
-                    case ItemType.ManaPotion:
-                        {
-                            statsPanelValues.manaPotionItemTexts.SetActive(true);
+                                if (curSlot.item as FireBallItemData)
+                                {
+                                    statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                                                    (curSlot.item as FireBallItemData).data.fireballDamage.ToString();  //damage
+                                }
+                                else if (curSlot.item as BowItemData)
+                                {
+                                    statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                                                    (curSlot.item as BowItemData).data.bowDamage.ToString();  //damage
+                                }
+                                else if (curSlot.item as SwordItemData)
+                                {
+                                    statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                                                    (curSlot.item as SwordItemData).data.swordDamage.ToString();  //damage
+                                }
+                                else if (curSlot.item as StaffItem)
+                                {
+                                    statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                                                    (curSlot.item as StaffItem).data.allyHealAmmount.ToString();  //damage
+                                }
+                                else if (curSlot.item as CrucifixItem)
+                                {
+                                    statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                                                    (curSlot.item as CrucifixItem).data.damage.ToString();  //damage
+                                }
+                                else
+                                {
+                                    Debug.LogWarning("Sry but this type of weapon not founded");
+                                }
+                                break;
+                            }
+                        case ItemType.Bullet:
+                            {
+                                statsPanelValues.bulletItemTexts.SetActive(true);
 
-                            //statsPanelValues.manaPotionItemTexts.transform.GetChild(0).gameObject.SetActive(true);
-                            statsPanelValues.manaPotionItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                                                (curSlot.item as ManaRegenItem).manaRegenInterval.ToString();  //manaRegenChange
+                                statsPanelValues.bulletItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                                                    (curSlot.item as BulletItem).bulletAmmount.ToString();  //bulletAmmount
 
-                            statsPanelValues.manaPotionItemTexts.transform.GetChild(1).GetComponent<TMP_Text>().text =
-                                                                (curSlot.item as ManaRegenItem).duration.ToString();  //duration
+                                statsPanelValues.useButton.SetActive(true);
 
-                            statsPanelValues.useButton.SetActive(true);
+                                statsPanelValues.useButton.GetComponent<Button>().onClick.AddListener(AddBullets);
+                                break;
+                            }
+                        case ItemType.ManaPotion:
+                            {
+                                statsPanelValues.manaPotionItemTexts.SetActive(true);
 
-                            statsPanelValues.useButton.GetComponent<Button>().onClick.AddListener(RegenBuff);
-                            break;
-                        }
-                    default:
-                        {
-                            Debug.LogWarning("Sry but this type of item not founded or it is not need text");
-                            break;
-                        }
-                }   
+                                //statsPanelValues.manaPotionItemTexts.transform.GetChild(0).gameObject.SetActive(true);
+                                statsPanelValues.manaPotionItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                                                    (curSlot.item as ManaRegenItem).manaRegenInterval.ToString();  //manaRegenChange
+
+                                statsPanelValues.manaPotionItemTexts.transform.GetChild(1).GetComponent<TMP_Text>().text =
+                                                                    (curSlot.item as ManaRegenItem).duration.ToString();  //duration
+
+                                statsPanelValues.useButton.SetActive(true);
+
+                                statsPanelValues.useButton.GetComponent<Button>().onClick.AddListener(RegenBuff);
+                                break;
+                            }
+                        default:
+                            {
+                                Debug.LogWarning("Sry but this type of item not founded or it is not need text");
+                                break;
+                            }
+                    }
+                }                
             }
             else
             {
@@ -235,14 +238,14 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
     {
         foreach (Weapon weapon in gameObject.GetComponent<WeaponManager>().weapons) 
         {
-            if (weapon as SimplePistol) 
+            if (weapon as SimpleBow) 
             {
                 curSlot.amount -= 1;
-                (weapon as SimplePistol).AddBullets((curSlot.item as BulletItem).bulletAmmount);
+                (weapon as SimpleBow).AddBullets((curSlot.item as BulletItem).bulletAmmount);
                 if (weapon == gameObject.GetComponent<WeaponManager>().weapons[gameObject.GetComponent<WeaponManager>().currentWeaponIndex]) 
                 {
-                    (weapon as SimplePistol).UpdateAmmo((weapon as SimplePistol).CountOfBulletsInWeapon, 
-                        (weapon as SimplePistol).CountOfBulletsInBackpack);
+                    (weapon as SimpleBow).UpdateAmmo((weapon as SimpleBow).CountOfBulletsInWeapon, 
+                        (weapon as SimpleBow).CountOfBulletsInBackpack);
                 }               
                 CheckIfSlotNull();
             }
@@ -255,7 +258,7 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
             curSlot.item = null;
             curSlot.isEmpty = true;
             curSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-            curSlot.iconGO.GetComponent<Image>().sprite = null;
+            curSlot.SetBasedIcon();
             curSlot.itemAmountText.text = "";
             curSlot.defenseID = 0;
 
@@ -268,7 +271,11 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
     }
     void CloseStatsPanel() 
     {
-        durabilDatabase.OnChangeValues -= IfDurabilChanged;
+        if (durabilDatabase != null && durabilDatabase.OnChangeValues != null) 
+        {
+            durabilDatabase.OnChangeValues -= IfDurabilChanged;
+            durabilDatabase = null;
+        }
         if (curSlot != null) 
         {
             curSlot.OnChangeItems -= IfSlotItemChanged;
@@ -291,6 +298,7 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
         statsPanel.GetComponent<StatsList>().defenseItemTextPanel.SetActive(false);
         statsPanel.GetComponent<StatsList>().weaponItemTexts.SetActive(false);
         statsPanel.GetComponent<StatsList>().bulletItemTexts.SetActive(false);
+        statsPanel.GetComponent<StatsList>().manaPotionItemTexts.SetActive(false);
     }
     void IfDurabilChanged() 
     {

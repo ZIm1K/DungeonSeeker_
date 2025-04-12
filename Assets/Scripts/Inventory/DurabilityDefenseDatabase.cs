@@ -54,7 +54,8 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
                         break;
                     }                  
             }           
-        }            
+        }    
+        
     }
 
     public int GetValueByID(int id)
@@ -119,8 +120,9 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
 
         allItems.Add(item);
     }
-    public int OnNewDefenseItemAdded(ItemScriptableObject item) 
+    public int OnNewDefenseItemAdded(string ID) 
     {
+        ItemScriptableObject item = itemDatabase.GetItemByID(ID);
         switch (item)
         {
             case HelmetItem:

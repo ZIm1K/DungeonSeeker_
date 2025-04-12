@@ -19,3 +19,4 @@ MonoBehaviour:
   manaCost: 100
   useSoundPath: FootSteeps/Metal/hit_metal.1
   allyPrefab: {fileID: 549738267683341139, guid: bd1496b026bc08c46b29992f155591f6, type: 3}
+  pathOfScObj: ScriptableObject/Weapon/Spawn Staff Item

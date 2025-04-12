@@ -109,7 +109,7 @@ namespace Inventory
                             craftSlots[i].amount = 0;
                             craftSlots[i].isEmpty = true;
                             craftSlots[i].iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                            craftSlots[i].iconGO.GetComponent<Image>().sprite = null;
+                            craftSlots[i].SetBasedIcon();
                             craftSlots[i].itemAmountText.text = " ";
                         }
                         currentCrafter = null;
@@ -144,7 +144,7 @@ namespace Inventory
                                 craftSlots[i].amount = 0;
                                 craftSlots[i].isEmpty = true;
                                 craftSlots[i].iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                                craftSlots[i].iconGO.GetComponent<Image>().sprite = null;
+                                craftSlots[i].SetBasedIcon();
                                 craftSlots[i].itemAmountText.text = " ";
                             }
                             gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = true;
@@ -199,7 +199,14 @@ namespace Inventory
                                             slot.defenseID = hit.collider.GetComponent<Chest>().saveChestItems[i].defenseID;
                                             slot.amount = hit.collider.GetComponent<Chest>().saveChestItems[i].ammount;
                                             slot.isEmpty = item == null ? true : false;
-                                            slot.SetIcon(item.icon);
+                                            if (!slot.isEmpty)
+                                            {
+                                                slot.SetIcon(item.icon);
+                                            }
+                                            else 
+                                            {
+                                                slot.SetBasedIcon();
+                                            }
                                             slot.itemAmountText.text = slot.amount.ToString();
                                         }
                                     }
@@ -228,6 +235,10 @@ namespace Inventory
                                         craftSlots[i].isEmpty = false;
                                         craftSlots[i].SetIcon(item.icon);
                                         craftSlots[i].itemAmountText.text = "1";
+                                    }
+                                    else 
+                                    {
+
                                     }
                                 }
                                 photonView.RPC("CheckForCraftButtonLocaly", photonView.Owner);
@@ -428,7 +439,7 @@ namespace Inventory
                 slot.amount = 0;
                 slot.isEmpty = true;
                 slot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                slot.iconGO.GetComponent<Image>().sprite = null;
+                slot.SetBasedIcon();
                 slot.itemAmountText.text = "";
                 slot.defenseID = 0;
             }

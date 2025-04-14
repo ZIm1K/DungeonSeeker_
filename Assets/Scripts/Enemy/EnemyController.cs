@@ -112,6 +112,10 @@ namespace Objects.Enemies
                     stateMachine.ChangeState(patrolState);
                 }
             }
+
+            if (model.Health <= 0)
+                Die();
+
         }
 
         private GameObject FindNearestPlayer()

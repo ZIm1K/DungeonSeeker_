@@ -26,7 +26,8 @@ namespace Objects.PlayerScripts
         [SerializeField] private AudioClip[] concreteClips;
         [SerializeField] private AudioClip[] metalClips;
         [SerializeField] private AudioClip[] defaultClips;
-        [SerializeField] private float stepInterval = 0.5f; // Interval between steps
+        [SerializeField] private AudioClip JumpClip;
+        [SerializeField] private float stepInterval = 0.1f; // Interval between steps
 
         [Header("MVC")]
         [SerializeField] private CharacterView view;
@@ -120,6 +121,10 @@ namespace Objects.PlayerScripts
         private void TryJump()
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+            AudioClip jmpClip = JumpClip;
+            audioSource.clip = jmpClip;
+            audioSource.Play();
+
         }
 
         private void FixedUpdate()

@@ -1,5 +1,4 @@
 using Photon.Realtime;
-using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
@@ -37,8 +36,13 @@ namespace LevelGenerator
 
         void GenerateLevel()
         {
-            GameObject startRoom = PhotonNetwork.Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Length)].name,
-                Vector3.zero, Quaternion.identity);
+            Quaternion randomRotation = Quaternion.Euler(0, 90 * Random.Range(0, 4), 0);
+            GameObject startRoom = PhotonNetwork.Instantiate(
+                roomPrefabs[Random.Range(0, roomPrefabs.Length)].name,
+                Vector3.zero,
+                randomRotation
+            );
+
             usedPositions.Add(Vector3.zero);
             spawnedRooms.Add(startRoom);
 
@@ -67,8 +71,12 @@ namespace LevelGenerator
             if (validPositions.Count > 0)
             {
                 Vector3 selectedPosition = validPositions[Random.Range(0, validPositions.Count)];
-                GameObject newRoom = PhotonNetwork.Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Length)].name,
-                    selectedPosition, Quaternion.identity);
+                Quaternion randomRotation = Quaternion.Euler(0, 90 * Random.Range(0, 4), 0);
+                GameObject newRoom = PhotonNetwork.Instantiate(
+                    roomPrefabs[Random.Range(0, roomPrefabs.Length)].name,
+                    selectedPosition,
+                    randomRotation
+                );
 
                 usedPositions.Add(selectedPosition);
                 spawnedRooms.Add(newRoom);
@@ -83,7 +91,13 @@ namespace LevelGenerator
                 Vector3 lastPosition = lastRoom.transform.position;
 
                 PhotonNetwork.Destroy(lastRoom);
-                GameObject finalRoom = PhotonNetwork.Instantiate(finalRoomPrefab.name, lastPosition, Quaternion.identity);
+
+                Quaternion randomRotation = Quaternion.Euler(0, 90 * Random.Range(0, 4), 0);
+                GameObject finalRoom = PhotonNetwork.Instantiate(
+                    finalRoomPrefab.name,
+                    lastPosition,
+                    randomRotation
+                );
 
                 spawnedRooms[spawnedRooms.Count - 1] = finalRoom;
             }
@@ -101,7 +115,11 @@ namespace LevelGenerator
                     if (!usedPositions.Contains(wallPosition) && !wallPositions.Contains(wallPosition))
                     {
                         wallPositions.Add(wallPosition);
-                        PhotonNetwork.Instantiate(wallRoomPrefab.name, wallPosition, Quaternion.identity);
+                        PhotonNetwork.Instantiate(
+                            wallRoomPrefab.name,
+                            wallPosition,
+                            Quaternion.identity 
+                        );
                     }
                 }
             }

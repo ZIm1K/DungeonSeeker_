@@ -1,17 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Photon.Pun;
+using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject enemy;
-    
+    public GameObject[] enemyPrefabs;
+
     void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && enemyPrefabs.Length > 0)
         {
-            PhotonNetwork.Instantiate(enemy.name, new Vector3(-8, 0.5f, -4), Quaternion.identity);
+            int randomIndex = Random.Range(0, enemyPrefabs.Length);
+            GameObject selectedEnemy = enemyPrefabs[randomIndex];
+
+            PhotonNetwork.Instantiate(selectedEnemy.name, transform.position, transform.rotation);
         }
     }
 }

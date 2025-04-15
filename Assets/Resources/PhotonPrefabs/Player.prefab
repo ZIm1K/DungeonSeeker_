@@ -409,6 +409,7 @@ MonoBehaviour:
   JumpClip: {fileID: 0}
   stepInterval: 0.1
   view: {fileID: -4128584846684513814}
+  durabilityDefense: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
   maxHealth: 100
   maxMana: 100
   manaRegenAmount: 1

@@ -2166,6 +2166,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     - target: {fileID: 4725356937742542618, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Name
       value: Candlestick_Wall (3)
@@ -2346,6 +2350,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Table_Big (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5493550688961220248, guid: 0a7f51b5f4ba6294a889f661114da0d3, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2426,6 +2434,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     - target: {fileID: 4725356937742542618, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Name
       value: Candlestick_Wall (8)
@@ -2540,6 +2552,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dungeon_Big_Passage (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8011076794465515464, guid: b78909d98814b3d42aa488a008c30001, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2558,6 +2574,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     - target: {fileID: 4725356937742542618, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Name
       value: Candlestick_Wall (5)
@@ -2620,6 +2640,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     - target: {fileID: 4725356937742542618, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Name
       value: Candlestick_Wall (2)
@@ -2682,6 +2706,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     - target: {fileID: 4725356937742542618, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Name
       value: Candlestick_Wall (7)
@@ -2788,6 +2816,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Table_Big
       objectReference: {fileID: 0}
+    - target: {fileID: 5493550688961220248, guid: 0a7f51b5f4ba6294a889f661114da0d3, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2806,6 +2838,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     - target: {fileID: 4725356937742542618, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Name
       value: Candlestick_Wall (6)
@@ -2920,6 +2956,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dungeon_Big_Passage (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8011076794465515464, guid: b78909d98814b3d42aa488a008c30001, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2938,6 +2978,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     - target: {fileID: 4725356937742542618, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Name
       value: Candlestick_Wall
@@ -3000,6 +3044,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     - target: {fileID: 4725356937742542618, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Name
       value: Candlestick_Wall (4)
@@ -3238,6 +3286,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dungeon_Big_Passage (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 8011076794465515464, guid: b78909d98814b3d42aa488a008c30001, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3256,6 +3308,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     - target: {fileID: 4725356937742542618, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Name
       value: Candlestick_Wall (9)
@@ -3370,6 +3426,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dungeon_Big_Passage (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 8011076794465515464, guid: b78909d98814b3d42aa488a008c30001, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3388,6 +3448,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
     - target: {fileID: 4725356937742542618, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Name
       value: Candlestick_Wall (1)

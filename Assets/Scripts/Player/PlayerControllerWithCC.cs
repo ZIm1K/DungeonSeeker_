@@ -32,6 +32,9 @@ namespace Objects.PlayerScripts
         [Header("MVC")]
         [SerializeField] private CharacterView view;
 
+        [Header("Move settings")]
+        [SerializeField] private DurabilityDefenseDatabase durabilityDefense;
+
         [Header("Params")]
         [SerializeField] private int maxHealth = 100;
         [SerializeField] private int maxMana = 100;
@@ -72,7 +75,7 @@ namespace Objects.PlayerScripts
             }
             else
             {
-                DurabilityDefenseDatabase durabilDatabase = GameObject.FindWithTag("DurabilBase").GetComponent<DurabilityDefenseDatabase>();
+                DurabilityDefenseDatabase durabilDatabase = durabilityDefense;
                 model = gameObject.AddComponent<CharacterModel>();
                 model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
 

@@ -98,7 +98,7 @@ namespace Objects.PlayerScripts
 
         private void Update()
         {
-            if (!_photonView.IsMine) return;
+            if (!photonView.IsMine || GameMenuManager.IsMenuOpen) return;
 
             RotatePlayerRightLeft();
             RotateCameraUpDown();
@@ -132,7 +132,7 @@ namespace Objects.PlayerScripts
 
         private void FixedUpdate()
         {
-            if (!_photonView.IsMine) return;
+            if (!photonView.IsMine || GameMenuManager.IsMenuOpen) return;
 
             PlayerMovement();
         }

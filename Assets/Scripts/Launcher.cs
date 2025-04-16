@@ -1,5 +1,6 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -20,19 +21,29 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject playerTextPrefab;
 
     [SerializeField] private GameObject startGameButton;
+    [SerializeField] AudioSource clickSound;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(this.gameObject); 
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
     private void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
-        MenuManager.Instance.OpenMenu("loading");
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.OpenMenu("loading");
+        }
+
     }
 
     public override void OnConnectedToMaster()
@@ -90,14 +101,52 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void LeaveRoom()
     {
+        if (!PhotonNetwork.InRoom)
+        {
+            Debug.LogWarning("Not in a room!");
+            return;
+        }
+        Debug.Log("LeaveRoom() called");
         PhotonNetwork.LeaveRoom();
-        MenuManager.Instance.OpenMenu("loading");
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.OpenMenu("loading");
+        }
+        StartCoroutine(WaitToLeaveRoom());
+    }
+
+    private IEnumerator WaitToLeaveRoom()
+    {
+        float timeout = 5f;
+        while (PhotonNetwork.InRoom && timeout > 0f)
+        {
+            yield return null;
+            timeout -= Time.deltaTime;
+        }
+
+        if (!PhotonNetwork.InRoom)
+        {
+            Debug.Log("Room left via coroutine fallback");
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            Debug.LogError("Failed to leave room after timeout!");
+        }
     }
 
     public override void OnLeftRoom()
     {
+        Debug.Log("OnLeftRoom() called");
+        SceneManager.LoadScene(0);
         MenuManager.Instance.OpenMenu("main");
     }
+
+    public void PlayClick()
+    {
+        clickSound.Play();
+    }
+
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         errorText.text = $"Error: {message}";
@@ -107,8 +156,10 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void JoinRoom(RoomInfo info)
     {
         PhotonNetwork.JoinRoom(info.Name);
-        MenuManager.Instance.OpenMenu("loading");
-
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.OpenMenu("loading");
+        }
     }
 
 
@@ -135,7 +186,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        SceneManager.LoadScene(1);
+        PhotonNetwork.LoadLevel(1);
     }
 
     public void ExitGame()

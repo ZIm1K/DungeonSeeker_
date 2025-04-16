@@ -18,5 +18,5 @@ MonoBehaviour:
   itemPrefab: {fileID: 6651851940751878855, guid: e6604c6b41907ce49b754ba7e68feff8, type: 3}
   icon: {fileID: 21300000, guid: 1ff18920df7230a4dbc8e9e75c4ed7e5, type: 3}
   itemType: 4
-  itemDescription: HELMET
+  itemDescription: Worn over the mind, not the head.
   defense: 50

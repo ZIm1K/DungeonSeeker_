@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5242867bbf754024681c8a7eecda18b0, type: 3}
   m_Name: Crucifix
   m_EditorClassIdentifier: 
-  rangeOfAttack: 50
-  damage: 1000
-  attackSoundPath: FootSteeps/Metal/hit_metal.1
+  rangeOfAttack: 10
+  damage: 500
+  attackSoundPath: Sounds/Weapons/Crucifix/crucufix_use
   pathOfScObj: ScriptableObject/Weapon/Crucifix Item

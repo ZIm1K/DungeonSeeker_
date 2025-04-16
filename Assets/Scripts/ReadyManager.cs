@@ -65,6 +65,7 @@ public class ReadyManager : MonoBehaviourPunCallbacks
 
         if (readyPlayers == PhotonNetwork.PlayerList.Length)
         {
+            PlayerViewManager.Instance.SavePlayerInventory();
             PhotonNetwork.LoadLevel(nextSceneIndex);
         }
     }

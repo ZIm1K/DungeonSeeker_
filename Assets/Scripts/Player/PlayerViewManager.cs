@@ -37,4 +37,14 @@ public class PlayerViewManager : MonoBehaviour
     {
         playersPhotonViews.Remove(PhotonView.Find(id));
     }
+    public void SavePlayerInventory() 
+    {
+        foreach (var player in playersPhotonViews) 
+        {
+            if (player.Owner == PhotonNetwork.LocalPlayer) 
+            {
+                player.GetComponent<InventorySaver>().SaveInventory();
+            }
+        }
+    }
 }

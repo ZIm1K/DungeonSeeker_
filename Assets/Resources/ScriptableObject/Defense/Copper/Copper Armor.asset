@@ -18,6 +18,8 @@ MonoBehaviour:
   itemPrefab: {fileID: 6250633792016504668, guid: fa6f670fb9abe3d44bd7fdb5b3be4de6, type: 3}
   icon: {fileID: 21300000, guid: 9c8101d479c60d34185259c220494c61, type: 3}
   itemType: 5
-  itemDescription: ARMOR
+  itemDescription: "Worn by those who didn\u2019t flee. Their courage still clings
+    to it."
+  dropChanse: 15
   defense: 50
   nerfSpeed: 2

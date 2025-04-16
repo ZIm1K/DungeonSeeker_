@@ -17,7 +17,7 @@ MonoBehaviour:
   arrowSpeed: 15
   decalArrow: {fileID: 7642882335625824108, guid: 8ae1db459f5514f4aaafc4e8c7ca7aff, type: 3}
   firePoint: {fileID: 0}
-  shotSoundPath: Sounds/Weapons/Bow/gun-shot-1-7069
+  shotSoundPath: Sounds/Weapons/Bow/bow_Attack
   shotTimeout: 1
   reloadTime: 3
   maxBulletsInWeapon: 12

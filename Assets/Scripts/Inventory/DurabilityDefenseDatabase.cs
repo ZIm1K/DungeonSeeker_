@@ -90,6 +90,44 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
         }
         OnChangeValues?.Invoke();
     }
+    public void HealDefense(int ammount) 
+    {
+        for (int i = 0; i < allValues.Count; i++) 
+        {
+            int maxDefense = 0;
+            switch (allItems[i])
+            {
+                case HelmetItem:
+                    {
+                        maxDefense = (allItems[i] as HelmetItem).defense;
+                        break;
+                    }
+                case ArmorItem:
+                    {
+                        maxDefense = (allItems[i] as ArmorItem).defense;
+                        break;
+                    }
+                case BootsItem:
+                    {
+                        maxDefense = (allItems[i] as BootsItem).defense;
+                        break;
+                    }
+            }
+
+            if (allValues[i] < maxDefense)
+            {
+                if (allValues[i] + ammount <= maxDefense)
+                {
+                    allValues[i] += ammount;
+                }
+                else 
+                {
+                    allValues[i] += maxDefense - allValues[i];
+                }
+            }
+            photonView.RPC("UpdateValueInOnline", RpcTarget.Others, i, allValues[i]);
+        }
+    }
     [PunRPC]
     void UpdateValueInOnline(int i, int value) 
     {

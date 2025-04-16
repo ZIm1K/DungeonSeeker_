@@ -17,7 +17,6 @@ namespace Objects.Weapon.Fireball
         [SerializeField] private GameObject explosionPrefab;
         [SerializeField] private GameObject decalPrefab;
         [SerializeField] private AudioClip shotSound;
-        [SerializeField] private float shotTimeout;
         [SerializeField] private int manaCost;
 
         private CharacterModel model;

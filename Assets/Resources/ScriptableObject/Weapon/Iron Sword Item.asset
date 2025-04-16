@@ -18,6 +18,8 @@ MonoBehaviour:
   itemPrefab: {fileID: 7620116842255900661, guid: 9e15086e6108822478c9ad49ad4b80e1, type: 3}
   icon: {fileID: 21300000, guid: 4ad16adfdf2d1a441879a598de742eb6, type: 3}
   itemType: 2
-  itemDescription: This is iron sword
+  itemDescription: 'An iron blade stained with marks that will not wash away. Sharper
+    than memory, crueler than pain.  '
+  dropChanse: 70
   data: {fileID: 11400000, guid: d41aa46fe289d9f44b53b1a4928e057b, type: 2}
   usePrefab: {fileID: 8261400541534674111, guid: 452bfb60e40e3f54d91dc716cb3fdec2, type: 3}

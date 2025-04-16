@@ -18,5 +18,7 @@ MonoBehaviour:
   itemPrefab: {fileID: 8977368166849258377, guid: 064c07833e31ba14e8ebbfd15dd67cd8, type: 3}
   icon: {fileID: 21300000, guid: 310b28abd7578074b95656f579fbdebc, type: 3}
   itemType: 8
-  itemDescription: This is leather for craft
+  itemDescription: "Tanned in smoke and whispers. It still breathes when no one\u2019s
+    near."
+  dropChanse: 30
   indexOfOre: 3

@@ -45,10 +45,13 @@ namespace Objects.Weapon
                 {
                     if (!weapons[currentWeaponIndex].IsReloading)
                     {
-                        currentWeaponIndex = 0;
-                        posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
-                        photonView.RPC("Activator", RpcTarget.Others, 
-                            posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                        if (posTarget.transform.GetChild(1).childCount > 0) 
+                        {
+                            currentWeaponIndex = 0;
+                            posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+                            photonView.RPC("Activator", RpcTarget.Others,
+                                posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                        }                       
                     }
                 }
                 else
@@ -56,7 +59,7 @@ namespace Objects.Weapon
                     currentWeaponIndex = 0;
                 }
 
-                if (weapons[currentWeaponIndex] != null)
+                if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
                 {
                     posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
                     photonView.RPC("Activator", RpcTarget.Others,
@@ -69,10 +72,13 @@ namespace Objects.Weapon
                 {
                     if (!weapons[currentWeaponIndex].IsReloading)
                     {
-                        currentWeaponIndex = 1;
-                        posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
-                        photonView.RPC("Activator", RpcTarget.Others,
-                            posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                        if (posTarget.transform.GetChild(0).childCount > 0)
+                        {
+                            currentWeaponIndex = 1;
+                            posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+                            photonView.RPC("Activator", RpcTarget.Others,
+                                posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                        }
                     }
                 }
                 else
@@ -127,13 +133,18 @@ namespace Objects.Weapon
                 }
                 else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "12")///
                 {
-                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as StaffItem).usePrefab;
-                    AddStaff(0);
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as SummonerStaffItem).usePrefab;
+                    AddSummonerStaff(0);
                 }
                 else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "13")/////////////////////////////////////
                 {
                     usePref = (weaponSlot1.GetComponent<InventorySlot>().item as CrucifixItem).usePrefab;
                     AddCrucifix(0);
+                }
+                else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "33")/////////////////////////////////////
+                {
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as DefenseStaffItem).usePrefab;
+                    AddDefenseStaff(0);
                 }
                 SelectWeapon();
 
@@ -174,13 +185,18 @@ namespace Objects.Weapon
                 }
                 else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "12")///
                 {
-                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as StaffItem).usePrefab;
-                    AddStaff(1);
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as SummonerStaffItem).usePrefab;
+                    AddSummonerStaff(1);
                 }
                 else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "13")/////////////////////////////////////
                 {
                     usePref = (weaponSlot2.GetComponent<InventorySlot>().item as CrucifixItem).usePrefab;
                     AddCrucifix(1);
+                }
+                else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "33")/////////////////////////////////////
+                {
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as DefenseStaffItem).usePrefab;
+                    AddDefenseStaff(1);
                 }
                 SelectWeapon();
 
@@ -257,11 +273,11 @@ namespace Objects.Weapon
                 : (weaponSlot2.GetComponent<InventorySlot>().item as SwordItemData).data.pathOfScObj);
             weapons[numberOfSlot] = sword;
         }
-        public void AddStaff(int numberOfSlot)
+        public void AddSummonerStaff(int numberOfSlot)
         {
             SummonerStaf staff = gameObject.AddComponent<SummonerStaf>();
-            staff.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as StaffItem).data.pathOfScObj
-                : (weaponSlot2.GetComponent<InventorySlot>().item as StaffItem).data.pathOfScObj);
+            staff.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as SummonerStaffItem).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as SummonerStaffItem).data.pathOfScObj);
             weapons[numberOfSlot] = staff;
         }
         public void AddCrucifix(int numberOfSlot)
@@ -270,6 +286,13 @@ namespace Objects.Weapon
             crucifix.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as CrucifixItem).data.pathOfScObj
                 : (weaponSlot2.GetComponent<InventorySlot>().item as CrucifixItem).data.pathOfScObj);
             weapons[numberOfSlot] = crucifix;
+        }
+        public void AddDefenseStaff(int numberOfSlot)
+        {
+            DefenseStaff staff = gameObject.AddComponent<DefenseStaff>();
+            staff.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as DefenseStaffItem).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as DefenseStaffItem).data.pathOfScObj);
+            weapons[numberOfSlot] = staff;
         }
         public void RemoveWeapon(int numberOfSlot) 
         {
@@ -287,13 +310,11 @@ namespace Objects.Weapon
                             allBullets -= (weapons[numberOfSlot] as SimpleBow).MaxBulletsInWeapon;
                             itemObject.GetComponent<PhotonView>().RPC("RPC_Ammount", RpcTarget.All, 
                                 (weapons[numberOfSlot] as SimpleBow).MaxBulletsInWeapon);
-                            //itemObject.GetComponent<Item>().amount = (weapons[numberOfSlot] as SimplePistol).MaxBulletsInWeapon;
                             //If more than 12
                         }
                         else
                         {
                             itemObject.GetComponent<PhotonView>().RPC("RPC_Ammount", RpcTarget.All, allBullets);
-                            //itemObject.GetComponent<Item>().amount = allBullets;
                             allBullets = 0;
                         }
                     }
@@ -377,6 +398,10 @@ namespace Objects.Weapon
             else if (weapons[currentWeaponIndex] is CrucifixWeapon crucifix)
             {
                 crucifix.UpdateSwordAmmo("1");
+            }
+            else if (weapons[currentWeaponIndex] is DefenseStaff defenseStaff)
+            {
+                defenseStaff.UpdateSwordAmmo("∞");
             }
             else if (weapons[currentWeaponIndex] == null)
             {

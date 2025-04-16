@@ -16,8 +16,9 @@ MonoBehaviour:
   itemName: Mana Regen Potion
   maximumAmount: 10
   itemPrefab: {fileID: 6648269027127108437, guid: 0d7fef87fc93021439aa199a55f25ba3, type: 3}
-  icon: {fileID: 21300000, guid: c190daea028019549936a9bc3c536cb4, type: 3}
+  icon: {fileID: 21300000, guid: 586b2938c6d832944ba2fd8dc3bf901a, type: 3}
   itemType: 10
-  itemDescription: This is mana regen potion
+  itemDescription: It stirs the mind, then feeds on it.
+  dropChanse: 20
   manaRegenInterval: 0.3
   duration: 60

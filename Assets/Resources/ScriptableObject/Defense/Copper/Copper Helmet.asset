@@ -18,5 +18,6 @@ MonoBehaviour:
   itemPrefab: {fileID: 1521256893733288580, guid: d64177e5f1e44de4b91dc6df27d12d41, type: 3}
   icon: {fileID: 21300000, guid: 3253ad9deab97584d9f92d6a2fad17b4, type: 3}
   itemType: 4
-  itemDescription: HELMET
+  itemDescription: The inside is warm, like someone just took it off.
+  dropChanse: 18
   defense: 25

@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Bow Item
   m_EditorClassIdentifier: 
   itemID: 6
-  itemName: Bow item
+  itemName: Bow
   maximumAmount: 1
   itemPrefab: {fileID: 4021962881653473189, guid: f5a2498232bdced41948d030e89c98e9, type: 3}
   icon: {fileID: 21300000, guid: fb1e48043961d8f44948225f539a83bb, type: 3}
   itemType: 2
-  itemDescription: This is bow
+  itemDescription: "A bow carved from a tree that no longer grows. Its arrows find
+    their mark \u2014 even in the dead.  "
+  dropChanse: 35
   data: {fileID: 11400000, guid: 2eda7dfb14218734b8d76f22d94c43ab, type: 2}
   usePrefab: {fileID: 1268234348741745558, guid: 346b736950044ec449b010ceb57c4bf2, type: 3}

@@ -151,15 +151,20 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
                                     statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
                                                                     (curSlot.item as SwordItemData).data.swordDamage.ToString();  //damage
                                 }
-                                else if (curSlot.item as StaffItem)
+                                else if (curSlot.item as SummonerStaffItem)
                                 {
                                     statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
-                                                                    (curSlot.item as StaffItem).data.allyHealAmmount.ToString();  //damage
+                                                                    (curSlot.item as SummonerStaffItem).data.allyHealAmmount.ToString();  //damage
                                 }
                                 else if (curSlot.item as CrucifixItem)
                                 {
                                     statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
                                                                     (curSlot.item as CrucifixItem).data.damage.ToString();  //damage
+                                }
+                                else if (curSlot.item as DefenseStaffItem)
+                                {
+                                    statsPanelValues.weaponItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
+                                                                    (curSlot.item as DefenseStaffItem).data.defenseHealAmmount.ToString();  //defense heal
                                 }
                                 else
                                 {

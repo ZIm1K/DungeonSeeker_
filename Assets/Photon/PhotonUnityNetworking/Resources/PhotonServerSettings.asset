@@ -81,6 +81,7 @@ MonoBehaviour:
   - AddHealth
   - RPC_Ammount
   - RPC_DefenseID
+  - SetParenter
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: MetaRing
   m_EditorClassIdentifier: 
   itemID: 5
-  itemName: Charm
+  itemName: Meta ring
   maximumAmount: 1
   itemPrefab: {fileID: 1932959180255612031, guid: f7319c8754be9a047898e2033a07a364, type: 3}
   icon: {fileID: 21300000, guid: a77137ad837df124683f8930f467a6a9, type: 3}
   itemType: 7
-  itemDescription: CHARM
+  itemDescription: "Its surface shifts when no one\u2019s looking."
+  dropChanse: 15
   buffSpeed: 1
   buffJumpForce: 1

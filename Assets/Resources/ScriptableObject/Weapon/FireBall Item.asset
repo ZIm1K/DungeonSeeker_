@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: FireBall Item
   m_EditorClassIdentifier: 
   itemID: 7
-  itemName: Default fireball
+  itemName: FireBall Book
   maximumAmount: 1
   itemPrefab: {fileID: 1612979474718030506, guid: 13ae1403d62c43a4eb284278841a0e56, type: 3}
   icon: {fileID: 21300000, guid: 9f69b220176e6964fbd87f5f158d45e3, type: 3}
   itemType: 2
-  itemDescription: This is fireball
+  itemDescription: 'A burning spell, shaped like fury. Each casting echoes the voice
+    of flame itself.  '
+  dropChanse: 30
   data: {fileID: 11400000, guid: 1a497f2706387634389fadf1e3375c86, type: 2}
   usePrefab: {fileID: 7714811414807647583, guid: e53aa2a57bbfbb74dadb2b1c928249d2, type: 3}

@@ -42,6 +42,9 @@ public class InventorySaver : MonoBehaviour
     private void Start()
     {
         _saveSystem = new BinarySaveSystem();
+        LoadInventory();
+        savedSlotsData.Clear();
+        _saveSystem.Save(savedSlotsData);
     }
 
     public void SaveInventory()

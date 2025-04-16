@@ -24,7 +24,6 @@ public class Arrow : MonoBehaviourPun
             {
                 PhotonView targetPhotonView = collision.collider.gameObject.GetComponent<PhotonView>();
                 targetPhotonView.RPC("TakeDamage", RpcTarget.All, damage);
-                Debug.LogWarning("Damaged");
             }           
             else 
             {

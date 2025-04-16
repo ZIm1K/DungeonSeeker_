@@ -18,6 +18,7 @@ MonoBehaviour:
   itemPrefab: {fileID: 7745759177650114780, guid: bd8aba10164c86f4cbf249333f7930ae, type: 3}
   icon: {fileID: 21300000, guid: 1b932e329d2e122489394506ac8a777b, type: 3}
   itemType: 6
-  itemDescription: BOOTS
+  itemDescription: The soles are worn, but the path remembers.
+  dropChanse: 18
   defense: 15
   buffSpeed: 2

@@ -18,6 +18,7 @@ MonoBehaviour:
   itemPrefab: {fileID: 1932959180255612031, guid: 12c4fe1a177926e4c99cb0abce9a8439, type: 3}
   icon: {fileID: 21300000, guid: cd7b401a96a069e45a2313a33309ef26, type: 3}
   itemType: 6
-  itemDescription: BOOTS
+  itemDescription: "They drag slightly\u2026 like something holds them back."
+  dropChanse: 25
   defense: 10
   buffSpeed: 1

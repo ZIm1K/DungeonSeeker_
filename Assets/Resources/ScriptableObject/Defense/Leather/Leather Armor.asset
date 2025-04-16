@@ -18,6 +18,7 @@ MonoBehaviour:
   itemPrefab: {fileID: 311388990353597461, guid: fe2bbf793df87d94484536361d471a58, type: 3}
   icon: {fileID: 21300000, guid: e49632776de7f0a4482a78059933c8ed, type: 3}
   itemType: 5
-  itemDescription: ARMOR
+  itemDescription: Stitched from things that once breathed.
+  dropChanse: 15
   defense: 10
   nerfSpeed: 0

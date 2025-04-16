@@ -18,6 +18,8 @@ MonoBehaviour:
   itemPrefab: {fileID: 7971000137547230927, guid: e5220627b1383d149aa5d0d006cacb15, type: 3}
   icon: {fileID: 21300000, guid: bcc4eb7b7b4ff6e48a33c2519c51d7ff, type: 3}
   itemType: 2
-  itemDescription: THIS IS CRUCFIX!!!!!!!!!!!
+  itemDescription: "An old cross holding the soul of its last bearer. A tool of faith\u2026
+    or sacrifice."
+  dropChanse: 10
   data: {fileID: 11400000, guid: b7c2a222186973f48bf671146d5d1466, type: 2}
   usePrefab: {fileID: 1427278749875700550, guid: 1d4830c86d009fb4e86d5e6faceac329, type: 3}

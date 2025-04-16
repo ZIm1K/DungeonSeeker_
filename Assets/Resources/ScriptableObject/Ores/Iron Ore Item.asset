@@ -18,5 +18,6 @@ MonoBehaviour:
   itemPrefab: {fileID: 4759440384529501081, guid: 8fb974b4e82bf4f42ab27adb3329cce5, type: 3}
   icon: {fileID: 21300000, guid: ca6299f192d72b047a99c160e51a72d0, type: 3}
   itemType: 8
-  itemDescription: This is iron for craft
+  itemDescription: Heavy and silent. Forged in suffering, carried into war.
+  dropChanse: 30
   indexOfOre: 1

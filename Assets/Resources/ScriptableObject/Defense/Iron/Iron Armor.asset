@@ -18,6 +18,7 @@ MonoBehaviour:
   itemPrefab: {fileID: 1932959180255612031, guid: 350027f54ca23fd4997fd4b418c3694c, type: 3}
   icon: {fileID: 21300000, guid: 40f2d97515d2434418f9dcdd11d438a2, type: 3}
   itemType: 5
-  itemDescription: ARMOR
+  itemDescription: Too heavy for a coward. Too cursed for a hero.
+  dropChanse: 25
   defense: 35
   nerfSpeed: 3

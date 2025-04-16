@@ -93,6 +93,12 @@ namespace Objects.PlayerScripts
                 curManaRegenInterval = manaRegenInterval;
                 StartCoroutine(RegenerateMana());
                 StartCoroutine(RegenerateHealth());
+
+                if (PhotonNetwork.IsMasterClient) 
+                {
+                    GameObject.FindWithTag("Chest").GetComponent<Chest>().
+                        GenerateItems(gameObject.GetComponent<ItemDatabase>().allItems, durabilDatabase);
+                }
             }
 
             materialSounds = new Dictionary<PhysicMaterial, AudioClip[]>
@@ -330,7 +336,7 @@ namespace Objects.PlayerScripts
         private IEnumerator WaitForDuration(float duration) 
         {
             timer = duration;
-            while (timer > 0)
+            while (timer >= 0)
             {               
                 view.UpdateTimerText(timer);
                 yield return new WaitForSeconds(1f);

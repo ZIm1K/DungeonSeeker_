@@ -5,6 +5,8 @@ using UnityEngine.AI;
 using Photon.Pun;
 using Objects.PlayerScripts;
 using System.ComponentModel;
+using static UnityEditor.PlayerSettings;
+using Photon.Realtime;
 
 public class AllyController : MonoBehaviourPun
 {
@@ -14,6 +16,8 @@ public class AllyController : MonoBehaviourPun
     private int regenInterval;
     private int ammountOfHeal;
     private int maxHealDistanse;
+    private Vector3 tpPos;
+    private float maxTpDistance;
 
     public int HealAmmount 
     {
@@ -30,6 +34,11 @@ public class AllyController : MonoBehaviourPun
         get { return maxHealDistanse; }
         set { maxHealDistanse = value; }
     }
+    public float MaxTpDistance
+    {
+        get { return maxTpDistance; }
+        set { maxTpDistance = value; }
+    }
 
     private void Start()
     {
@@ -41,6 +50,12 @@ public class AllyController : MonoBehaviourPun
     void FixedUpdate()
     {
         agent.destination = player.transform.position;
+        if (Vector3.Distance(transform.position, player.transform.position) > maxTpDistance) 
+        {
+            agent.enabled = false;
+            agent.transform.position = player.transform.position + player.transform.forward * 2;
+            agent.enabled = true;
+        }
     }
     private IEnumerator HealCharacter() 
     {

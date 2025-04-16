@@ -79,30 +79,7 @@ namespace Objects.Weapon.Bow
                         GameObject arrow = PhotonNetwork.Instantiate(arrowPrefab.name, firePoint.position + firePoint.forward * 2, firePoint.rotation);
                         arrow.GetComponent<Arrow>().Initialize(arrowDecal, damage);
                         Rigidbody rb = arrow.GetComponent<Rigidbody>();
-                        rb.velocity = firePoint.forward * arrowSpeed;
-
-                        //Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-                        //RaycastHit hit;
-                        //if (Physics.Raycast(ray, out hit, 100))
-                        //{
-                        //    EnemyModel enemy = hit.collider.gameObject.GetComponent<EnemyModel>();
-                        //    if (enemy != null)
-                        //    {
-                        //        PhotonView targetPhotonView = hit.collider.gameObject.GetComponent<PhotonView>();
-                        //        if (targetPhotonView != null)
-                        //        {
-                        //            targetPhotonView.RPC("TakeDamage", RpcTarget.All, pistolDamage);
-                        //        }
-                        //    }
-                        //    else
-                        //    {
-                        //        Quaternion rotation = Quaternion.LookRotation(hit.normal) * Quaternion.Euler(0, 180, 0);
-                        //        Vector3 position = hit.point + hit.normal * 0.06f;
-                        //        GameObject decal = PhotonNetwork.Instantiate(decalPrefab.name, position, rotation);
-                        //        decal.transform.SetParent(hit.collider.transform);
-                        //        PhotonNetwork.Instantiate(hitObjectPrefab.name, decal.transform.position, Quaternion.identity);
-                        //    }
-                        //}
+                        rb.velocity = firePoint.forward * arrowSpeed;                        
 
                         countOfBulletsInWeapon--;
                         UpdateAmmo(countOfBulletsInWeapon, countOfBulletsInBackpack);

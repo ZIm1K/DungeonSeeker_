@@ -5,7 +5,6 @@ using UnityEngine.AI;
 using Photon.Pun;
 using Objects.PlayerScripts;
 using System.ComponentModel;
-using static UnityEditor.PlayerSettings;
 using Photon.Realtime;
 
 public class AllyController : MonoBehaviourPun

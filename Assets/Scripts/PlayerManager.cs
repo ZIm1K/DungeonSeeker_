@@ -8,7 +8,7 @@ public class PlayerManager : MonoBehaviour
 {
     private PhotonView photonView;
 
-    [SerializeField] private List<PhotonView> playersPhotonView;
+    //[SerializeField] private List<PhotonView> playersPhotonView;
     void Start()
     {
         photonView = GetComponent<PhotonView>();
@@ -22,12 +22,14 @@ public class PlayerManager : MonoBehaviour
     {
         PhotonView player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"),
             new Vector3(Random.Range(-4.5f, 4.5f), 1.1f, Random.Range(-4.5f, 4.5f)), Quaternion.identity).GetPhotonView();
-        
+
+        player.GetComponent<InventorySaver>().LoadInventory();
+
         PlayerViewManager.Instance.photonView.RPC("AddToList", RpcTarget.All, player.ViewID);
     }
-    [PunRPC]
-    void UpdateList(int id) 
-    {
-        playersPhotonView.Add(PhotonView.Find(id));
-    }
+    //[PunRPC]
+    //void UpdateList(int id) 
+    //{
+    //    playersPhotonView.Add(PhotonView.Find(id));
+    //}
 }

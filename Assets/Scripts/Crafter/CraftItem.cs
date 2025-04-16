@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
-using static UnityEditor.Progress;
 using Photon.Realtime;
 using System;
 using System.Reflection;

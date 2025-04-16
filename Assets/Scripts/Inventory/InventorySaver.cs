@@ -3,11 +3,8 @@ using Objects.Weapon;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
-using UnityEditorInternal.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 [Serializable]
 public class SavedSlotData
@@ -41,10 +38,9 @@ public class InventorySaver : MonoBehaviour
 
     private void Start()
     {
-        _saveSystem = new BinarySaveSystem();
-        LoadInventory();
-        savedSlotsData.Clear();
-        _saveSystem.Save(savedSlotsData);
+        //_saveSystem = new BinarySaveSystem();
+        //_saveSystem.Save(savedSlotsData);
+        //LoadInventory();
     }
 
     public void SaveInventory()
@@ -88,8 +84,10 @@ public class InventorySaver : MonoBehaviour
 
     public void LoadInventory()
     {
+        _saveSystem = new BinarySaveSystem();
+        //_saveSystem.Save(savedSlotsData);
         savedSlotsData = _saveSystem.Load<List<SavedSlotData>>();
-
+        if (savedSlotsData == null) return;
         if (defenseSlots == null || charmSlots == null || weaponSlots == null || defaultSlots == null)
         {
             Debug.LogError("One or more slot lists are null.");
@@ -105,7 +103,7 @@ public class InventorySaver : MonoBehaviour
         {
             if (savedSlot.itemID != "0")
             {
-                var item = transform.root.gameObject.GetComponent<ItemDatabase>().allItems.Find(x => x.itemID == savedSlot.itemID);
+                var item = gameObject.GetComponent<ItemDatabase>().allItems.Find(x => x.itemID == savedSlot.itemID);
                 if (item != null)
                 {
                     switch (savedSlot.slotType)
@@ -126,6 +124,8 @@ public class InventorySaver : MonoBehaviour
                 }
             }
         }
+        savedSlotsData.Clear();
+        _saveSystem.Save(savedSlotsData);
     }
 
     private void AssignItemToSlotAtIndex(List<InventorySlot> slots, int index, ItemScriptableObject item, int amount, int defenseID)

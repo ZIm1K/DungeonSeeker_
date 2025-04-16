@@ -7,7 +7,6 @@ using Photon.Pun;
 using Unity.VisualScripting;
 using Photon.Realtime;
 using Random = UnityEngine.Random;
-using static UnityEditor.Progress;
 using Objects.Weapon;
 using System.Linq;
 

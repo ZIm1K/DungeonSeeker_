@@ -2,8 +2,6 @@ using Inventory;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.WSA;
-using static UnityEditor.Progress;
 using Photon.Pun;
 using System;
 

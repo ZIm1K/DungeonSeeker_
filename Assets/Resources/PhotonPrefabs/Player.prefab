@@ -362,6 +362,10 @@ MonoBehaviour:
   DefenseText: {fileID: 6091835566814128026}
   SpeedText: {fileID: 1552058324029344887}
   JumpForceText: {fileID: 5139761963913410250}
+  ManaBuffEmpty: {fileID: 0}
+  ManaBuffText: {fileID: 0}
+  HealthBar: {fileID: 0}
+  ManaBar: {fileID: 0}
   Level: {fileID: 5683724349737404106}
 --- !u!114 &7252949635557732502
 MonoBehaviour:
@@ -387,6 +391,8 @@ MonoBehaviour:
   cameraSensitivity: 2
   slopeForce: 5
   slopeForceRayLength: 1.5
+  durabilytyDatabase: {fileID: 1429180039718220187, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
+  isCanRotate: 1
   dirtClips:
   - {fileID: 8300000, guid: 97912322f89bb400d8a94e5d0ff79170, type: 3}
   - {fileID: 8300000, guid: d0e98915d633d4455977776369667c86, type: 3}
@@ -407,11 +413,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4fc28ca163cea425897985dcda2ad6ed, type: 3}
   - {fileID: 8300000, guid: c3536f2814bc94a10a8eda67ee5fe95d, type: 3}
   - {fileID: 8300000, guid: 015fd9fd0599f412c8432e0b37c5ca85, type: 3}
-  JumpClip: {fileID: 0}
   stepInterval: 0.1
   view: {fileID: -4128584846684513814}
-  durabilityDefense: {fileID: 4783771764754925997, guid: 2c7f154a4ae8500448ab1898aa363d11, type: 3}
   maxHealth: 100
+  healthRegenInterval: 2
+  healthaRegenAmount: 1
   maxMana: 100
   manaRegenAmount: 1
   manaRegenInterval: 1
@@ -528,9 +534,11 @@ MonoBehaviour:
   weapons:
   - {fileID: 0}
   - {fileID: 0}
+  currentWeaponIndex: 0
   weaponSlot1: {fileID: 6788981835614015403}
   weaponSlot2: {fileID: 747544931046691156}
   reloadImage: {fileID: 6549165793489017670}
+  posTarget: {fileID: 0}
 --- !u!114 &2658879669417671174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,6 +556,7 @@ MonoBehaviour:
   inventoryPanel: {fileID: 8675772997558594319}
   reachDistance: 3
   itemDatabase: {fileID: 455487175894009716}
+  isItemOnDrag: 0
   slotPrefab: {fileID: 4118200696008253200, guid: 4dc78baaa169f024487ed129f39bf874, type: 3}
   rangeOfOpen: 3
   ChestInventoryPanel: {fileID: 4674019840255413793}
@@ -578,7 +587,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 980d6570953ed1c4aae8629a02b9e002, type: 2}
   - {fileID: 11400000, guid: b5af09c4c125dbf4081d28c8c482e6ee, type: 2}
   - {fileID: 11400000, guid: cede4054a3148bf4b9633f1708387453, type: 2}
-  - {fileID: 11400000, guid: 6ac974a03c0014c439eaa2fd857273cd, type: 2}
+  - {fileID: 0}
   - {fileID: 11400000, guid: 710d00429d26e254aaf1d3812463ea56, type: 2}
   - {fileID: 11400000, guid: cc3dab9eb7a8d774f9efb80e987e27c4, type: 2}
   - {fileID: 11400000, guid: c12b8c76c97473143919a9c2002b663a, type: 2}
@@ -618,7 +627,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statsPanel: {fileID: 3277822073597825187}
-  durabilDatabase: {fileID: 0}
 --- !u!114 &3998095175256264781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1016,15 +1024,8 @@ MonoBehaviour:
   - {fileID: 3936245625210783859}
   - {fileID: 2449061740470763147}
   - {fileID: 3970754105462523082}
-  allItems:
-  - {fileID: 11400000, guid: a11bbc6179fc1094c8f54b610b3cc603, type: 2}
-  - {fileID: 11400000, guid: 792b708f2675dbb4d943a0613b8a5682, type: 2}
-  - {fileID: 11400000, guid: 980d6570953ed1c4aae8629a02b9e002, type: 2}
-  - {fileID: 11400000, guid: b5af09c4c125dbf4081d28c8c482e6ee, type: 2}
-  - {fileID: 11400000, guid: cede4054a3148bf4b9633f1708387453, type: 2}
-  - {fileID: 11400000, guid: 6ac974a03c0014c439eaa2fd857273cd, type: 2}
-  - {fileID: 11400000, guid: 710d00429d26e254aaf1d3812463ea56, type: 2}
   savedSlotsData: []
+  loadingPanel: {fileID: 0}
 --- !u!1 &875397352907816364
 GameObject:
   m_ObjectHideFlags: 0
@@ -2469,6 +2470,7 @@ MonoBehaviour:
   itemAmountText: {fileID: 0}
   itemTypeToGet: 6
   defenseID: 0
+  basedIcon: {fileID: 0}
 --- !u!1 &2674816532707842091
 GameObject:
   m_ObjectHideFlags: 0
@@ -2938,6 +2940,7 @@ MonoBehaviour:
   itemAmountText: {fileID: 0}
   itemTypeToGet: 5
   defenseID: 0
+  basedIcon: {fileID: 0}
 --- !u!1 &3277822073597825187
 GameObject:
   m_ObjectHideFlags: 0
@@ -3036,10 +3039,13 @@ MonoBehaviour:
   nameText: {fileID: 5003070550068890571}
   typeText: {fileID: 4622677872370158690}
   descriptionText: {fileID: 5726421882664262171}
-  foodItemTexts: {fileID: 5498312094657141963}
-  defenseItemTexts: {fileID: 2220119665307559009}
-  charmItemTexts: {fileID: 6475959488863814727}
+  useButton: {fileID: 0}
+  fooodItemTextPanel: {fileID: 0}
+  charmItemTextPanel: {fileID: 0}
+  defenseItemTextPanel: {fileID: 0}
   weaponItemTexts: {fileID: 3926172018252073272}
+  bulletItemTexts: {fileID: 0}
+  manaPotionItemTexts: {fileID: 0}
 --- !u!1 &3350441263252070493
 GameObject:
   m_ObjectHideFlags: 0
@@ -5159,6 +5165,7 @@ MonoBehaviour:
   itemAmountText: {fileID: 0}
   itemTypeToGet: 4
   defenseID: 0
+  basedIcon: {fileID: 0}
 --- !u!1 &7116717776038071857
 GameObject:
   m_ObjectHideFlags: 0

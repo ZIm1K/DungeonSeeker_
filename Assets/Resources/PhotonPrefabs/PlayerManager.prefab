@@ -67,3 +67,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aec6179383b5450591f6376c6299689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playersPhotonView: []

@@ -23,6 +23,7 @@ namespace Objects.PlayerScripts
         [SerializeField] private float cameraSensitivity = 2f;
         [SerializeField] private float slopeForce = 5.0f;
         [SerializeField] private float slopeForceRayLength = 1.5f;
+        [SerializeField] private GameObject durabilytyDatabase;
         
         public bool isCanRotate = true;
         
@@ -80,7 +81,7 @@ namespace Objects.PlayerScripts
             }
             else
             {
-                DurabilityDefenseDatabase durabilDatabase = GameObject.FindWithTag("DurabilBase").GetComponent<DurabilityDefenseDatabase>();               
+                DurabilityDefenseDatabase durabilDatabase = durabilytyDatabase.GetComponent<DurabilityDefenseDatabase>();               
                 durabilDatabase.itemDatabase = gameObject.GetComponent<ItemDatabase>();                             
                 model = gameObject.AddComponent<CharacterModel>();
                 model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);

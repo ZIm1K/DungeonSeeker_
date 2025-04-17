@@ -127,19 +127,26 @@ namespace Objects.PlayerScripts
             }
         }
         public void Initialize(int health, int mana, CharacterView view, float speed, PlayerControllerWithCC playerController,
-            float jumpForce, DurabilityDefenseDatabase durabilDatabase)
+     float jumpForce, DurabilityDefenseDatabase durabilDatabase)
         {
             maxHealth = health;
-            this.health = maxHealth;           
-            this.mana = mana;
+
+            int level = LevelHandler.Level;
+            float multiplier = Mathf.Pow(1.1f, level - 1); 
+
+            this.health = Mathf.RoundToInt(health * multiplier);
+            this.mana = Mathf.RoundToInt(mana * multiplier);
+            this.speed = speed * (1 + 0.05f * (level - 1));
+            this.jumpForce = jumpForce * (1 + 0.03f * (level - 1));
+
             this.view = view;
-            this.speed = speed;
             this.playerController = playerController;
-            this.jumpForce = jumpForce;
             this.durabilDatabase = durabilDatabase;
             view.HealthBar.maxValue = maxHealth;
             view.ManaBar.maxValue = mana;           
         }               
+        
+
         [PunRPC]
         public void WearDefense(ItemScriptableObject item, int ID) 
         {
@@ -229,37 +236,34 @@ namespace Objects.PlayerScripts
         public void TakeDamage(int damage)
         {
             if (!photonView.IsMine) return;
+
             if (Defense > 0)
             {
                 if (HelmetDefense > 0)
-                {                    
+                {
                     HelmetDefense = SubtractTypeDefense(HelmetDefense, damage);
-                    durabilDatabase.SubDurabilAmmount(helmetID,damage);
-                }                
+                    durabilDatabase.SubDurabilAmmount(helmetID, damage);
+                }
                 else if (ArmorDefense > 0)
-                {                   
+                {
                     ArmorDefense = SubtractTypeDefense(ArmorDefense, damage);
                     durabilDatabase.SubDurabilAmmount(armorID, damage);
                 }
-                else if (BootsDefense > 0) 
-                {                   
-                    BootsDefense = SubtractTypeDefense(BootsDefense,damage);
+                else if (BootsDefense > 0)
+                {
+                    BootsDefense = SubtractTypeDefense(BootsDefense, damage);
                     durabilDatabase.SubDurabilAmmount(bootsID, damage);
-                }   
+                }
+
                 Defense = HelmetDefense + ArmorDefense + BootsDefense;
             }
-            else 
+            else
             {
-                if (Health > damage)
-                {
-                    Health -= damage;
-                }
-                else
-                {
-                    Health = 0;
-                }
+                Health = Mathf.Max(Health - damage, 0);
             }
         }
+
+
         public int SubtractTypeDefense(int defense, int damage) 
         {
             if (defense > damage)
@@ -273,6 +277,18 @@ namespace Objects.PlayerScripts
             return defense;
         }
 
+        public void UpdateAllStats()
+        {
+            view.UpdateHealthText(Health);
+            view.UpdateManaText(Mana);
+            view.UpdateDefenseText(Defense);
+            view.UpdateSpeedText(Speed);
+            view.UpdateJumpForceText(JumpForce);
+            view.UpdateLevelText(LevelHandler.Level);
+        }
+
+
+        [PunRPC]
         public void Heal(int heal)
         {
             Health += heal;

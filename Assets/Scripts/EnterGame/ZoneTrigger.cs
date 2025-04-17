@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ZoneTrigger : MonoBehaviour
 {
-    public GameObject readyPanel; // ������, �� ������������ � ���
+    public GameObject readyPanel; 
     private bool isPlayerInZone = false;
 
 
@@ -11,7 +11,7 @@ public class ZoneTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerInZone = true;
-            readyPanel.SetActive(true); // ³��������� ������
+            readyPanel.SetActive(true);
         }
     }
 
@@ -20,7 +20,7 @@ public class ZoneTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerInZone = false;
-            readyPanel.SetActive(false); // ������ ������
+            readyPanel.SetActive(false);
         }
     }
 

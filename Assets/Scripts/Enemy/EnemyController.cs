@@ -41,7 +41,9 @@ namespace Objects.Enemies
         void Start()
         {
             model = gameObject.AddComponent<EnemyModel>();
-            model.Initialize(maxHealth, damage, attackRange, attackInterval, view);
+            int level = LevelHandler.Level;
+            model.Initialize(maxHealth, damage, attackRange, attackInterval, view, level);
+
 
             if (!PhotonNetwork.IsMasterClient)
             {
@@ -112,6 +114,10 @@ namespace Objects.Enemies
                     stateMachine.ChangeState(patrolState);
                 }
             }
+
+            if (model.Health <= 0)
+                Die();
+
         }
 
         private GameObject FindNearestPlayer()

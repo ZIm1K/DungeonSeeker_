@@ -19,6 +19,12 @@ namespace Objects.PlayerScripts
         public Slider HealthBar;
         public Slider ManaBar;
         private float time;      
+        public TMP_Text Level;
+
+        public void UpdateLevelText(int level)
+        {
+            Level.text = $"{level}";
+        }
         public void UpdateHealthText(int health)
         {
             HealthText.text = $"Health: {health}";

@@ -1,5 +1,4 @@
 using Photon.Pun;
-using System.Data.Common;
 using UnityEngine;
 
 namespace Objects.Enemies
@@ -10,58 +9,67 @@ namespace Objects.Enemies
         private int health;
         private float attackRange;
         private float attackInterval;
-        
+
         private EnemyView view;
-        
+
+        [SerializeField] private int level = 1;
+
+        public int Level
+        {
+            get => level;
+            set
+            {
+                level = value;
+                ApplyLevelBonuses();
+                UpdateAllStats();
+            }
+        }
+
         public float AttackRange { get; set; }
         public float AttackInterval { get; set; }
+
         public int Damage
         {
-            get { return damage; }
+            get => damage;
             set
             {
                 damage = value;
-                view.UpdateDamageText(damage);
+                view?.UpdateDamageText(damage);
             }
         }
+
         public int Health
         {
-            get { return health; }
+            get => health;
             set
             {
                 health = value;
-                view.UpdateHealthText(health);
+                view?.UpdateHealthText(health);
             }
         }
-        
-        public void Initialize(int health, int damage, float attackRange, float attackInterval, EnemyView view)
+
+        public void Initialize(int baseHealth, int baseDamage, float attackRange, float attackInterval, EnemyView view, int level = 1)
         {
-            this.health = health;
-            this.damage = damage;
+            this.view = view;
             this.attackRange = attackRange;
             this.attackInterval = attackInterval;
-            this.view = view;
+            this.level = level;
+
+            float multiplier = Mathf.Pow(1.15f, level - 1);
+            Health = Mathf.RoundToInt(baseHealth * multiplier);
+            Damage = Mathf.RoundToInt(baseDamage * multiplier);
         }
 
-        [PunRPC]
-        public void TakeDamage(int damage)
+        private void ApplyLevelBonuses()
         {
-            if (Health > damage)
-            {
-                Health -= damage;
-            }
-            else 
-            { 
-                Health = 0;
-            }
-            Debug.Log("Enemy took " + damage + " damage. Health is now " + health);
+            float multiplier = Mathf.Pow(1.15f, level - 1);
+            Health = Mathf.RoundToInt(health * multiplier);
+            Damage = Mathf.RoundToInt(damage * multiplier);
         }
 
-        [PunRPC]
-        public void Heal(int heal)
+        private void UpdateAllStats()
         {
-            Health += heal;
-            Debug.Log("Enemy healed " + heal + " health. Health is now " + health);
+            view?.UpdateHealthText(health);
         }
     }
 }

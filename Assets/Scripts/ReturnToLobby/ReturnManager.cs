@@ -90,6 +90,7 @@ public class ReturnManager : MonoBehaviourPunCallbacks
         if (readyPlayers.Count == PhotonNetwork.PlayerList.Length)
         {
             PhotonNetwork.LoadLevel(exitSceneIndex);
+            LevelHandler.IncreaseLevel();
         }
     }
 }

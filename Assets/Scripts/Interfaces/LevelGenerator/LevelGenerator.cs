@@ -2,6 +2,7 @@ using Photon.Realtime;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using System.Linq;
 
 namespace LevelGenerator
 {
@@ -10,7 +11,9 @@ namespace LevelGenerator
         [SerializeField] private GameObject[] roomPrefabs;
         [SerializeField] private GameObject finalRoomPrefab;
         [SerializeField] private GameObject wallRoomPrefab;
-        [SerializeField] private int maxRooms = 10;
+        [SerializeField] private int baseRooms = 15;
+        [SerializeField] private int branchFrequency = 3; 
+        [SerializeField] private int maxBranches = 2; 
 
         private List<Vector3> usedPositions = new List<Vector3>();
         private List<GameObject> spawnedRooms = new List<GameObject>();
@@ -27,14 +30,17 @@ namespace LevelGenerator
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                GenerateLevel();
+                int currentLevel = LevelHandler.Level;
+                int maxRooms = baseRooms + (currentLevel - 1);
+
+                GenerateLevel(maxRooms);
                 PlaceFinalRoom();
                 PlaceWalls();
                 photonView.RPC("SynchronizeLevel", RpcTarget.Others, usedPositions.ToArray());
             }
         }
 
-        void GenerateLevel()
+        void GenerateLevel(int maxRooms)
         {
             Quaternion randomRotation = Quaternion.Euler(0, 90 * Random.Range(0, 4), 0);
             GameObject startRoom = PhotonNetwork.Instantiate(
@@ -49,37 +55,68 @@ namespace LevelGenerator
             for (int i = 0; i < maxRooms - 1; i++)
             {
                 PlaceNextRoom();
+
+                if ((i + 1) % branchFrequency == 0)
+                {
+                    TryPlaceBranch();
+                }
             }
         }
 
         private void PlaceNextRoom()
         {
             GameObject lastRoom = spawnedRooms[spawnedRooms.Count - 1];
-            Vector3 lastPosition = lastRoom.transform.position;
+            Vector3 basePosition = lastRoom.transform.position;
 
-            List<Vector3> validPositions = new List<Vector3>();
+            List<Vector3> validPositions = directions
+                .Select(d => basePosition + d)
+                .Where(pos => !usedPositions.Contains(pos))
+                .ToList();
 
-            foreach (Vector3 direction in directions)
+            if (validPositions.Count == 0)
             {
-                Vector3 newPosition = lastPosition + direction;
-                if (!usedPositions.Contains(newPosition))
-                {
-                    validPositions.Add(newPosition);
-                }
+                Debug.LogWarning("Не знайдено вільного напрямку для наступної кімнати.");
+                return;
             }
 
-            if (validPositions.Count > 0)
+            Vector3 selectedPosition = validPositions[Random.Range(0, validPositions.Count)];
+            Quaternion randomRotation = Quaternion.Euler(0, 90 * Random.Range(0, 4), 0);
+
+            GameObject newRoom = PhotonNetwork.Instantiate(
+                roomPrefabs[Random.Range(0, roomPrefabs.Length)].name,
+                selectedPosition,
+                randomRotation
+            );
+
+            usedPositions.Add(selectedPosition);
+            spawnedRooms.Add(newRoom);
+        }
+
+        private void TryPlaceBranch()
+        {
+            GameObject branchFromRoom = spawnedRooms[Random.Range(0, spawnedRooms.Count)];
+            Vector3 basePosition = branchFromRoom.transform.position;
+
+            List<Vector3> availableBranches = directions
+                .Select(d => basePosition + d)
+                .Where(pos => !usedPositions.Contains(pos))
+                .ToList();
+
+            int branchesToPlace = Mathf.Min(maxBranches, availableBranches.Count);
+
+            for (int i = 0; i < branchesToPlace; i++)
             {
-                Vector3 selectedPosition = validPositions[Random.Range(0, validPositions.Count)];
+                Vector3 branchPosition = availableBranches[Random.Range(0, availableBranches.Count)];
+                availableBranches.Remove(branchPosition);
+
                 Quaternion randomRotation = Quaternion.Euler(0, 90 * Random.Range(0, 4), 0);
-                GameObject newRoom = PhotonNetwork.Instantiate(
+                GameObject branchRoom = PhotonNetwork.Instantiate(
                     roomPrefabs[Random.Range(0, roomPrefabs.Length)].name,
-                    selectedPosition,
+                    branchPosition,
                     randomRotation
                 );
 
-                usedPositions.Add(selectedPosition);
-                spawnedRooms.Add(newRoom);
+                usedPositions.Add(branchPosition);
             }
         }
 
@@ -105,21 +142,17 @@ namespace LevelGenerator
 
         private void PlaceWalls()
         {
-            List<Vector3> wallPositions = new List<Vector3>();
+            HashSet<Vector3> wallPositions = new HashSet<Vector3>();
 
             foreach (Vector3 roomPosition in usedPositions)
             {
                 foreach (Vector3 direction in directions)
                 {
-                    Vector3 wallPosition = roomPosition + direction;
-                    if (!usedPositions.Contains(wallPosition) && !wallPositions.Contains(wallPosition))
+                    Vector3 checkPos = roomPosition + direction;
+                    if (!usedPositions.Contains(checkPos) && !wallPositions.Contains(checkPos))
                     {
-                        wallPositions.Add(wallPosition);
-                        PhotonNetwork.Instantiate(
-                            wallRoomPrefab.name,
-                            wallPosition,
-                            Quaternion.identity 
-                        );
+                        wallPositions.Add(checkPos);
+                        PhotonNetwork.Instantiate(wallRoomPrefab.name, checkPos, Quaternion.identity);
                     }
                 }
             }

@@ -79,11 +79,9 @@ namespace Objects.PlayerScripts
                 model = gameObject.AddComponent<CharacterModel>();
                 model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
 
-                view.UpdateHealthText(model.Health);
-                view.UpdateManaText(model.Mana);
-                view.UpdateDefenseText(model.Defense);
-                view.UpdateSpeedText(model.Speed);
-                view.UpdateJumpForceText(model.JumpForce);
+                model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
+                model.UpdateAllStats();
+
 
                 StartCoroutine(RegenerateMana());
             }

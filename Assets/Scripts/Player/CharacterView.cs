@@ -13,8 +13,13 @@ namespace Objects.PlayerScripts
         public TMP_Text ManaText;
         public TMP_Text DefenseText;
         public TMP_Text SpeedText;
-        public TMP_Text JumpForceText;             
-              
+        public TMP_Text JumpForceText;
+        public TMP_Text Level;
+
+        public void UpdateLevelText(int level)
+        {
+            Level.text = $"{level}";
+        }
         public void UpdateHealthText(int health)
         {
             HealthText.text = $"Health: {health}";

@@ -125,7 +125,7 @@ namespace Inventory
                     Cursor.visible = isOpened;
                     gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = !isOpened;
                 }
-                if (Input.GetKeyDown(KeyCode.Q))
+                if (Input.GetKeyDown(KeyCode.Z))
                 {
                     if (UIPanel.activeSelf)
                     {

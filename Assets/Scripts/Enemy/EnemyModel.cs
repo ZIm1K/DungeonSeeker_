@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 namespace Objects.Enemies
@@ -70,6 +71,18 @@ namespace Objects.Enemies
         private void UpdateAllStats()
         {
             view?.UpdateHealthText(health);
+        }
+        [PunRPC]
+        private void TakeDamage(int damage) 
+        {
+            if (Health - damage > 0)
+            {
+                Health -= damage;
+            }
+            else 
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
         }
     }
 }

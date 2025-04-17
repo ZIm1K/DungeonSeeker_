@@ -35,7 +35,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if ((scene.buildIndex == 1 || scene.buildIndex == 2) && GameObject.Find("PlayerManager(Clone)") == null)
+        if ((scene.buildIndex == 1 || scene.buildIndex == 2)/* && GameObject.Find("PlayerManager(Clone)") == null*/)
         {
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
         }

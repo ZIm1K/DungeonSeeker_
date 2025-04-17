@@ -81,8 +81,9 @@ namespace Objects.PlayerScripts
             }
             else
             {
-                DurabilityDefenseDatabase durabilDatabase = durabilytyDatabase.GetComponent<DurabilityDefenseDatabase>();               
-                durabilDatabase.itemDatabase = gameObject.GetComponent<ItemDatabase>();                             
+                DurabilityDefenseDatabase durabilDatabase = GameObject.FindWithTag("DurabilBase").GetComponent<DurabilityDefenseDatabase>();               
+                durabilDatabase.itemDatabase = gameObject.GetComponent<ItemDatabase>();
+                Debug.LogWarning(durabilDatabase.name);
                 model = gameObject.AddComponent<CharacterModel>();
                 model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
 
@@ -98,8 +99,12 @@ namespace Objects.PlayerScripts
 
                 if (PhotonNetwork.IsMasterClient) 
                 {
-                    GameObject.FindWithTag("Chest").GetComponent<Chest>().
+                    GameObject chest = GameObject.FindWithTag("Chest");
+                    if (chest != null)
+                    {
+                        chest.GetComponent<Chest>().
                         GenerateItems(gameObject.GetComponent<ItemDatabase>().allItems, durabilDatabase);
+                    }
                 }               
             }
 

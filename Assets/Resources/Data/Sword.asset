@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2cb79b7565b9af44a6657c87d2a8597, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
-  swordDamage: 15
+  swordDamage: 10
   shotTimeout: 0.5
-  attackSound: {fileID: 8300000, guid: 2015ddc9b29df4c4a8fd720451137088, type: 3}
+  attackSoundPath: Sounds/Weapons/Sword/sword_Attack
+  rangeOfAttack: 7
+  pathOfScObj: ScriptableObject/Weapon/Iron Sword Item

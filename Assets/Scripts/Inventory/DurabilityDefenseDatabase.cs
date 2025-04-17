@@ -2,10 +2,9 @@ using Inventory;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.WSA;
-using static UnityEditor.Progress;
 using Photon.Pun;
 using System;
+using System.Threading.Tasks;
 
 public class DurabilityDefenseDatabase : MonoBehaviourPun
 {   
@@ -54,7 +53,8 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
                         break;
                     }                  
             }           
-        }            
+        }    
+        
     }
 
     public int GetValueByID(int id)
@@ -89,14 +89,56 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
         }
         OnChangeValues?.Invoke();
     }
+    public void HealDefense(int ammount) 
+    {
+        for (int i = 0; i < allValues.Count; i++) 
+        {
+            int maxDefense = 0;
+            switch (allItems[i])
+            {
+                case HelmetItem:
+                    {
+                        maxDefense = (allItems[i] as HelmetItem).defense;
+                        break;
+                    }
+                case ArmorItem:
+                    {
+                        maxDefense = (allItems[i] as ArmorItem).defense;
+                        break;
+                    }
+                case BootsItem:
+                    {
+                        maxDefense = (allItems[i] as BootsItem).defense;
+                        break;
+                    }
+            }
+
+            if (allValues[i] < maxDefense)
+            {
+                if (allValues[i] + ammount <= maxDefense)
+                {
+                    allValues[i] += ammount;
+                }
+                else 
+                {
+                    allValues[i] += maxDefense - allValues[i];
+                }
+            }
+            photonView.RPC("UpdateValueInOnline", RpcTarget.Others, i, allValues[i]);
+        }
+    }
     [PunRPC]
     void UpdateValueInOnline(int i, int value) 
     {
         allValues[i] = value;
     }
     [PunRPC]
-    void AddNewItemInOnline(string ID)
+    async Task AddNewItemInOnline(string ID)
     {
+        if (itemDatabase == null) 
+        {
+            await WaitForItemDatabase();
+        }
         ItemScriptableObject item = itemDatabase.GetItemByID(ID);
         switch (item)
         {
@@ -115,12 +157,20 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
                     allValues.Add((item as BootsItem).defense);
                     break;
                 }
-        }
+        }       
 
         allItems.Add(item);
     }
-    public int OnNewDefenseItemAdded(ItemScriptableObject item) 
+    private async Task WaitForItemDatabase() 
     {
+        while (itemDatabase == null)
+        {
+            await Task.Yield();
+        }
+    }
+    public int OnNewDefenseItemAdded(string ID) 
+    {
+        ItemScriptableObject item = itemDatabase.GetItemByID(ID);
         switch (item)
         {
             case HelmetItem:

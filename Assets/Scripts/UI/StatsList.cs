@@ -9,9 +9,12 @@ public class StatsList : MonoBehaviour
     public TMP_Text nameText;
     public TMP_Text typeText;
     public TMP_Text descriptionText;
+    public GameObject useButton;
 
-    public GameObject foodItemTexts;
-    public GameObject defenseItemTexts;
-    public GameObject charmItemTexts;
+    public GameObject fooodItemTextPanel;
+    public GameObject charmItemTextPanel;
+    public GameObject defenseItemTextPanel;
     public GameObject weaponItemTexts;
+    public GameObject bulletItemTexts;
+    public GameObject manaPotionItemTexts;
 }

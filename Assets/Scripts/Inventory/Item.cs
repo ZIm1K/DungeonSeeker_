@@ -15,6 +15,11 @@ namespace Inventory
             {
                 PhotonNetwork.Destroy(targetView.gameObject);
             }
-        }       
+        }
+        [PunRPC]
+        protected virtual void RPC_Ammount(int newAmmount)
+        {
+            amount = newAmmount;
+        }
     }
 }

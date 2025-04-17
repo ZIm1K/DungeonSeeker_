@@ -5,7 +5,7 @@ namespace Inventory
     [CreateAssetMenu(fileName ="Food Item",menuName ="Inventory/Items/New Food Item")]
     public class FoodItem : ItemScriptableObject
     {
-        public float healAmount;
+        public int healAmount;
 
         private void Start()
         {

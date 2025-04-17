@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using UnityEngine;
 
@@ -36,5 +37,15 @@ public class PlayerViewManager : MonoBehaviour
     void RemoveFromList(int id)
     {
         playersPhotonViews.Remove(PhotonView.Find(id));
+    }
+    public void SavePlayerInventory() 
+    {
+        foreach (var player in playersPhotonViews) 
+        {
+            if (player.Owner == PhotonNetwork.LocalPlayer) 
+            {
+                player.GetComponent<InventorySaver>().SaveInventory();
+            }
+        }
     }
 }

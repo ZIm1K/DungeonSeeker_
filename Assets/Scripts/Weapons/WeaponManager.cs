@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using Inventory;
 using Objects.Weapon.Fireball;
-using Objects.Weapon.Pistol;
+using Objects.Weapon.Bow;
 using Photon.Pun;
+using Photon.Realtime;
 using ScriptableObjects.Weapons;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
@@ -14,12 +16,14 @@ namespace Objects.Weapon
     public class WeaponManager : MonoBehaviourPun
     {
         public Weapon[] weapons;
-        private int currentWeaponIndex = 0;
+        public int currentWeaponIndex = 0;
 
         [SerializeField] private GameObject weaponSlot1;
         [SerializeField] private GameObject weaponSlot2;
 
         public Image reloadImage;
+
+        public GameObject posTarget;
 
         void Start()
         {
@@ -28,7 +32,7 @@ namespace Objects.Weapon
             weaponSlot1.GetComponent<InventorySlot>().OnChangeItems += OnChangeSlot1;//
             weaponSlot2.GetComponent<InventorySlot>().OnChangeItems += OnChangeSlot2;//
         }
-        
+
         void Update()
         {
             if (!photonView.IsMine) return;
@@ -37,32 +41,59 @@ namespace Objects.Weapon
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                if (weapons[currentWeaponIndex] != null)
-                {
-                    if (!weapons[currentWeaponIndex].IsReloading)
-                    {
-                        currentWeaponIndex = 0;
-                    }
-                }
-                else
-                {
-                    currentWeaponIndex = 0;
-                }               
+                OnKeyDown1();
+                //if (weapons[currentWeaponIndex] != null)
+                //{
+                //    if (!weapons[currentWeaponIndex].IsReloading)
+                //    {
+                //        if (posTarget.transform.GetChild(1).childCount > 0) 
+                //        {
+                //            currentWeaponIndex = 0;
+                //            posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+                //            photonView.RPC("Activator", RpcTarget.Others,
+                //                posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                //        }                       
+                //    }
+                //}
+                //else
+                //{
+                //    currentWeaponIndex = 0;
+                //}
+
+                //if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
+                //{
+                //    posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                //    photonView.RPC("Activator", RpcTarget.Others,
+                //            posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
+                //}
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                if (weapons[currentWeaponIndex] != null)
-                {
-                    if (!weapons[currentWeaponIndex].IsReloading)
-                    {
-                        currentWeaponIndex = 1;
-                    }
-                }
-                else
-                {
-                    currentWeaponIndex = 1;
-                   
-                }
+                OnKeyDown2();
+                //if (weapons[currentWeaponIndex] != null)
+                //{
+                //    if (!weapons[currentWeaponIndex].IsReloading)
+                //    {
+                //        if (posTarget.transform.GetChild(0).childCount > 0)
+                //        {
+                //            currentWeaponIndex = 1;
+                //            posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+                //            photonView.RPC("Activator", RpcTarget.Others,
+                //                posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                //    currentWeaponIndex = 1;
+                //}
+
+                //if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
+                //{
+                //    posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
+                //    photonView.RPC("Activator", RpcTarget.Others,
+                //            posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
+                //}
             }
 
             if (previousWeaponIndex != currentWeaponIndex)
@@ -81,83 +112,317 @@ namespace Objects.Weapon
                 weapons[currentWeaponIndex].Reload();
             }
         }
+        public void OnKeyDown1() 
+        {
+            if (weapons[currentWeaponIndex] != null)
+            {
+                if (!weapons[currentWeaponIndex].IsReloading)
+                {
+                    if (posTarget.transform.GetChild(1).childCount > 0)
+                    {
+                        currentWeaponIndex = 0;
+                        posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+                        photonView.RPC("Activator", RpcTarget.Others,
+                            posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                    }
+                }
+            }
+            else
+            {
+                currentWeaponIndex = 0;
+            }
+
+            if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
+            {
+                posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                photonView.RPC("Activator", RpcTarget.Others,
+                        posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
+            }
+        }
+        public void OnKeyDown2()
+        {
+            if (weapons[currentWeaponIndex] != null)
+            {
+                if (!weapons[currentWeaponIndex].IsReloading)
+                {
+                    if (posTarget.transform.GetChild(0).childCount > 0)
+                    {
+                        currentWeaponIndex = 1;
+                        posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+                        photonView.RPC("Activator", RpcTarget.Others,
+                            posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                    }
+                }
+            }
+            else
+            {
+                currentWeaponIndex = 1;
+            }
+
+            if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
+            {
+                posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
+                photonView.RPC("Activator", RpcTarget.Others,
+                        posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
+            }
+        }
         private void OnChangeSlot1()
         {
+            RemoveWeapon(0);
             if (weaponSlot1.GetComponent<InventorySlot>().item != null)
             {
+                GameObject usePref = null;
                 if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "6")
                 {
-                    AddPistol(0);
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as BowItemData).usePrefab;
+                    AddBow(0);
                 }
-                else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "7") 
+                else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "7")
                 {
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as FireBallItemData).usePrefab;
                     AddFireBall(0);
                 }
                 else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "11")///
                 {
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as SwordItemData).usePrefab;
                     AddSword(0);
                 }
+                else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "12")///
+                {
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as SummonerStaffItem).usePrefab;
+                    AddSummonerStaff(0);
+                }
+                else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "13")/////////////////////////////////////
+                {
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as CrucifixItem).usePrefab;
+                    AddCrucifix(0);
+                }
+                else if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "33")/////////////////////////////////////
+                {
+                    usePref = (weaponSlot1.GetComponent<InventorySlot>().item as DefenseStaffItem).usePrefab;
+                    AddDefenseStaff(0);
+                }
                 SelectWeapon();
-            }                       
+
+                if (posTarget.transform.GetChild(0).childCount > 0)
+                {
+                    PhotonNetwork.Destroy(posTarget.transform.GetChild(0).GetChild(0).gameObject);
+                }
+
+                SetObj(0, weaponSlot1, usePref);
+            }
             else
             {
-                RemoveWeapon(0);
-            }            
+                PhotonNetwork.Destroy(posTarget.transform.GetChild(0).GetChild(0).gameObject);
+            }
+
             UpdateAmmoUI();
         }
         private void OnChangeSlot2()
         {
+            RemoveWeapon(1);
             if (weaponSlot2.GetComponent<InventorySlot>().item != null)
             {
+                GameObject usePref = null;
                 if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "6")
                 {
-                    AddPistol(1);
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as BowItemData).usePrefab;
+                    AddBow(1);
                 }
                 else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "7")
                 {
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as FireBallItemData).usePrefab;
                     AddFireBall(1);
                 }
                 else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "11")///
                 {
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as SwordItemData).usePrefab;
                     AddSword(1);
                 }
+                else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "12")///
+                {
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as SummonerStaffItem).usePrefab;
+                    AddSummonerStaff(1);
+                }
+                else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "13")/////////////////////////////////////
+                {
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as CrucifixItem).usePrefab;
+                    AddCrucifix(1);
+                }
+                else if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "33")/////////////////////////////////////
+                {
+                    usePref = (weaponSlot2.GetComponent<InventorySlot>().item as DefenseStaffItem).usePrefab;
+                    AddDefenseStaff(1);
+                }
                 SelectWeapon();
+
+                if (posTarget.transform.GetChild(1).childCount > 0)
+                {
+                    PhotonNetwork.Destroy(posTarget.transform.GetChild(1).GetChild(0).gameObject);
+                }
+
+                SetObj(1, weaponSlot2, usePref);
             }
             else
             {
-                RemoveWeapon(1);
+                PhotonNetwork.Destroy(posTarget.transform.GetChild(1).GetChild(0).gameObject);
             }
+
             UpdateAmmoUI();
         }
-        public void AddPistol(int numberOfSlot)
+
+        private void SetObj(int index, GameObject curSlot, GameObject usePrefab)
         {
-            SimplePistol pistol = gameObject.AddComponent<SimplePistol>();
-            pistol.Initialize(reloadImage);
-            weapons[numberOfSlot] = pistol;
+            GameObject obj = PhotonNetwork.Instantiate(usePrefab.name,
+                        posTarget.transform.GetChild(index).transform.position, Quaternion.identity);
+            obj.transform.SetParent(posTarget.transform.GetChild(index));
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localEulerAngles = Vector3.zero;
+
+            bool activ;
+            if (currentWeaponIndex == index)
+            {
+                activ = true;
+                obj.SetActive(true);
+            }
+            else
+            {
+                activ = false;
+                obj.SetActive(false);
+            }
+
+            photonView.RPC("SetForOthers", RpcTarget.Others, index, obj.GetComponent<PhotonView>().ViewID, activ);           
+        }
+        [PunRPC]
+        private void SetForOthers(int index, int viewID, bool isActive)
+        {
+            GameObject obj = PhotonView.Find(viewID).gameObject;
+            obj.transform.SetParent(posTarget.transform.GetChild(index));
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localEulerAngles = Vector3.zero;
+            obj.SetActive(isActive);
+        }
+        [PunRPC]
+        private void Activator(int viewID, bool isActive) 
+        {
+            GameObject obj = PhotonView.Find(viewID).gameObject;
+            obj.SetActive(isActive);
+        }
+        public void AddBow(int numberOfSlot)
+        {
+            SimpleBow bow = gameObject.AddComponent<SimpleBow>();
+            bow.Initialize(reloadImage, numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as BowItemData).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as BowItemData).data.pathOfScObj);
+            weapons[numberOfSlot] = bow;
         }
         public void AddFireBall(int numberOfSlot)
         {
             PlayerShootingFireball fireball = gameObject.AddComponent<PlayerShootingFireball>();
-            fireball.Initialize();
+            fireball.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as FireBallItemData).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as FireBallItemData).data.pathOfScObj);
             weapons[numberOfSlot] = fireball;
         }
         public void AddSword(int numberOfSlot)
         {
             SimpleSword sword = gameObject.AddComponent<SimpleSword>();
-            sword.Initialize();
+            sword.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as SwordItemData).data.pathOfScObj 
+                : (weaponSlot2.GetComponent<InventorySlot>().item as SwordItemData).data.pathOfScObj);
             weapons[numberOfSlot] = sword;
+        }
+        public void AddSummonerStaff(int numberOfSlot)
+        {
+            SummonerStaf staff = gameObject.AddComponent<SummonerStaf>();
+            staff.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as SummonerStaffItem).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as SummonerStaffItem).data.pathOfScObj);
+            weapons[numberOfSlot] = staff;
+        }
+        public void AddCrucifix(int numberOfSlot)
+        {
+            CrucifixWeapon crucifix = gameObject.AddComponent<CrucifixWeapon>();
+            crucifix.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as CrucifixItem).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as CrucifixItem).data.pathOfScObj);
+            weapons[numberOfSlot] = crucifix;
+        }
+        public void AddDefenseStaff(int numberOfSlot)
+        {
+            DefenseStaff staff = gameObject.AddComponent<DefenseStaff>();
+            staff.Initialize(numberOfSlot == 0 ? (weaponSlot1.GetComponent<InventorySlot>().item as DefenseStaffItem).data.pathOfScObj
+                : (weaponSlot2.GetComponent<InventorySlot>().item as DefenseStaffItem).data.pathOfScObj);
+            weapons[numberOfSlot] = staff;
         }
         public void RemoveWeapon(int numberOfSlot) 
         {
-            Destroy(weapons[numberOfSlot]);           
-
-            if (weapons[currentWeaponIndex] == weapons[numberOfSlot])
+            if (weapons[numberOfSlot] as SimpleBow) 
             {
-                weapons[currentWeaponIndex].ClearAmmo();
+                if ((weapons[numberOfSlot] as SimpleBow).CountOfBulletsInBackpack + (weapons[numberOfSlot] as SimpleBow).CountOfBulletsInWeapon > 0) 
+                {                                   
+                    int allBullets = (weapons[numberOfSlot] as SimpleBow).CountOfBulletsInBackpack + 
+                        (weapons[numberOfSlot] as SimpleBow).CountOfBulletsInWeapon;
+                    while (allBullets > 0)
+                    {
+                        GameObject itemObject = CreateBullet();
+                        if (allBullets > (weapons[numberOfSlot] as SimpleBow).MaxBulletsInWeapon)
+                        {
+                            allBullets -= (weapons[numberOfSlot] as SimpleBow).MaxBulletsInWeapon;
+                            itemObject.GetComponent<PhotonView>().RPC("RPC_Ammount", RpcTarget.All, 
+                                (weapons[numberOfSlot] as SimpleBow).MaxBulletsInWeapon);
+                            //If more than 12
+                        }
+                        else
+                        {
+                            itemObject.GetComponent<PhotonView>().RPC("RPC_Ammount", RpcTarget.All, allBullets);
+                            allBullets = 0;
+                        }
+                    }
+                }                
             }
 
+            Destroy(weapons[numberOfSlot]);
+
+            if (weapons[currentWeaponIndex] != null) 
+            {
+                if (weapons[currentWeaponIndex] == weapons[numberOfSlot])
+                {
+                    weapons[currentWeaponIndex].ClearAmmo();
+                }
+            }
+            
             weapons[numberOfSlot] = null;
-        }        
+        }
+        GameObject CreateBullet() 
+        {
+            ItemScriptableObject item = gameObject.GetComponent<InventoryManager>().ItemReturner("14"); //pistol bullet ID
+            GameObject itemObject = PhotonNetwork.Instantiate(item.itemPrefab.name,
+            transform.position + Vector3.up + transform.forward, Quaternion.identity);
+            itemObject.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.MasterClient);
+            itemObject.GetComponent<Item>().item = item;
+            return itemObject;
+        }
+        public void NullifySlotData(int index)
+        {
+            InventorySlot slot = null;
+            if (index == 0)
+            {
+                slot = weaponSlot1.GetComponent<InventorySlot>();
+            }
+            else if (index == 1)
+            {
+                slot = weaponSlot2.GetComponent<InventorySlot>();
+            }
+            else 
+            {
+                Debug.LogWarning("Unknown slot");
+                return;
+            }
+            slot.item = null;
+            slot.amount = 0;
+            slot.isEmpty = true;
+            slot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+            slot.SetBasedIcon();
+            slot.itemAmountText.text = "";
+            slot.defenseID = 0;
+            slot.OnSlotItemChanged();
+        }
         void SelectWeapon()
         {
             for (int i = 0; i < weapons.Length; i++)
@@ -168,10 +433,9 @@ namespace Objects.Weapon
                 }
             }
         }
-
         void UpdateAmmoUI()
         {
-            if (weapons[currentWeaponIndex] is SimplePistol pistol)
+            if (weapons[currentWeaponIndex] is SimpleBow pistol)
             {
                 pistol.UpdateAmmo(pistol.CountOfBulletsInWeapon, pistol.CountOfBulletsInBackpack);
             }
@@ -183,7 +447,19 @@ namespace Objects.Weapon
             {
                 sword.UpdateSwordAmmo("∞");
             }
-            else if (weapons[currentWeaponIndex] == null) 
+            else if (weapons[currentWeaponIndex] is SummonerStaf staff)
+            {
+                staff.UpdateSwordAmmo("∞");
+            }
+            else if (weapons[currentWeaponIndex] is CrucifixWeapon crucifix)
+            {
+                crucifix.UpdateSwordAmmo("1");
+            }
+            else if (weapons[currentWeaponIndex] is DefenseStaff defenseStaff)
+            {
+                defenseStaff.UpdateSwordAmmo("∞");
+            }
+            else if (weapons[currentWeaponIndex] == null)
             {
                 WeaponEvents.OnClearAmmo.Invoke();
             }

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c94d92b98d99712408c446e65294ab49, type: 3}
+  m_Name: Defense Staff Item
+  m_EditorClassIdentifier: 
+  itemID: 33
+  itemName: Armor Restoration Staff
+  maximumAmount: 1
+  itemPrefab: {fileID: 6309434210401165414, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+  icon: {fileID: 21300000, guid: 23e3487bd159e544bbce0a44b6faadc4, type: 3}
+  itemType: 2
+  itemDescription: "It does not mend the metal \u2014 it recalls what it once was.
+    Every whisper brings the armor closer to its first forge."
+  dropChanse: 15
+  data: {fileID: 11400000, guid: 65e8cc71afa45224a840a4dbd6f4ae97, type: 2}
+  usePrefab: {fileID: 4760012153550416352, guid: d5ee4bf5f5a3b37418a5c8ef25a6d2e6, type: 3}

@@ -6,8 +6,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
-using static UnityEditor.Progress;
 using Photon.Realtime;
+using System;
+using System.Reflection;
+using Random = UnityEngine.Random;
+using Objects.PlayerScripts;
 
 public class CraftItem : MonoBehaviourPun
 {
@@ -55,7 +58,7 @@ public class CraftItem : MonoBehaviourPun
             inventoryManager.currentCrafter.RPC("RemoveItemFromCrafter", RpcTarget.All, i);
             inventoryManager.UpdateSlotInOnlineLocalySent(i);
         }
-               
+      
         int index1 = indexs[Random.Range(0, craftSlots.Count)];
         int index2 = indexs[Random.Range(0, craftSlots.Count)];
 
@@ -65,35 +68,145 @@ public class CraftItem : MonoBehaviourPun
             {
                 case 1: //Iron
                     {
-                        AddItemCheck("1", 1);  
-                        Debug.LogWarning("Iron");
+                        int index = Random.Range(1, 5);
+                        switch (index) 
+                        {
+                            case 1:  //Iron Sword
+                                {
+                                    AddItemCheck("11", 1, 0);
+                                    break;
+                                }
+                            case 2:  //Iron Helmet
+                                {
+                                    string ID = "2";
+                                    AddDefenseItem(ID);                                  
+                                    break;
+                                }
+                            case 3:    //Iron Armor
+                                {
+                                    string ID = "3";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }
+                            case 4:   //Iron Boots
+                                {
+                                    string ID = "4";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }
+                            default:    
+                                {
+                                    Debug.LogWarning("Unknown id for craft");
+                                    break;
+                                }
+                        }
                         break;
                     }
-                case 2: //Gold
+                case 2: //Copper
                     {
-                        AddItemCheck("1", 1);  
-                        Debug.LogWarning("Gold");
+                        int index = Random.Range(1, 4);
+                        switch (index)
+                        {
+                            case 1:  //Copper Helmet
+                                {
+                                    string ID = "17";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }
+                            case 2:  //Copper Armor
+                                {
+                                    string ID = "18";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }
+                            case 3:    //Copper Boots
+                                {
+                                    string ID = "19";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }                           
+                            default:
+                                {
+                                    Debug.LogWarning("Unknown id for craft");
+                                    break;
+                                }
+                        }
                         break;
                     }
-                case 3: //Emerald
+                case 3: //Leather
                     {
-                        AddItemCheck("1", 1);  
-                        Debug.LogWarning("Emerald");
+                        int index = Random.Range(1, 4);
+                        switch (index)
+                        {
+                            case 1:  //Leather Helmet
+                                {
+                                    string ID = "20";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }
+                            case 2:  //Leather Armor
+                                {
+                                    string ID = "21";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }
+                            case 3:    //Leather Boots
+                                {
+                                    string ID = "22";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }
+                            default:
+                                {
+                                    Debug.LogWarning("Unknown id for craft");
+                                    break;
+                                }
+                        }
                         break;
+                    }
+                case 4: //Super Material
+                    {
+                        int index = Random.Range(1, 4);
+                        switch (index)
+                        {
+                            case 1:  //Magic Helmet
+                                {
+                                    string ID = "23";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }
+                            case 2:  //Magic Armor
+                                {
+                                    string ID = "24";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }
+                            case 3:    //Magic Boots
+                                {
+                                    string ID = "25";
+                                    AddDefenseItem(ID);
+                                    break;
+                                }
+                            default:
+                                {
+                                    Debug.LogWarning("Unknown id for craft");
+                                    break;
+                                }
+                        }
+                        break; ;
                     }
                 default:
                     {
-                        Debug.LogWarning("Unknown id");
+                        Debug.LogWarning("Unknown id for craft");
                         break;
                     }
             }
         }
-        else //Combined
+        else 
         {
-            AddItemCheck("1", 1);  
-            Debug.LogWarning("Combined");
+            AddItemCheck("16", 1, 0);
+            Debug.LogWarning("Super Material");
         }
-        
     }
 
     public void ActiveCraftButton(bool setter) 
@@ -101,12 +214,17 @@ public class CraftItem : MonoBehaviourPun
         craftButton.gameObject.SetActive(setter);
         text.gameObject.SetActive(!setter);
     }
+    void AddDefenseItem(string ID) 
+    {
+        int createdDefenseID = playerPhotonView.GetComponent<CharacterModel>().durabilDatabase.OnNewDefenseItemAdded(ID);
+        AddItemCheck(ID, 1, createdDefenseID);
+    }
 
-    void AddItemCheck(string itemID, int ammount) 
+    void AddItemCheck(string itemID, int ammount, int createdDefenseID) 
     {
         if (playerPhotonView.GetComponent<InventoryManager>().CheckEmptyInInventory() == true)
         {
-            playerPhotonView.RPC("RPC_AddItemToInventory", RpcTarget.All, itemID, ammount, 0);
+            playerPhotonView.RPC("RPC_AddItemToInventory", RpcTarget.All, itemID, ammount, createdDefenseID);
         }
     }
 
@@ -136,7 +254,7 @@ public class CraftItem : MonoBehaviourPun
         slot.amount = 0;
         slot.isEmpty = true;
         slot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-        slot.iconGO.GetComponent<Image>().sprite = null;
+        slot.SetBasedIcon();
         slot.itemAmountText.text = "";
         slot.defenseID = 0;
     }        

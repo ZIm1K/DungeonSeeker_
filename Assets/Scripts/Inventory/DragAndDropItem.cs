@@ -3,12 +3,12 @@ using Objects.PlayerScripts;
 using Photon.Pun;
 using Photon.Pun.Demo.Cockpit;
 using System.Net;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 namespace Inventory
 {
@@ -46,6 +46,7 @@ namespace Inventory
             if (oldSlot.isEmpty)
                 return;
 
+            player.GetComponent<InventoryManager>().isItemOnDrag = true;
             if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == "ChestInventory")
             {
                 isItemFromChest = true;
@@ -91,7 +92,7 @@ namespace Inventory
             transform.SetParent(transform.parent.parent);
         }
         
-        public void OnPointerUp(PointerEventData eventData)
+        public async void OnPointerUp(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
                 return;
@@ -138,22 +139,28 @@ namespace Inventory
                     }
                 }
             }
-
+            
+            player.GetComponent<InventoryManager>().isItemOnDrag = false;
             if (eventData.pointerCurrentRaycast.gameObject == null) return;
             if (eventData.pointerCurrentRaycast.gameObject.name == "UIPanel")
             {
                 GameObject itemObject = PhotonNetwork.Instantiate(oldSlot.item.itemPrefab.name,
                     player.position + Vector3.up + player.forward, Quaternion.identity);
                 itemObject.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.MasterClient);
-                itemObject.GetComponent<Item>().amount = oldSlot.amount;
+                itemObject.GetComponent<PhotonView>().RPC("RPC_Ammount", RpcTarget.All, oldSlot.amount);
                 if (itemObject.GetComponent<DefenseItem>() != null)
                 {
-                    OnUnWearItem(oldSlot.item);
-                    itemObject.GetComponent<DefenseItem>().ID = oldSlot.defenseID;
+                    itemObject.GetComponent<PhotonView>().RPC("RPC_DefenseID", RpcTarget.All, oldSlot.defenseID);                    
                 }
-                else if (itemObject.GetComponent<Item>().item.itemType == ItemType.Charm)
+                if (oldSlot.itemTypeToGet != ItemType.Default)
                 {
-                    OnUnWearItem(oldSlot.item);
+                    if (oldSlot.itemTypeToGet == ItemType.Helmet ||
+                        oldSlot.itemTypeToGet == ItemType.Armor ||
+                        oldSlot.itemTypeToGet == ItemType.Boots ||
+                        oldSlot.itemTypeToGet == ItemType.Charm)
+                    {
+                        OnUnWearItem(oldSlot.item);
+                    }
                 }
                 NullifySlotData();
                 oldSlot.OnSlotItemChanged();
@@ -172,8 +179,8 @@ namespace Inventory
                         OnUnWearItem(newSlot.item);
                         OnUnWearItem(oldSlot.item);
                         ExchangeSlotData(newSlot);
-                        OnWearItem(newSlot.item, newSlot.defenseID);
-                        OnWearItem(oldSlot.item, oldSlot.defenseID);
+                        await OnWearItem(newSlot.item, newSlot.defenseID);
+                        await OnWearItem(oldSlot.item, oldSlot.defenseID);
                     }
                 }
                 else
@@ -182,7 +189,7 @@ namespace Inventory
                     {
                         OnUnWearItem(newSlot.item);
                         ExchangeSlotData(newSlot);
-                        OnWearItem(newSlot.item, newSlot.defenseID);
+                        await OnWearItem(newSlot.item, newSlot.defenseID);
                     }
                     else if (newSlot.itemTypeToGet == ItemType.Default)
                     {
@@ -192,7 +199,7 @@ namespace Inventory
                             {
                                 OnUnWearItem(newSlot.item);
                                 ExchangeSlotData(newSlot);
-                                OnWearItem(newSlot.item, newSlot.defenseID);
+                                await OnWearItem(newSlot.item, newSlot.defenseID);
                             }
                         }
                         else
@@ -296,7 +303,7 @@ namespace Inventory
                                     oldSlot.isEmpty, id);
                     player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(id);
                 }
-            }
+            }            
         }
 
         int CheckForID() 
@@ -315,7 +322,23 @@ namespace Inventory
             }
             return 0;
         }
-        private void OnWearItem(ItemScriptableObject item, int defenseID)
+        private async Task WaitForPlayerView()
+        {
+            while (playerView == null)
+            {
+                await Task.Yield();
+            }
+        }
+        public async Task LoadWearItem(ItemScriptableObject item, int defenseID) 
+        {
+            if (playerView == null) 
+            {
+                await WaitForPlayerView();
+            }
+            await OnWearItem(item,defenseID);
+            await Task.Yield();
+        }
+        private async Task OnWearItem(ItemScriptableObject item, int defenseID)
         {
             switch (item)
             {
@@ -352,6 +375,7 @@ namespace Inventory
                         break;
                     }
             }
+            await Task.Yield();
         }
         private void OnUnWearItem(ItemScriptableObject item)
         {
@@ -397,7 +421,7 @@ namespace Inventory
             oldSlot.amount = 0;
             oldSlot.isEmpty = true;
             oldSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-            oldSlot.iconGO.GetComponent<Image>().sprite = null;
+            oldSlot.SetBasedIcon();
             oldSlot.itemAmountText.text = "";
             oldSlot.defenseID = 0;
         }
@@ -420,7 +444,7 @@ namespace Inventory
             else
             {
                 newSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 0);
-                newSlot.iconGO.GetComponent<Image>().sprite = null;
+                oldSlot.SetBasedIcon();
                 newSlot.itemAmountText.text = "";
             }
 
@@ -437,7 +461,7 @@ namespace Inventory
             else
             {
                 oldSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                oldSlot.iconGO.GetComponent<Image>().sprite = null;
+                oldSlot.SetBasedIcon();
                 oldSlot.itemAmountText.text = "";
             }
 

@@ -8,6 +8,8 @@ TagManager:
   - FxTemporaire
   - Chest
   - Crafter
+  - Item
+  - PlayerViewManager
   layers:
   - Default
   - TransparentFX

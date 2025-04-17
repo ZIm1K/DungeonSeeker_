@@ -9,6 +9,7 @@ namespace Objects.PlayerScripts
     public class CharacterModel : MonoBehaviourPun
     {
         [SerializeField] private int health;
+        [SerializeField] private int maxHealth;
         private int defense;
         
         [SerializeField] int helmetDefense;
@@ -31,9 +32,17 @@ namespace Objects.PlayerScripts
         {
             get { return health; }
             set
-            {               
-                health = value;                         
+            {
+                health = value;
                 view.UpdateHealthText(health);
+            }
+        }
+        public int MaxHealth
+        {
+            get { return maxHealth; }
+            set
+            {
+                maxHealth = value;
             }
         }
         public int Defense
@@ -41,7 +50,7 @@ namespace Objects.PlayerScripts
             get { return defense; }
             set
             {
-                defense = HelmetDefense + ArmorDefense + BootsDefense;
+                defense = value;
                 view.UpdateDefenseText(defense);
             }
         }      
@@ -120,6 +129,8 @@ namespace Objects.PlayerScripts
         public void Initialize(int health, int mana, CharacterView view, float speed, PlayerControllerWithCC playerController,
      float jumpForce, DurabilityDefenseDatabase durabilDatabase)
         {
+            maxHealth = health;
+
             int level = LevelHandler.Level;
             float multiplier = Mathf.Pow(1.1f, level - 1); 
 
@@ -131,7 +142,10 @@ namespace Objects.PlayerScripts
             this.view = view;
             this.playerController = playerController;
             this.durabilDatabase = durabilDatabase;
-        }
+            view.HealthBar.maxValue = maxHealth;
+            view.ManaBar.maxValue = mana;           
+        }               
+        
 
         [PunRPC]
         public void WearDefense(ItemScriptableObject item, int ID) 
@@ -281,18 +295,21 @@ namespace Objects.PlayerScripts
             Debug.Log("Player healed " + heal + " health. Health is now " + health);
         }
 
-        [PunRPC]
         public void SpendMana(int count)
         {
             Mana -= count;
             Debug.Log($"Player spend {count} of mana");
         }
 
-        [PunRPC]
         public void AddMana(int count)
         {
             Mana += count;
             Debug.Log($"Player added {count} of mana");
+        }
+        public void AddHealth(int count)
+        {
+            Health += count;
+            Debug.Log($"Player added {count} of health");
         }
     }
 }

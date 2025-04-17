@@ -4,6 +4,9 @@ using UnityEngine;
 using Photon.Pun;
 using Unity.VisualScripting;
 using System.Net.Http;
+using Inventory;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 namespace Objects.PlayerScripts
 {
@@ -20,26 +23,29 @@ namespace Objects.PlayerScripts
         [SerializeField] private float cameraSensitivity = 2f;
         [SerializeField] private float slopeForce = 5.0f;
         [SerializeField] private float slopeForceRayLength = 1.5f;
-
+        
+        public bool isCanRotate = true;
+        
         [Header("Footstep Sounds")]
         [SerializeField] private AudioClip[] dirtClips;
         [SerializeField] private AudioClip[] concreteClips;
         [SerializeField] private AudioClip[] metalClips;
         [SerializeField] private AudioClip[] defaultClips;
-        [SerializeField] private AudioClip JumpClip;
-        [SerializeField] private float stepInterval = 0.1f; // Interval between steps
+        [SerializeField] private float stepInterval = 0.5f; // Interval between steps
 
         [Header("MVC")]
         [SerializeField] private CharacterView view;
 
-        [Header("Move settings")]
-        [SerializeField] private DurabilityDefenseDatabase durabilityDefense;
-
         [Header("Params")]
         [SerializeField] private int maxHealth = 100;
+        [SerializeField] private float healthRegenInterval = 2f;
+        [SerializeField] private int healthaRegenAmount = 1;
+
         [SerializeField] private int maxMana = 100;
-        [SerializeField] private int manaRegenAmount = 1;
+        [SerializeField] private int manaRegenAmount = 1;      
         [SerializeField] private float manaRegenInterval = 0.5f;
+        private float curManaRegenInterval;
+        private float timer;
 
         [Header("UI")]
         [SerializeField] private GameObject canvas;
@@ -54,8 +60,7 @@ namespace Objects.PlayerScripts
 
         private float _rotationX;
         private PhotonView _photonView;
-        [SerializeField] private CharacterModel model;
-
+        [SerializeField] private CharacterModel model;                
         private void Start()
         {
             _photonView = GetComponent<PhotonView>();
@@ -75,15 +80,26 @@ namespace Objects.PlayerScripts
             }
             else
             {
-                DurabilityDefenseDatabase durabilDatabase = durabilityDefense;
+                DurabilityDefenseDatabase durabilDatabase = GameObject.FindWithTag("DurabilBase").GetComponent<DurabilityDefenseDatabase>();               
+                durabilDatabase.itemDatabase = gameObject.GetComponent<ItemDatabase>();                             
                 model = gameObject.AddComponent<CharacterModel>();
                 model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
 
-                model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
-                model.UpdateAllStats();
+                view.UpdateHealthText(model.Health);
+                view.UpdateManaText(model.Mana);
+                view.UpdateDefenseText(model.Defense);
+                view.UpdateSpeedText(model.Speed);
+                view.UpdateJumpForceText(model.JumpForce);
 
-
+                curManaRegenInterval = manaRegenInterval;
                 StartCoroutine(RegenerateMana());
+                StartCoroutine(RegenerateHealth());
+
+                if (PhotonNetwork.IsMasterClient) 
+                {
+                    GameObject.FindWithTag("Chest").GetComponent<Chest>().
+                        GenerateItems(gameObject.GetComponent<ItemDatabase>().allItems, durabilDatabase);
+                }               
             }
 
             materialSounds = new Dictionary<PhysicMaterial, AudioClip[]>
@@ -96,10 +112,13 @@ namespace Objects.PlayerScripts
 
         private void Update()
         {
-            if (!photonView.IsMine || GameMenuManager.IsMenuOpen) return;
+            if (!_photonView.IsMine) return;
 
-            RotatePlayerRightLeft();
-            RotateCameraUpDown();
+            if (isCanRotate)
+            {
+                RotatePlayerRightLeft();
+                RotateCameraUpDown();
+            }           
 
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -122,15 +141,11 @@ namespace Objects.PlayerScripts
         private void TryJump()
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
-            AudioClip jmpClip = JumpClip;
-            audioSource.clip = jmpClip;
-            audioSource.Play();
-
         }
 
         private void FixedUpdate()
         {
-            if (!photonView.IsMine || GameMenuManager.IsMenuOpen) return;
+            if (!_photonView.IsMine) return;
 
             PlayerMovement();
         }
@@ -278,13 +293,57 @@ namespace Objects.PlayerScripts
         {
             while (true)
             {
-                yield return new WaitForSeconds(manaRegenInterval);
+                yield return new WaitForSeconds(curManaRegenInterval);
                 if (model.Mana < maxMana)
                 {
                     int newMana = Mathf.Min(model.Mana + manaRegenAmount, maxMana);
                     model.AddMana(newMana - model.Mana);
                 }
             }
+        }
+        private IEnumerator RegenerateHealth()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(healthRegenInterval);
+                if (model.Health < maxHealth)
+                {
+                    int newHealth = Mathf.Min(model.Health + healthaRegenAmount, maxHealth);
+                    model.AddHealth(newHealth - model.Health);
+                }
+            }
+        }
+        public void EnableRegen(float manaRegenInterval, float duration) 
+        {
+            if (curManaRegenInterval == manaRegenInterval) //if poition had the same buff
+            {
+                if (timer < 1)
+                {
+                    curManaRegenInterval = manaRegenInterval;
+                    StartCoroutine(WaitForDuration(duration));
+                }
+                else
+                {
+                    timer += duration;
+                }
+            }
+            else 
+            {
+                timer = duration;
+                curManaRegenInterval = manaRegenInterval;
+                StartCoroutine(WaitForDuration(duration));
+            }
+        }        
+        private IEnumerator WaitForDuration(float duration) 
+        {
+            timer = duration;
+            while (timer >= 0)
+            {               
+                view.UpdateTimerText(timer);
+                yield return new WaitForSeconds(1f);
+                timer -= 1;               
+            }            
+            curManaRegenInterval = manaRegenInterval;
         }
     }
 }

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efb8e5768584ca743b7fd83309bf45d7, type: 3}
+  m_Name: GoRing
+  m_EditorClassIdentifier: 
+  itemID: 32
+  itemName: Go ring
+  maximumAmount: 1
+  itemPrefab: {fileID: 6575915502782765434, guid: 5f3ad042551f73e45b121ac03edbd10f, type: 3}
+  icon: {fileID: 21300000, guid: 8b1aca60f8fc5a64a876608829a93cbf, type: 3}
+  itemType: 7
+  itemDescription: "Gold that remembers every vow \u2014 and every betrayal."
+  dropChanse: 8
+  buffSpeed: 2
+  buffJumpForce: 1

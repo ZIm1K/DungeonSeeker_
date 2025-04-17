@@ -1384,6 +1384,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameMenuPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 1195034419025747961, guid: 8aa008ef616633343a87b7b8fc7a8444, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4114797390555844933, guid: 8aa008ef616633343a87b7b8fc7a8444, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 27
+      objectReference: {fileID: 0}
+    - target: {fileID: 4114797390555844933, guid: 8aa008ef616633343a87b7b8fc7a8444, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -67
+      objectReference: {fileID: 0}
     - target: {fileID: 4786597734399895075, guid: 8aa008ef616633343a87b7b8fc7a8444, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

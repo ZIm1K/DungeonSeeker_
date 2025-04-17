@@ -38,7 +38,6 @@ public class GameMenuManager : MonoBehaviourPunCallbacks
         clickSound.Play();
         panel.SetActive(true);
         isMenuActive = true;
-        Time.timeScale = 0f;
         IsMenuOpen = true;
 
         Cursor.lockState = CursorLockMode.None;
@@ -51,7 +50,6 @@ public class GameMenuManager : MonoBehaviourPunCallbacks
         clickSound.Play();
         panel.SetActive(false);
         isMenuActive = false;
-        Time.timeScale = 1f;
         IsMenuOpen = false;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -72,11 +70,11 @@ public class GameMenuManager : MonoBehaviourPunCallbacks
     }
 
 
-    public void ExitToMenu()
+    /*public void ExitToMenu()
     {
         if (PhotonNetwork.InRoom)
         {
             Launcher.LeaveRoom();
         }
-    }
+    }*/
 }

@@ -28,7 +28,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(this.gameObject); 
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -138,8 +138,10 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         Debug.Log("OnLeftRoom() called");
-        SceneManager.LoadScene(0);
-        MenuManager.Instance.OpenMenu("main");
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.OpenMenu("main");
+        }
     }
 
     public void PlayClick()

@@ -41,57 +41,59 @@ namespace Objects.Weapon
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                if (weapons[currentWeaponIndex] != null)
-                {
-                    if (!weapons[currentWeaponIndex].IsReloading)
-                    {
-                        if (posTarget.transform.GetChild(1).childCount > 0) 
-                        {
-                            currentWeaponIndex = 0;
-                            posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
-                            photonView.RPC("Activator", RpcTarget.Others,
-                                posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
-                        }                       
-                    }
-                }
-                else
-                {
-                    currentWeaponIndex = 0;
-                }
+                OnKeyDown1();
+                //if (weapons[currentWeaponIndex] != null)
+                //{
+                //    if (!weapons[currentWeaponIndex].IsReloading)
+                //    {
+                //        if (posTarget.transform.GetChild(1).childCount > 0) 
+                //        {
+                //            currentWeaponIndex = 0;
+                //            posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+                //            photonView.RPC("Activator", RpcTarget.Others,
+                //                posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                //        }                       
+                //    }
+                //}
+                //else
+                //{
+                //    currentWeaponIndex = 0;
+                //}
 
-                if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
-                {
-                    posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
-                    photonView.RPC("Activator", RpcTarget.Others,
-                            posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
-                }
+                //if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
+                //{
+                //    posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                //    photonView.RPC("Activator", RpcTarget.Others,
+                //            posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
+                //}
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                if (weapons[currentWeaponIndex] != null)
-                {
-                    if (!weapons[currentWeaponIndex].IsReloading)
-                    {
-                        if (posTarget.transform.GetChild(0).childCount > 0)
-                        {
-                            currentWeaponIndex = 1;
-                            posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
-                            photonView.RPC("Activator", RpcTarget.Others,
-                                posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
-                        }
-                    }
-                }
-                else
-                {
-                    currentWeaponIndex = 1;
-                }
+                OnKeyDown2();
+                //if (weapons[currentWeaponIndex] != null)
+                //{
+                //    if (!weapons[currentWeaponIndex].IsReloading)
+                //    {
+                //        if (posTarget.transform.GetChild(0).childCount > 0)
+                //        {
+                //            currentWeaponIndex = 1;
+                //            posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+                //            photonView.RPC("Activator", RpcTarget.Others,
+                //                posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                //    currentWeaponIndex = 1;
+                //}
 
-                if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
-                {
-                    posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
-                    photonView.RPC("Activator", RpcTarget.Others,
-                            posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
-                }
+                //if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
+                //{
+                //    posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
+                //    photonView.RPC("Activator", RpcTarget.Others,
+                //            posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
+                //}
             }
 
             if (previousWeaponIndex != currentWeaponIndex)
@@ -108,6 +110,60 @@ namespace Objects.Weapon
             if (Input.GetKeyDown(KeyCode.R) && weapons[currentWeaponIndex] != null)
             {
                 weapons[currentWeaponIndex].Reload();
+            }
+        }
+        public void OnKeyDown1() 
+        {
+            if (weapons[currentWeaponIndex] != null)
+            {
+                if (!weapons[currentWeaponIndex].IsReloading)
+                {
+                    if (posTarget.transform.GetChild(1).childCount > 0)
+                    {
+                        currentWeaponIndex = 0;
+                        posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+                        photonView.RPC("Activator", RpcTarget.Others,
+                            posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                    }
+                }
+            }
+            else
+            {
+                currentWeaponIndex = 0;
+            }
+
+            if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
+            {
+                posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                photonView.RPC("Activator", RpcTarget.Others,
+                        posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
+            }
+        }
+        public void OnKeyDown2()
+        {
+            if (weapons[currentWeaponIndex] != null)
+            {
+                if (!weapons[currentWeaponIndex].IsReloading)
+                {
+                    if (posTarget.transform.GetChild(0).childCount > 0)
+                    {
+                        currentWeaponIndex = 1;
+                        posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+                        photonView.RPC("Activator", RpcTarget.Others,
+                            posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                    }
+                }
+            }
+            else
+            {
+                currentWeaponIndex = 1;
+            }
+
+            if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
+            {
+                posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
+                photonView.RPC("Activator", RpcTarget.Others,
+                        posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
             }
         }
         private void OnChangeSlot1()

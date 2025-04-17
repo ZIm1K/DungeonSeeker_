@@ -74,6 +74,10 @@ public class Chest : MonoBehaviourPun
                                 allItems[i].itemType == ItemType.Armor ||
                                 allItems[i].itemType == ItemType.Boots)
                             {
+                                //if (durabilDatabase.allItems == null) 
+                                //{
+                                //    durabilDatabase.allItems = allItems;
+                                //}
                                 defenseID = durabilDatabase.OnNewDefenseItemAdded(allItems[i].itemID);
                             }
                             

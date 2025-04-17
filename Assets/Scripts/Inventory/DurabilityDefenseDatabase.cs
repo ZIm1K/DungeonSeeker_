@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System;
+using System.Threading.Tasks;
 
 public class DurabilityDefenseDatabase : MonoBehaviourPun
 {   
@@ -132,8 +133,12 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
         allValues[i] = value;
     }
     [PunRPC]
-    void AddNewItemInOnline(string ID)
+    async Task AddNewItemInOnline(string ID)
     {
+        if (itemDatabase == null) 
+        {
+            await WaitForItemDatabase();
+        }
         ItemScriptableObject item = itemDatabase.GetItemByID(ID);
         switch (item)
         {
@@ -152,9 +157,16 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
                     allValues.Add((item as BootsItem).defense);
                     break;
                 }
-        }
+        }       
 
         allItems.Add(item);
+    }
+    private async Task WaitForItemDatabase() 
+    {
+        while (itemDatabase == null)
+        {
+            await Task.Yield();
+        }
     }
     public int OnNewDefenseItemAdded(string ID) 
     {

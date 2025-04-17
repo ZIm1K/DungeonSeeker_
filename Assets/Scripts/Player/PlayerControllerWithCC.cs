@@ -5,6 +5,8 @@ using Photon.Pun;
 using Unity.VisualScripting;
 using System.Net.Http;
 using Inventory;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 namespace Objects.PlayerScripts
 {
@@ -58,8 +60,7 @@ namespace Objects.PlayerScripts
 
         private float _rotationX;
         private PhotonView _photonView;
-        [SerializeField] private CharacterModel model;
-
+        [SerializeField] private CharacterModel model;                
         private void Start()
         {
             _photonView = GetComponent<PhotonView>();
@@ -98,7 +99,7 @@ namespace Objects.PlayerScripts
                 {
                     GameObject.FindWithTag("Chest").GetComponent<Chest>().
                         GenerateItems(gameObject.GetComponent<ItemDatabase>().allItems, durabilDatabase);
-                }
+                }               
             }
 
             materialSounds = new Dictionary<PhysicMaterial, AudioClip[]>

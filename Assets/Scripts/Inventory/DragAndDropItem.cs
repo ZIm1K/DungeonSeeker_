@@ -3,6 +3,7 @@ using Objects.PlayerScripts;
 using Photon.Pun;
 using Photon.Pun.Demo.Cockpit;
 using System.Net;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -91,7 +92,7 @@ namespace Inventory
             transform.SetParent(transform.parent.parent);
         }
         
-        public void OnPointerUp(PointerEventData eventData)
+        public async void OnPointerUp(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
                 return;
@@ -178,8 +179,8 @@ namespace Inventory
                         OnUnWearItem(newSlot.item);
                         OnUnWearItem(oldSlot.item);
                         ExchangeSlotData(newSlot);
-                        OnWearItem(newSlot.item, newSlot.defenseID);
-                        OnWearItem(oldSlot.item, oldSlot.defenseID);
+                        await OnWearItem(newSlot.item, newSlot.defenseID);
+                        await OnWearItem(oldSlot.item, oldSlot.defenseID);
                     }
                 }
                 else
@@ -188,7 +189,7 @@ namespace Inventory
                     {
                         OnUnWearItem(newSlot.item);
                         ExchangeSlotData(newSlot);
-                        OnWearItem(newSlot.item, newSlot.defenseID);
+                        await OnWearItem(newSlot.item, newSlot.defenseID);
                     }
                     else if (newSlot.itemTypeToGet == ItemType.Default)
                     {
@@ -198,7 +199,7 @@ namespace Inventory
                             {
                                 OnUnWearItem(newSlot.item);
                                 ExchangeSlotData(newSlot);
-                                OnWearItem(newSlot.item, newSlot.defenseID);
+                                await OnWearItem(newSlot.item, newSlot.defenseID);
                             }
                         }
                         else
@@ -321,7 +322,23 @@ namespace Inventory
             }
             return 0;
         }
-        private void OnWearItem(ItemScriptableObject item, int defenseID)
+        private async Task WaitForPlayerView()
+        {
+            while (playerView == null)
+            {
+                await Task.Yield();
+            }
+        }
+        public async Task LoadWearItem(ItemScriptableObject item, int defenseID) 
+        {
+            if (playerView == null) 
+            {
+                await WaitForPlayerView();
+            }
+            await OnWearItem(item,defenseID);
+            await Task.Yield();
+        }
+        private async Task OnWearItem(ItemScriptableObject item, int defenseID)
         {
             switch (item)
             {
@@ -358,6 +375,7 @@ namespace Inventory
                         break;
                     }
             }
+            await Task.Yield();
         }
         private void OnUnWearItem(ItemScriptableObject item)
         {

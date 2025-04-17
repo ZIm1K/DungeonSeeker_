@@ -45,17 +45,16 @@ namespace Inventory
         private bool isOpenedCrafter;
 
         [SerializeField] private InventorySlot[] craftSlots;
-
+        
         private void Awake()
         {
             UIPanel.SetActive(photonView.IsMine);
             ChestInventoryPanel.SetActive(!photonView.IsMine);
             CharacterTextsPanel.SetActive(photonView.IsMine);
         }
-
-        void Start()
+        private void Start()
         {
-            if (!photonView.IsMine) return;           
+            if (!photonView.IsMine) return;
 
             mainCamera = Camera.main;
             for (int i = 0; i < inventoryPanel.childCount; i++)
@@ -65,9 +64,13 @@ namespace Inventory
                     slots.Add(inventoryPanel.GetChild(i).GetComponent<InventorySlot>());
                 }
             }
+            //UIPanel.SetActive(false);
+        }
+        public void InvLoaded() 
+        {
             UIPanel.SetActive(false);
         }
-
+        
         void Update()
         {
             if (!photonView.IsMine) return;

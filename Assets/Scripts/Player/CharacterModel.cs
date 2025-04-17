@@ -138,7 +138,7 @@ namespace Objects.PlayerScripts
             this.jumpForce = jumpForce;
             this.durabilDatabase = durabilDatabase;
             view.HealthBar.maxValue = maxHealth;
-            view.ManaBar.maxValue = mana;
+            view.ManaBar.maxValue = mana;           
         }               
         [PunRPC]
         public void WearDefense(ItemScriptableObject item, int ID) 

@@ -1,8 +1,12 @@
 using Inventory;
 using Objects.Weapon;
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,13 +38,31 @@ public class InventorySaver : MonoBehaviour
 
     [SerializeField] private List<SavedSlotData> savedSlotsData;
 
+    [SerializeField] private GameObject loadingPanel;
+
     private ISaveManager _saveSystem;
 
-    private void Start()
+    //private string userId;
+
+    private async void Start()
     {
-        //_saveSystem = new BinarySaveSystem();
-        //_saveSystem.Save(savedSlotsData);
-        //LoadInventory();
+        loadingPanel.transform.GetChild(0).gameObject.SetActive(true);
+        await LoadInventoryOnLoad();
+        //if (!PlayerPrefs.HasKey("Id"))
+        //{
+        //    PlayerPrefs.SetString("Id", PhotonNetwork.LocalPlayer.UserId);
+        //    PlayerPrefs.Save();
+        //}
+
+        //userId = PlayerPrefs.GetString("Id"); 
+        LoadInventory();
+    }
+    async Task LoadInventoryOnLoad() 
+    {
+        while (!PhotonNetwork.InRoom && PhotonNetwork.LocalPlayer?.ActorNumber != 0)
+        {
+            await Task.Yield();
+        }
     }
 
     public void SaveInventory()
@@ -82,23 +104,28 @@ public class InventorySaver : MonoBehaviour
         _saveSystem.Save(savedSlotsData);
     }
 
-    public void LoadInventory()
+    public async void LoadInventory()
     {
+        Debug.LogWarning("Loading Inv");
         _saveSystem = new BinarySaveSystem();
-        //_saveSystem.Save(savedSlotsData);
         savedSlotsData = _saveSystem.Load<List<SavedSlotData>>();
-        if (savedSlotsData == null) return;
+        if (savedSlotsData == null) 
+        {
+            loadingPanel.transform.GetChild(0).gameObject.SetActive(false);
+            gameObject.GetComponent<InventoryManager>().InvLoaded();
+            return;
+        }
         if (defenseSlots == null || charmSlots == null || weaponSlots == null || defaultSlots == null)
         {
             Debug.LogError("One or more slot lists are null.");
             return;
         }
-
+        Debug.LogWarning("Not returned");
         ClearSlots(defenseSlots);
         ClearSlots(charmSlots);
         ClearSlots(weaponSlots);
         ClearSlots(defaultSlots);
-
+        Debug.LogWarning("Start loading");
         foreach (var savedSlot in savedSlotsData)
         {
             if (savedSlot.itemID != "0")
@@ -110,42 +137,61 @@ public class InventorySaver : MonoBehaviour
                     {
                         case "Defense":
                             AssignItemToSlotAtIndex(defenseSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
+                            await defenseSlots[savedSlot.slotIndex].gameObject.transform.GetChild(0)
+                                .GetComponent<DragAndDropItem>().LoadWearItem(item, savedSlot.defenseID);
+                            //AssignItemToSlotAtIndex(defenseSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
                             break;
                         case "Charm":
                             AssignItemToSlotAtIndex(charmSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
+                            await charmSlots[savedSlot.slotIndex].gameObject.transform.GetChild(0)
+                                .GetComponent<DragAndDropItem>().LoadWearItem(item, savedSlot.defenseID);
                             break;
                         case "Weapon":
                             AssignItemToSlotAtIndex(weaponSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
+                            if (savedSlot.slotIndex == 0)
+                            {
+                                gameObject.GetComponent<WeaponManager>().OnKeyDown1();
+                            }
+                            else if (savedSlot.slotIndex == 1)
+                            {
+                                gameObject.GetComponent<WeaponManager>().OnKeyDown2();
+                            }
                             break;
                         case "Default":
                             AssignItemToSlotAtIndex(defaultSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
                             break;
                     }
+                    Debug.LogWarning("you loaded something");
                 }
             }
         }
         savedSlotsData.Clear();
         _saveSystem.Save(savedSlotsData);
+        loadingPanel.transform.GetChild(0).gameObject.SetActive(false);
+        gameObject.GetComponent<InventoryManager>().InvLoaded();
+        Debug.LogWarning("End load");
     }
 
     private void AssignItemToSlotAtIndex(List<InventorySlot> slots, int index, ItemScriptableObject item, int amount, int defenseID)
     {
         if (slots == null || index < 0 || index >= slots.Count)
         {
-            Debug.LogError($"Slots is null or index {index} is out of range");
+            Debug.LogWarning($"Slots is null or index {index} is out of range");
             return;
         }
 
         var slot = slots[index];
         if (slot == null)
         {
-            Debug.LogError($"Slot at index {index} is null");
+            Debug.LogWarning($"Slot at index {index} is null");
             return;
         }
 
         if (slot.iconGO == null || slot.itemAmountText == null)
         {
-            Debug.LogError("InventorySlot components are not assigned");
+            Debug.LogWarning("InventorySlot components are not assigned");
+            Debug.LogWarning(slot);
+            Debug.LogWarning(defenseID);
             return;
         }
 

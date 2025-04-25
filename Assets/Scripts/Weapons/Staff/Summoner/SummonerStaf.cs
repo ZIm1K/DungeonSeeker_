@@ -53,6 +53,12 @@ public class SummonerStaf : Weapon
         base.Initialize("Summoner Staff", 0, false, 0, Resources.Load<AudioClip>(attackSoundPath), 0);
     }
 
+    public override void InitializeAnimation(Animation animation)
+    {
+        animationClip = data.data.animationClip;
+        animation_ = animation;
+        animation_.clip = animationClip;
+    }
     public override void Use()
     {
         if (!photonView.IsMine || isReloading) return;
@@ -79,8 +85,8 @@ public class SummonerStaf : Weapon
                 curAlly.GetComponent<AllyController>().PlayAudio(attackSoundPath);
                 gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, attackSoundPath);
             }
-
-            model.SpendMana(manaCost);
+            animation_.Play();
+            model.SpendMana(manaCost);;
         }               
     }
     private void OnDisable()

@@ -22,3 +22,4 @@ MonoBehaviour:
   reloadTime: 3
   maxBulletsInWeapon: 12
   pathOfScObj: ScriptableObject/Weapon/Bow Item
+  animationClip: {fileID: 7400000, guid: 0585883a831487b4a86578b297334c16, type: 2}

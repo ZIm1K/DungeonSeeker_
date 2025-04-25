@@ -48,7 +48,7 @@ namespace Objects.Weapon.Bow
             reloadProgressImage = reloadImage;
 
             shotSoundPath = data.data.shotSoundPath;
-            shotSound = Resources.Load<AudioClip>(shotSoundPath);
+            shotSound = Resources.Load<AudioClip>(shotSoundPath);            
 
             shotTimeout = data.data.shotTimeout;
             reloadTime = data.data.reloadTime;
@@ -64,11 +64,17 @@ namespace Objects.Weapon.Bow
             }
         }
 
+        public override void InitializeAnimation(Animation animation)
+        {
+            animationClip = data.data.animationClip;
+            animation_ = animation;
+            animation_.clip = animationClip;
+        }
         public override void Use()
         {
             if (!photonView.IsMine || isReloading) return;
 
-            if (Time.time >= lastShotTime + shotTimeout)
+            if (Time.time >= lastShotTime + shotTimeout) 
             {
                 if (Cursor.lockState == CursorLockMode.Locked)
                 {
@@ -89,15 +95,15 @@ namespace Objects.Weapon.Bow
                             PlayAudioLocally();
                             gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, shotSoundPath);
                         }
+                        animation_.Play();
                     }
                     else
                     {
-                        Debug.Log("No bullets left in the pistol.");
+                        Debug.Log("No bullets left in the bow.");
                     }
                 }
             }
-        }
-
+        }        
         private void PlayAudioLocally()
         {
             AudioSource source = gameObject.AddComponent<AudioSource>();

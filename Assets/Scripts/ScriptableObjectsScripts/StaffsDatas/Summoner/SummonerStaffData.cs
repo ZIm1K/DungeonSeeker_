@@ -14,4 +14,5 @@ public class SummonerStaffData : ScriptableObject
     public string useSoundPath;
     public GameObject allyPrefab;
     public string pathOfScObj;
+    public AnimationClip animationClip;
 }

@@ -12,5 +12,6 @@ namespace ScriptableObjects.Weapons
         public string attackSoundPath;
         public float rangeOfAttack = 10;
         public string pathOfScObj;
+        public AnimationClip animationClip;
     }
 }

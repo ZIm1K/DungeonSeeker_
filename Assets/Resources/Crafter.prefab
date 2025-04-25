@@ -20,7 +20,7 @@ GameObject:
   m_TagString: Crafter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5925182914571254421
 Transform:
@@ -172,6 +172,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: e21b6c9b113d50a4b865c5a99ce0a58e, type: 3}
       propertyPath: m_Name
       value: Amphora_Stand
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: e21b6c9b113d50a4b865c5a99ce0a58e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e21b6c9b113d50a4b865c5a99ce0a58e, type: 3}
       propertyPath: m_LocalScale.x

@@ -16,3 +16,4 @@ MonoBehaviour:
   damage: 500
   attackSoundPath: Sounds/Weapons/Crucifix/crucufix_use
   pathOfScObj: ScriptableObject/Weapon/Crucifix Item
+  animationClip: {fileID: 7400000, guid: 9f41f93ff19487e4f98313d83a3b7ac3, type: 2}

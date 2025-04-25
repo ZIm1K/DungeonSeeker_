@@ -96,7 +96,10 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        if (SceneManager.GetActiveScene().buildIndex == 0) 
+        {
+            startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        }
     }
 
     public void LeaveRoom()

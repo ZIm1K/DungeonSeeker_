@@ -5511,6 +5511,14 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5165669658064775461, guid: c7112750c4744a343a807c534c7a280c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 10.484619
+      objectReference: {fileID: 0}
+    - target: {fileID: 6535231611286847565, guid: c7112750c4744a343a807c534c7a280c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 5.621338
+      objectReference: {fileID: 0}
     - target: {fileID: 8325651426463509218, guid: c7112750c4744a343a807c534c7a280c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6289,11 +6297,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 935817727246893572, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -14.123169
+      value: -14.123291
       objectReference: {fileID: 0}
     - target: {fileID: 935817727246893572, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 32.5838
+      value: 32.583862
       objectReference: {fileID: 0}
     - target: {fileID: 2709770158259974782, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -6436,8 +6444,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8184123722815468943, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -452.94458
+      objectReference: {fileID: 0}
+    - target: {fileID: 8184123722815468943, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -25.766418
+      value: -25.76648
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

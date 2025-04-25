@@ -10,4 +10,5 @@ public class DefenseStaffData : ScriptableObject
     public string useSoundPath;
     public string pathOfScObj;
     public int useTimeOut;
+    public AnimationClip animationClip;
 }

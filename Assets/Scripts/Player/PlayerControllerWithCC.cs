@@ -61,7 +61,9 @@ namespace Objects.PlayerScripts
 
         private float _rotationX;
         private PhotonView _photonView;
-        [SerializeField] private CharacterModel model;                
+        [SerializeField] private CharacterModel model;
+
+        [SerializeField] private GameObject playerModel;
         private void Start()
         {
             _photonView = GetComponent<PhotonView>();
@@ -83,7 +85,7 @@ namespace Objects.PlayerScripts
             {
                 DurabilityDefenseDatabase durabilDatabase = GameObject.FindWithTag("DurabilBase").GetComponent<DurabilityDefenseDatabase>();               
                 durabilDatabase.itemDatabase = gameObject.GetComponent<ItemDatabase>();
-                Debug.LogWarning(durabilDatabase.name);
+                //Debug.LogWarning(durabilDatabase.name);
                 model = gameObject.AddComponent<CharacterModel>();
                 model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
 
@@ -105,7 +107,9 @@ namespace Objects.PlayerScripts
                         chest.GetComponent<Chest>().
                         GenerateItems(gameObject.GetComponent<ItemDatabase>().allItems, durabilDatabase);
                     }
-                }               
+                }
+
+                SetRenderLayer();
             }
 
             materialSounds = new Dictionary<PhysicMaterial, AudioClip[]>
@@ -114,6 +118,18 @@ namespace Objects.PlayerScripts
                 { Resources.Load<PhysicMaterial>("Materials/PhysicalMaterials/Concrete"), concreteClips },
                 { Resources.Load<PhysicMaterial>("Materials/PhysicalMaterials/Metal"), metalClips }
             };
+        }
+        void SetRenderLayer() 
+        {
+            playerModel.layer = LayerMask.NameToLayer("NotForRender");
+
+            foreach (Transform child in playerModel.transform)
+            {
+                if (child != null)
+                {
+                    child.gameObject.layer = playerModel.layer;
+                }
+            }
         }
 
         private void Update()

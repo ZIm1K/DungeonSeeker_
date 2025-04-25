@@ -21,3 +21,4 @@ MonoBehaviour:
   useSoundPath: Sounds/Weapons/Staff/SummonerStaff/summonerStaff
   allyPrefab: {fileID: 549738267683341139, guid: bd1496b026bc08c46b29992f155591f6, type: 3}
   pathOfScObj: ScriptableObject/Weapon/Spawn Staff Item
+  animationClip: {fileID: 7400000, guid: 36f7e9ca47e437c4a9770ce360827f89, type: 2}

@@ -9,4 +9,5 @@ public class CrucifixData : ScriptableObject
     public int damage;
     public string attackSoundPath;
     public string pathOfScObj;
+    public AnimationClip animationClip;
 }

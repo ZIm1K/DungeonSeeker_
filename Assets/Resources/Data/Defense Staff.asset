@@ -17,3 +17,4 @@ MonoBehaviour:
   useSoundPath: Sounds/Weapons/Staff/DefenseStaff/DefenseStaff
   pathOfScObj: ScriptableObject/Weapon/Defense Staff Item
   useTimeOut: 2
+  animationClip: {fileID: 7400000, guid: 36f7e9ca47e437c4a9770ce360827f89, type: 2}

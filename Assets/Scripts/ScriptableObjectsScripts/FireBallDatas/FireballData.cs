@@ -15,5 +15,6 @@ namespace ScriptableObjects.Weapons
         public float shotTimeout = 0.5f;
         public int manaCost = 20;
         public string pathOfScObj;
+        public AnimationClip animationClip;
     }
 }

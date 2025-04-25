@@ -4,6 +4,7 @@ using Objects.Weapon;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -40,6 +41,12 @@ public class DefenseStaff : Weapon
         base.Initialize("Defense Staff", 0, false, 0, attackSound, 0);
     }
 
+    public override void InitializeAnimation(Animation animation)
+    {
+        animationClip = data.data.animationClip;
+        animation_ = animation;
+        animation_.clip = animationClip;
+    }
     public override void Use()
     {
         if (!photonView.IsMine || isReloading) return;
@@ -57,6 +64,7 @@ public class DefenseStaff : Weapon
                 PlayAudioLocally();
                 gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, shotSoundPath);
             }
+            animation_.Play();
         }
     }
     private void PlayAudioLocally()

@@ -17,5 +17,6 @@ namespace ScriptableObjects.Weapons
         public float reloadTime = 2f;
         public int maxBulletsInWeapon;
         public string pathOfScObj;
+        public AnimationClip animationClip;
     }
 }

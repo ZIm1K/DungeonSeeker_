@@ -5,6 +5,8 @@ using Objects.Weapon;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -29,6 +31,7 @@ public class CrucifixWeapon : Weapon
 
         damage = data.data.damage;
         rangeOfAttack = data.data.rangeOfAttack;
+               
 
         attackSoundPath = data.data.attackSoundPath;
         attackSound = Resources.Load<AudioClip>(attackSoundPath);
@@ -38,7 +41,13 @@ public class CrucifixWeapon : Weapon
         base.Initialize("Crucifix", damage, false, 0, attackSound, 0);
     }
 
-    public override void Use()
+    public override void InitializeAnimation(Animation animation)
+    {
+        animationClip = data.data.animationClip;
+        animation_ = animation;
+        animation_.clip = animationClip;
+    }
+    public async override void Use()
     {
         if (!photonView.IsMine || isReloading) return;
 
@@ -54,6 +63,8 @@ public class CrucifixWeapon : Weapon
                     PhotonView targetPhotonView = hit.collider.gameObject.GetComponent<PhotonView>();
                     if (targetPhotonView != null)
                     {
+                        animation_.Play();
+                        await PlayAnimation(animation_);
                         targetPhotonView.RPC("TakeDamage", RpcTarget.All, damage);
                         if (attackSound != null)
                         {
@@ -64,6 +75,16 @@ public class CrucifixWeapon : Weapon
                     }
                 }
             }                  
+        }
+    }
+
+    async Task PlayAnimation(Animation animation) 
+    {        
+        await Task.Yield(); 
+
+        while (animation.isPlaying)
+        {
+            await Task.Yield(); 
         }
     }
     private void PlayAudioLocally()

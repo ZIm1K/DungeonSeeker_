@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
-    private bool playerInstantiated = false;
+    //private bool playerInstantiated = false;
     public static RoomManager Instance;
     private void Awake()
     {

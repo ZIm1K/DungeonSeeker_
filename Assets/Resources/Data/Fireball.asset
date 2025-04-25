@@ -22,3 +22,4 @@ MonoBehaviour:
   shotTimeout: 0.5
   manaCost: 20
   pathOfScObj: ScriptableObject/Weapon/FireBall Item
+  animationClip: {fileID: 7400000, guid: 651efc960b6319a4093d5589ba4e4c55, type: 2}

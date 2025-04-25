@@ -25,6 +25,8 @@ public class SimpleSword : Weapon
 
     private float lastAttackTime;
 
+    private SwordTrigger trigger;
+
     public void Initialize(string path)
     {
         data = Resources.Load<SwordItemData>(path);
@@ -43,7 +45,19 @@ public class SimpleSword : Weapon
 
         base.Initialize("Sword", swordDamage, false, 0, attackSound, shotTimeout);
     }
+    public void SetTrigger(SwordTrigger trigger) 
+    {
+        this.trigger = trigger;
+        Debug.LogWarning("Triggered");
+    }
 
+
+    public override void InitializeAnimation(Animation animation)
+    {
+        animationClip = data.data.animationClip;
+        animation_ = animation;
+        animation_.clip = animationClip;
+    }
     public override void Use()
     {
         if (!photonView.IsMine || isReloading) return;
@@ -54,30 +68,62 @@ public class SimpleSword : Weapon
             {
                 lastAttackTime = Time.time;
 
-                Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, rangeOfAttack))
+                if (trigger.enemysInRange.Count > 0)
                 {
-                    EnemyModel enemy = hit.collider.gameObject.GetComponent<EnemyModel>();
-                    if (enemy != null)
+                    for (int i = 0; i < trigger.enemysInRange.Count; i++) 
                     {
-                        PhotonView targetPhotonView = hit.collider.gameObject.GetComponent<PhotonView>();
-                        if (targetPhotonView != null)
+                        if (trigger.enemysInRange[i] != null)
                         {
-                            targetPhotonView.RPC("TakeDamage", RpcTarget.All, swordDamage);
+                            EnemyModel enemyToAttack = trigger.enemysInRange[i].GetComponent<EnemyModel>();
+                            if (enemyToAttack != null)
+                            {
+                                PhotonView targetPhotonView = trigger.enemysInRange[i].gameObject.GetComponent<PhotonView>();
+                                if (targetPhotonView != null)
+                                {
+                                    targetPhotonView.RPC("TakeDamage", RpcTarget.All, swordDamage);
+                                }
+                            }
                         }
-                    }                   
+                        else 
+                        {
+                            trigger.enemysInRange.RemoveAt(i);
+                            i--;
+                        }
+                    }                    
                 }
 
                 if (attackSound != null)
                 {
                     PlayAudioLocally();
                     gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, attackSoundPath);
-                }              
+                }
+                animation_.Play();
+
+                //Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+                //RaycastHit hit;
+                //if (Physics.Raycast(ray, out hit, rangeOfAttack))
+                //{
+                //    EnemyModel enemy = hit.collider.gameObject.GetComponent<EnemyModel>();
+                //    if (enemy != null)
+                //    {
+                //        PhotonView targetPhotonView = hit.collider.gameObject.GetComponent<PhotonView>();
+                //        if (targetPhotonView != null)
+                //        {
+                //            targetPhotonView.RPC("TakeDamage", RpcTarget.All, swordDamage);
+                //        }
+                //    }                   
+                //}
+
+                //if (attackSound != null)
+                //{
+                //    PlayAudioLocally();
+                //    gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, attackSoundPath);
+                //}
+                //animation_.Play();
             }
         }
     }
-    private void PlayAudioLocally()//////////////////////////////////////////////
+    private void PlayAudioLocally()
     {
         AudioSource source = gameObject.AddComponent<AudioSource>();
         source.clip = attackSound;

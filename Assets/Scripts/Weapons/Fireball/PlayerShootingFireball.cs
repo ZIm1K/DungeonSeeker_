@@ -42,6 +42,12 @@ namespace Objects.Weapon.Fireball
             base.Initialize("Fireball", fireballDamage, false, 0f, shotSound, shotTimeout);
             lastShotTime = -shotTimeout;
         }
+        public override void InitializeAnimation(Animation animation)
+        {
+            animationClip = data.data.animationClip;
+            animation_ = animation;
+            animation_.clip = animationClip;
+        }
 
         public override void Use()
         {
@@ -56,6 +62,7 @@ namespace Objects.Weapon.Fireball
                     Rigidbody rb = fireball.GetComponent<Rigidbody>();
                     rb.velocity = firePoint.forward * fireballSpeed;
                     model.SpendMana(manaCost);
+                    animation_.Play();
                 }              
             }
         }

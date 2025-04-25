@@ -17,3 +17,4 @@ MonoBehaviour:
   attackSoundPath: Sounds/Weapons/Sword/sword_Attack
   rangeOfAttack: 7
   pathOfScObj: ScriptableObject/Weapon/Iron Sword Item
+  animationClip: {fileID: 7400000, guid: e4380077761497f438f0411b6d97f99f, type: 2}

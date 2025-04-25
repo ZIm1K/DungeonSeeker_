@@ -41,59 +41,11 @@ namespace Objects.Weapon
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                OnKeyDown1();
-                //if (weapons[currentWeaponIndex] != null)
-                //{
-                //    if (!weapons[currentWeaponIndex].IsReloading)
-                //    {
-                //        if (posTarget.transform.GetChild(1).childCount > 0) 
-                //        {
-                //            currentWeaponIndex = 0;
-                //            posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
-                //            photonView.RPC("Activator", RpcTarget.Others,
-                //                posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
-                //        }                       
-                //    }
-                //}
-                //else
-                //{
-                //    currentWeaponIndex = 0;
-                //}
-
-                //if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
-                //{
-                //    posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
-                //    photonView.RPC("Activator", RpcTarget.Others,
-                //            posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
-                //}
+                OnKeyDown1();                
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                OnKeyDown2();
-                //if (weapons[currentWeaponIndex] != null)
-                //{
-                //    if (!weapons[currentWeaponIndex].IsReloading)
-                //    {
-                //        if (posTarget.transform.GetChild(0).childCount > 0)
-                //        {
-                //            currentWeaponIndex = 1;
-                //            posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
-                //            photonView.RPC("Activator", RpcTarget.Others,
-                //                posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    currentWeaponIndex = 1;
-                //}
-
-                //if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
-                //{
-                //    posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
-                //    photonView.RPC("Activator", RpcTarget.Others,
-                //            posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
-                //}
+            {               
+                OnKeyDown2();               
             }
 
             if (previousWeaponIndex != currentWeaponIndex)
@@ -116,10 +68,10 @@ namespace Objects.Weapon
         {
             if (weapons[currentWeaponIndex] != null)
             {
-                if (!weapons[currentWeaponIndex].IsReloading)
+                if (!weapons[currentWeaponIndex].IsReloading && !weapons[currentWeaponIndex].animation_.isPlaying)
                 {
                     if (posTarget.transform.GetChild(1).childCount > 0)
-                    {
+                    {                        
                         currentWeaponIndex = 0;
                         posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
                         photonView.RPC("Activator", RpcTarget.Others,
@@ -132,7 +84,7 @@ namespace Objects.Weapon
                 currentWeaponIndex = 0;
             }
 
-            if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
+            if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading && !weapons[currentWeaponIndex].animation_.isPlaying)
             {
                 posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
                 photonView.RPC("Activator", RpcTarget.Others,
@@ -143,7 +95,7 @@ namespace Objects.Weapon
         {
             if (weapons[currentWeaponIndex] != null)
             {
-                if (!weapons[currentWeaponIndex].IsReloading)
+                if (!weapons[currentWeaponIndex].IsReloading && !weapons[currentWeaponIndex].animation_.isPlaying)
                 {
                     if (posTarget.transform.GetChild(0).childCount > 0)
                     {
@@ -159,7 +111,7 @@ namespace Objects.Weapon
                 currentWeaponIndex = 1;
             }
 
-            if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading)
+            if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading && !weapons[currentWeaponIndex].animation_.isPlaying)
             {
                 posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
                 photonView.RPC("Activator", RpcTarget.Others,
@@ -171,7 +123,7 @@ namespace Objects.Weapon
             RemoveWeapon(0);
             if (weaponSlot1.GetComponent<InventorySlot>().item != null)
             {
-                GameObject usePref = null;
+                GameObject usePref = null;               
                 if (weaponSlot1.GetComponent<InventorySlot>().item.itemID == "6")
                 {
                     usePref = (weaponSlot1.GetComponent<InventorySlot>().item as BowItemData).usePrefab;
@@ -223,7 +175,7 @@ namespace Objects.Weapon
             RemoveWeapon(1);
             if (weaponSlot2.GetComponent<InventorySlot>().item != null)
             {
-                GameObject usePref = null;
+                GameObject usePref = null;                
                 if (weaponSlot2.GetComponent<InventorySlot>().item.itemID == "6")
                 {
                     usePref = (weaponSlot2.GetComponent<InventorySlot>().item as BowItemData).usePrefab;
@@ -291,7 +243,14 @@ namespace Objects.Weapon
                 obj.SetActive(false);
             }
 
-            photonView.RPC("SetForOthers", RpcTarget.Others, index, obj.GetComponent<PhotonView>().ViewID, activ);           
+            photonView.RPC("SetForOthers", RpcTarget.Others, index, obj.GetComponent<PhotonView>().ViewID, activ);
+            weapons[index].InitializeAnimation(posTarget.transform.GetChild(index).GetChild(0).GetComponent<Animation>());
+
+            if (weapons[index] as SimpleSword) 
+            {
+                (weapons[index] as SimpleSword).SetTrigger(posTarget.transform
+                    .GetChild(index).GetChild(0).GetChild(0).GetComponent<SwordTrigger>());
+            }
         }
         [PunRPC]
         private void SetForOthers(int index, int viewID, bool isActive)

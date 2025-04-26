@@ -7,4 +7,5 @@ public interface ISaveManager
     public void Save<T>(T data);
 
     public T Load<T>();
+
 }

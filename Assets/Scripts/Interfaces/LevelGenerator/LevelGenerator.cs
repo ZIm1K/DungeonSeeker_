@@ -75,7 +75,7 @@ namespace LevelGenerator
 
             if (validPositions.Count == 0)
             {
-                Debug.LogWarning("Не знайдено вільного напрямку для наступної кімнати.");
+                Debug.LogWarning("No valid positions");
                 return;
             }
 

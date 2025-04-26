@@ -42,8 +42,6 @@ public class InventorySaver : MonoBehaviour
 
     private ISaveManager _saveSystem;
 
-    //private string userId;
-
     private async void Start()
     {
         loadingPanel.transform.GetChild(0).gameObject.SetActive(true);
@@ -59,7 +57,7 @@ public class InventorySaver : MonoBehaviour
     }
     async Task LoadInventoryOnLoad() 
     {
-        while (!PhotonNetwork.InRoom && PhotonNetwork.LocalPlayer?.ActorNumber != 0)
+        while (!PhotonNetwork.InRoom && PhotonNetwork.LocalPlayer?.ActorNumber != 0)  //Load in on full load
         {
             await Task.Yield();
         }
@@ -67,7 +65,7 @@ public class InventorySaver : MonoBehaviour
 
     public void SaveInventory()
     {
-        savedSlotsData = new List<SavedSlotData>();
+        savedSlotsData = new List<SavedSlotData>();        
 
         for (int i = 0; i < defenseSlots.Count; i++)
         {
@@ -106,10 +104,9 @@ public class InventorySaver : MonoBehaviour
 
     public async void LoadInventory()
     {
-        Debug.LogWarning("Loading Inv");
         _saveSystem = new BinarySaveSystem();
         savedSlotsData = _saveSystem.Load<List<SavedSlotData>>();
-        if (savedSlotsData == null) 
+        if (savedSlotsData == default) 
         {
             loadingPanel.transform.GetChild(0).gameObject.SetActive(false);
             gameObject.GetComponent<InventoryManager>().InvLoaded();
@@ -165,11 +162,13 @@ public class InventorySaver : MonoBehaviour
                 }
             }
         }
-        savedSlotsData.Clear();
-        _saveSystem.Save(savedSlotsData);
+        //savedSlotsData.Clear();
+        //_saveSystem.Save(savedSlotsData);
+        //_saveSystem.DeleteFile();
+        //Debug.LogWarning("Cleared");
         loadingPanel.transform.GetChild(0).gameObject.SetActive(false);
         gameObject.GetComponent<InventoryManager>().InvLoaded();
-        Debug.LogWarning("End load");
+        //Debug.LogWarning("End load");
     }
 
     private void AssignItemToSlotAtIndex(List<InventorySlot> slots, int index, ItemScriptableObject item, int amount, int defenseID)

@@ -1863,6 +1863,18 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
+    - target: {fileID: 5725037847605902684, guid: 4b437f1c2454a2c409b1b7f35e69d661, type: 3}
+      propertyPath: m_Range
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5725037847605902684, guid: 4b437f1c2454a2c409b1b7f35e69d661, type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5725037847605902684, guid: 4b437f1c2454a2c409b1b7f35e69d661, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7586093321967142111, guid: 4b437f1c2454a2c409b1b7f35e69d661, type: 3}
       propertyPath: m_Name
       value: Torch_Wall
@@ -2123,6 +2135,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 113386650, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Range
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 113386650, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Material
       value: 
@@ -2883,6 +2903,18 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
+    - target: {fileID: 4027376600884704207, guid: 06b9d15b7d33e854cb23fe58a33238aa, type: 3}
+      propertyPath: m_Range
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4027376600884704207, guid: 06b9d15b7d33e854cb23fe58a33238aa, type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4027376600884704207, guid: 06b9d15b7d33e854cb23fe58a33238aa, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4055591486681154334, guid: 06b9d15b7d33e854cb23fe58a33238aa, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -2898,6 +2930,18 @@ PrefabInstance:
     - target: {fileID: 5634946493197523181, guid: 06b9d15b7d33e854cb23fe58a33238aa, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8021562540970052646, guid: 06b9d15b7d33e854cb23fe58a33238aa, type: 3}
+      propertyPath: m_Range
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8021562540970052646, guid: 06b9d15b7d33e854cb23fe58a33238aa, type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8021562540970052646, guid: 06b9d15b7d33e854cb23fe58a33238aa, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3679,6 +3723,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8325651426463509218}
     m_Modifications:
+    - target: {fileID: 113386650, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Range
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 113386650, guid: c559a22601843db4c927941c06a8b94b, type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4725356937742542617, guid: c559a22601843db4c927941c06a8b94b, type: 3}
       propertyPath: m_Material
       value: 
@@ -3937,6 +3989,14 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 13400000, guid: 5f98b9ff660e2fc43a70797f79ae352e, type: 2}
+    - target: {fileID: 8809672633612108558, guid: 98ba86548ddcd664e9df1d008a5c8f97, type: 3}
+      propertyPath: m_Range
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8809672633612108558, guid: 98ba86548ddcd664e9df1d008a5c8f97, type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

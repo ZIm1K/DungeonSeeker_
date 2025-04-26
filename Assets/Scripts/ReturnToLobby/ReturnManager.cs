@@ -89,6 +89,7 @@ public class ReturnManager : MonoBehaviourPunCallbacks
 
         if (readyPlayers.Count == PhotonNetwork.PlayerList.Length)
         {
+            PlayerViewManager.Instance.SavePlayerInventory();
             PhotonNetwork.LoadLevel(exitSceneIndex);
             LevelHandler.IncreaseLevel();
         }

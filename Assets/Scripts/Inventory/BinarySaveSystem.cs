@@ -19,49 +19,39 @@ public class BinarySaveSystem : ISaveManager
 
         _filePath = Path.Combine(_directoryPath, "BinarySave_" + PhotonNetwork.LocalPlayer.NickName + ".dat");
 
-        ////_filePath = Application.persistentDataPath + "/BinarySave" + PhotonNetwork.LocalPlayer.ActorNumber + ".dat";
     }
     public T Load<T>()
     {
-        Debug.LogWarning("Loading From Binary Inv");
-        T saveData;
-
-        Debug.LogWarning(_filePath);
-        if (!File.Exists(_filePath)) 
+        if (!File.Exists(_filePath))
         {
-            File.Create(_filePath).Close();
+            return default;
         }
+
+        T saveData;
 
         using (FileStream file = File.Open(_filePath, FileMode.Open))
         {
-            if (file.Length > 0) 
+            if (file.Length > 0)
             {
                 object loadedData = new BinaryFormatter().Deserialize(file);
                 saveData = (T)loadedData;
-                Debug.LogWarning(file.Name);
-                Debug.LogWarning("Got data");
-                return saveData;
-            }        
+            }
+            else
+            {
+                return default;
+            }
         }
-        return default;
 
-        //if (!File.Exists(_filePath))
-        //    return default;
+        DeleteFile();
 
-        //try
-        //{
-        //    using (FileStream file = File.Open(_filePath, FileMode.Open))
-        //    {
-        //        object loadedData = new BinaryFormatter().Deserialize(file);
-        //        return (T)lo
-        //        adedData;
-        //    }
-        //}
-        //catch (IOException ex)
-        //{
-        //    Debug.LogError("File access error: " + ex.Message);
-        //    return default;
-        //}
+        return saveData;
+    }
+    private void DeleteFile() 
+    {
+        if (File.Exists(_filePath))
+        {
+            File.Delete(_filePath);
+        }
     }
 
     public void Save<T>(T data)
@@ -75,5 +65,6 @@ public class BinarySaveSystem : ISaveManager
         {
             new BinaryFormatter().Serialize(file, data);
         }
+        Debug.LogWarning("Saved");
     }
 }

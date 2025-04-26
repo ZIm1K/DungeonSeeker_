@@ -18,7 +18,6 @@ MonoBehaviour:
   fireballDamage: 50
   explosionPrefab: {fileID: 2433282508537954060, guid: a0fc0f45ca5b3474786272232b2d83f3, type: 3}
   decalPrefab: {fileID: 2117697731899656662, guid: 0cf5941215f874a7a944a6ab585edba0, type: 3}
-  shotSound: {fileID: 0}
   shotTimeout: 0.5
   manaCost: 20
   pathOfScObj: ScriptableObject/Weapon/FireBall Item

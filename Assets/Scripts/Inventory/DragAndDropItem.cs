@@ -434,23 +434,23 @@ namespace Inventory
             TMP_Text itemAmountText = newSlot.itemAmountText;
             int defenseID = newSlot.defenseID;
 
-            if (newSlot.item == oldSlot.item) 
+            if (newSlot.item == oldSlot.item && newSlot.item.maximumAmount > 1) 
             {
-                if (newSlot.item.maximumAmount > 1) 
+                if (newSlot.amount + oldSlot.amount <= newSlot.item.maximumAmount)
                 {
-                    if (newSlot.amount + oldSlot.amount < newSlot.item.maximumAmount)
-                    {
-                        newSlot.amount += oldSlot.amount;
-                        NullifySlotData();
-                    }
-                    else
-                    {
-                        int changedSlotAmmount = newSlot.item.maximumAmount - newSlot.amount;
-                        newSlot.amount += changedSlotAmmount;
-                        oldSlot.amount -= changedSlotAmmount;
-                    }
-                    return;
-                }                        
+                    newSlot.amount += oldSlot.amount;
+                    newSlot.itemAmountText.text = newSlot.amount.ToString();
+                    NullifySlotData();
+                }
+                else 
+                {
+                    int changedAmmount = newSlot.item.maximumAmount - newSlot.amount;
+                    newSlot.amount += changedAmmount;
+                    newSlot.itemAmountText.text = newSlot.amount.ToString();
+                    oldSlot.amount -= changedAmmount;
+                    oldSlot.itemAmountText.text = oldSlot.amount.ToString();
+                }
+                return;
             }
 
             newSlot.item = oldSlot.item;

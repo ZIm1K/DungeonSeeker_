@@ -74,7 +74,7 @@ namespace Objects.Weapon.Bow
         {
             if (!photonView.IsMine || isReloading) return;
 
-            if (Time.time >= lastShotTime + shotTimeout) 
+            if (Time.time >= lastShotTime + shotTimeout + animationClip.length) 
             {
                 if (Cursor.lockState == CursorLockMode.Locked)
                 {

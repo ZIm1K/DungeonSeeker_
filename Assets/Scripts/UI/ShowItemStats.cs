@@ -188,7 +188,6 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
                             {
                                 statsPanelValues.manaPotionItemTexts.SetActive(true);
 
-                                //statsPanelValues.manaPotionItemTexts.transform.GetChild(0).gameObject.SetActive(true);
                                 statsPanelValues.manaPotionItemTexts.transform.GetChild(0).GetComponent<TMP_Text>().text =
                                                                     (curSlot.item as ManaRegenItem).manaRegenInterval.ToString();  //manaRegenChange
 
@@ -218,13 +217,13 @@ public class ShowItemStats : MonoBehaviour, IPointerClickHandler
     {
         curSlot.amount -= 1;
         
-        gameObject.GetComponent<PlayerControllerWithCC>().EnableRegen((curSlot.item as ManaRegenItem).manaRegenInterval,
+        gameObject.GetComponent<CharacterModel>().EnableRegen((curSlot.item as ManaRegenItem).manaRegenInterval,
             (curSlot.item as ManaRegenItem).duration);       
         CheckIfSlotNull();
     }
     void HealCharacter() 
     {
-        if (gameObject.GetComponent<CharacterModel>().Health == 100) return;
+        if (gameObject.GetComponent<CharacterModel>().Health == gameObject.GetComponent<CharacterModel>().MaxHealth) return;
         
         curSlot.amount -= 1;        
 

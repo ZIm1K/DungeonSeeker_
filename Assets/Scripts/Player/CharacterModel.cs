@@ -1,5 +1,6 @@
 using Inventory;
 using Photon.Pun;
+using System.Collections;
 using System.Net;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -10,6 +11,10 @@ namespace Objects.PlayerScripts
     {
         [SerializeField] private int health;
         [SerializeField] private int maxHealth;
+
+        [SerializeField] private float healthRegenInterval = 2f;
+        [SerializeField] private int healthaRegenAmount = 1;
+
         private int defense;
         
         [SerializeField] int helmetDefense;
@@ -22,12 +27,19 @@ namespace Objects.PlayerScripts
 
         public DurabilityDefenseDatabase durabilDatabase;
 
-        private int mana;
+        [SerializeField] private int mana;
+        [SerializeField] private int maxMana;
+
+        [SerializeField] private int manaRegenAmount = 1;
+        [SerializeField] private float manaRegenInterval = 0.5f;
+        private float curManaRegenInterval;
+        private float timer;
+
         private float speed;
         private float jumpForce;
         private CharacterView view;
         private PlayerControllerWithCC playerController;
-    
+
         public int Health
         {
             get { return health; }
@@ -108,6 +120,14 @@ namespace Objects.PlayerScripts
                 view.UpdateManaText(mana);
             }
         }
+        public int MaxMana
+        {
+            get { return maxMana; }
+            set
+            {
+                maxMana = value;
+            }
+        }
         public float Speed 
         {
             get { return speed; }
@@ -129,21 +149,29 @@ namespace Objects.PlayerScripts
         public void Initialize(int health, int mana, CharacterView view, float speed, PlayerControllerWithCC playerController,
      float jumpForce, DurabilityDefenseDatabase durabilDatabase)
         {
-            maxHealth = health;
-
             int level = LevelHandler.Level;
-            float multiplier = Mathf.Pow(1.1f, level - 1); 
+            float multiplier = Mathf.Pow(1.03f, level - 1); 
 
-            this.health = Mathf.RoundToInt(health * multiplier);
-            this.mana = Mathf.RoundToInt(mana * multiplier);
-            this.speed = speed * (1 + 0.05f * (level - 1));
-            this.jumpForce = jumpForce * (1 + 0.03f * (level - 1));
+            maxHealth = Mathf.RoundToInt(health * multiplier);
+            maxMana = Mathf.RoundToInt(mana * multiplier);
+            this.health = maxHealth;
+            this.mana = maxMana;
+            this.speed = speed;
+            this.jumpForce = jumpForce;
+
+            //this.speed = speed * (1 + 0.05f * (level - 1));   //don`t need to buff speed because of overpower
+            //this.jumpForce = jumpForce * (1 + 0.03f * (level - 1));   //don`t need to buff jump force because of overpower
 
             this.view = view;
             this.playerController = playerController;
             this.durabilDatabase = durabilDatabase;
             view.HealthBar.maxValue = maxHealth;
-            view.ManaBar.maxValue = mana;           
+            view.ManaBar.maxValue = mana;
+            curManaRegenInterval = manaRegenInterval;
+            UpdateAllStats();
+
+            StartCoroutine(RegenerateMana());
+            StartCoroutine(RegenerateHealth());
         }               
         
 
@@ -311,5 +339,61 @@ namespace Objects.PlayerScripts
             Health += count;
             Debug.Log($"Player added {count} of health");
         }
-    }
+        private IEnumerator RegenerateMana()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(curManaRegenInterval);
+                if (Mana < MaxMana)
+                {
+                    int newMana = Mathf.Min(Mana + manaRegenAmount, maxMana);
+                    AddMana(newMana - Mana);
+                }
+            }
+        }
+        private IEnumerator RegenerateHealth()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(healthRegenInterval);
+                if (Health < maxHealth)
+                {
+                    int newHealth = Mathf.Min(Health + healthaRegenAmount, maxHealth);
+                    AddHealth(newHealth - Health);
+                }
+            }
+        }
+        public void EnableRegen(float manaRegenInterval, float duration)
+        {
+            if (curManaRegenInterval == manaRegenInterval) //if poition had the same buff
+            {
+                if (timer < 1)
+                {
+                    curManaRegenInterval = manaRegenInterval;
+                    StartCoroutine(WaitForDuration(duration));
+                }
+                else
+                {
+                    timer += duration;
+                }
+            }
+            else
+            {
+                timer = duration;
+                curManaRegenInterval = manaRegenInterval;
+                StartCoroutine(WaitForDuration(duration));
+            }
+        }
+        private IEnumerator WaitForDuration(float duration)
+        {
+            timer = duration;
+            while (timer >= 0)
+            {
+                view.UpdateTimerText(timer);
+                yield return new WaitForSeconds(1f);
+                timer -= 1;
+            }
+            curManaRegenInterval = manaRegenInterval;
+        }
+    }    
 }

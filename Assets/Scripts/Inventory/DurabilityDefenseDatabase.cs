@@ -5,6 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 using System;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 
 public class DurabilityDefenseDatabase : MonoBehaviourPun
 {   
@@ -194,5 +195,10 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
         photonView.RPC("AddNewItemInOnline", RpcTarget.Others,item.itemID);
 
         return allItems.Count;  //return defense ID
+    }
+   
+    public void DestroySelf() 
+    {
+        Destroy(gameObject);
     }
 }

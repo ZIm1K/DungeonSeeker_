@@ -1,5 +1,7 @@
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameMenuManager : MonoBehaviourPunCallbacks
 {
@@ -12,6 +14,8 @@ public class GameMenuManager : MonoBehaviourPunCallbacks
 
     private bool isMenuActive = false;
     public static bool IsMenuOpen = false;
+
+    private bool isExitingToMenu = false;
 
     private void Start()
     {
@@ -70,11 +74,26 @@ public class GameMenuManager : MonoBehaviourPunCallbacks
     }
 
 
-    /*public void ExitToMenu()
+    public void ExitToMenu()
     {
-        if (PhotonNetwork.InRoom)
+        clickSound.Play();
+        FindObjectOfType<DurabilityDefenseDatabase>().DestroySelf();
+        if (PhotonNetwork.IsConnected)
         {
-            Launcher.LeaveRoom();
+            isExitingToMenu = true;
+            PhotonNetwork.Disconnect();
         }
-    }*/
+        else
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        if (isExitingToMenu)
+        {
+            isExitingToMenu = false;
+            SceneManager.LoadScene(0);
+        }
+    }
 }

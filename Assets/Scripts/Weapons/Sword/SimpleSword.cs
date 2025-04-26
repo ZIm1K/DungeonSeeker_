@@ -62,7 +62,7 @@ public class SimpleSword : Weapon
     {
         if (!photonView.IsMine || isReloading) return;
 
-        if (Time.time >= lastAttackTime + shotTimeout)
+        if (Time.time >= lastAttackTime + shotTimeout + animationClip.length)
         {
             if (Cursor.lockState == CursorLockMode.Locked)
             {

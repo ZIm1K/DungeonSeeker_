@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sword
   m_EditorClassIdentifier: 
   swordDamage: 10
-  shotTimeout: 0.5
+  shotTimeout: 0.3
   attackSoundPath: Sounds/Weapons/Sword/sword_Attack
   rangeOfAttack: 7
   pathOfScObj: ScriptableObject/Weapon/Iron Sword Item

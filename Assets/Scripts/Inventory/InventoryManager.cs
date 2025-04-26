@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using System.Net;
 using Objects.PlayerScripts;
 using System;
+using static UnityEditor.Progress;
 
 namespace Inventory
 {
@@ -77,7 +78,7 @@ namespace Inventory
 
             if (isItemOnDrag == false)
             {
-                if (Input.GetKeyDown(KeyCode.I))
+                if (Input.GetKeyDown(KeyCode.R))
                 {
                     if (ChestInventoryPanel.activeSelf)
                     {
@@ -277,7 +278,8 @@ namespace Inventory
                     string itemID = hit.collider.gameObject.GetComponent<Item>().item.itemID;
                     int amount = hit.collider.gameObject.GetComponent<Item>().amount;
 
-                    if (CheckEmptyInInventory() == true)
+                    if (CheckEmptyInInventory() || CheckForTheSameInInventory(hit.collider.gameObject.GetComponent<Item>().item, 
+                        hit.collider.gameObject.GetComponent<Item>().amount))
                     {
                         photonView.RPC("RPC_AddItemToInventory", RpcTarget.All, itemID, amount, defenseID);
 
@@ -296,11 +298,7 @@ namespace Inventory
                         {
                             PhotonNetwork.Destroy(hit.collider.gameObject);
                         }
-                    }
-                    else 
-                    {
-                        Debug.Log("You have full inventory!!!");
-                    }
+                    }                    
                 }
             }
         }
@@ -315,6 +313,26 @@ namespace Inventory
                 if (slot.isEmpty)
                 {
                     return true;                    
+                }
+            }
+            return false;
+        }
+        public bool CheckForTheSameInInventory(ItemScriptableObject item, float ammount)
+        {
+            for (int i = 0; i < slots.Count; i++)
+            {
+                if (item == slots[i].item)
+                {
+                    if (ammount + slots[i].amount <= item.maximumAmount)
+                    {
+                        return true;
+                    }
+                    else 
+                    {
+                        slots[i].amount = item.maximumAmount;
+                        slots[i].itemAmountText.text = slots[i].amount.ToString();
+                        return false;
+                    }                   
                 }
             }
             return false;

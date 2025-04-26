@@ -11,7 +11,7 @@ namespace ScriptableObjects.Weapons
         public int fireballDamage = 20;
         public GameObject explosionPrefab;
         public GameObject decalPrefab;
-        public AudioClip shotSound;
+        //public AudioClip shotSound;
         public float shotTimeout = 0.5f;
         public int manaCost = 20;
         public string pathOfScObj;

@@ -28,7 +28,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -73,6 +73,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (string.IsNullOrWhiteSpace(roomNameInputField.text)) return;
 
         PhotonNetwork.CreateRoom(roomNameInputField.text);
+
+        MenuManager.Instance.OpenMenu("loading");
     }
 
     public override void OnJoinedRoom()
@@ -115,7 +117,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             MenuManager.Instance.OpenMenu("loading");
         }
-        StartCoroutine(WaitToLeaveRoom());
     }
 
     private IEnumerator WaitToLeaveRoom()
@@ -178,7 +179,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         for (int i = 0; i < _roomList.Count; i++)
         {
-            if (_roomList[i].RemovedFromList) continue;
+            if (_roomList[i].RemovedFromList || !_roomList[i].IsOpen) continue;
             Instantiate(roomButtonPrefab, roomList).GetComponent<RoomListItem>().SetUp(_roomList[i]);
         }
     }
@@ -187,11 +188,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Instantiate(playerTextPrefab, playerList).GetComponent<PlayerListItem>().SetUp(player);
     }
-
-
-
     public void StartGame()
     {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        LevelHandler.ResetLevel();
         PhotonNetwork.LoadLevel(1);
     }
 
@@ -199,5 +200,4 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Application.Quit();
     }
-
 }

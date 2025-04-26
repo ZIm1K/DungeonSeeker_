@@ -36,7 +36,7 @@ namespace Objects.Weapon.Fireball
             fireballDamage = data.data.fireballDamage;
             explosionPrefab = data.data.explosionPrefab;
             decalPrefab = data.data.decalPrefab;
-            shotSound = data.data.shotSound;
+            //shotSound = data.data.shotSound;
             shotTimeout = data.data.shotTimeout;
 
             base.Initialize("Fireball", fireballDamage, false, 0f, shotSound, shotTimeout);
@@ -51,7 +51,7 @@ namespace Objects.Weapon.Fireball
 
         public override void Use()
         {
-            if (Time.time >= lastShotTime + shotTimeout && model.Mana >= manaCost)
+            if (Time.time >= lastShotTime + shotTimeout + animationClip.length && model.Mana >= manaCost)
             {
                 if (Cursor.lockState == CursorLockMode.Locked) 
                 { 

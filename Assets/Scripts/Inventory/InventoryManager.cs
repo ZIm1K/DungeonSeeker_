@@ -8,7 +8,6 @@ using UnityEngine.UI;
 using System.Net;
 using Objects.PlayerScripts;
 using System;
-using static UnityEditor.Progress;
 
 namespace Inventory
 {

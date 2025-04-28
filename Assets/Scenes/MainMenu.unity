@@ -10079,13 +10079,29 @@ PrefabInstance:
       value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 1897990939892356247, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1897990939892356247, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2140188018}
+      objectReference: {fileID: 1622596010}
     - target: {fileID: 1897990939892356247, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 2140188018}
+    - target: {fileID: 1897990939892356247, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OpenMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 1897990939892356247, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MenuManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1897990939892356247, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: main
+      objectReference: {fileID: 0}
     - target: {fileID: 1918142680101506737, guid: fcbfdeee0a65d404eb617be07e0f6d92, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1

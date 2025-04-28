@@ -6,7 +6,6 @@ using Photon.Pun;
 using System;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
-using static UnityEditor.Progress;
 using UnityEngine.ProBuilder.MeshOperations;
 
 public class DurabilityDefenseDatabase : MonoBehaviourPun

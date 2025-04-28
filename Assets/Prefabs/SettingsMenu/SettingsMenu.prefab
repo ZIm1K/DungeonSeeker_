@@ -1592,9 +1592,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7451521022393456671}
         m_TargetAssemblyTypeName: Launcher, Assembly-CSharp
-        m_MethodName: OnLeftRoom
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

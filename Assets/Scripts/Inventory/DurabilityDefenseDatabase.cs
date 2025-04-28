@@ -6,18 +6,20 @@ using Photon.Pun;
 using System;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
+using static UnityEditor.Progress;
+using UnityEngine.ProBuilder.MeshOperations;
 
 public class DurabilityDefenseDatabase : MonoBehaviourPun
-{   
-    public List<ItemScriptableObject> allItems;
+{
+    [SerializeField] private List<ItemScriptableObject> allItems = new List<ItemScriptableObject>();
 
-    public List<int> allValues;
+    [SerializeField] private List<int> allValues = new List<int>();
 
-    public ItemDatabase itemDatabase;
+    //public ItemDatabase itemDatabase;
 
     public Action OnChangeValues;
 
-    private static DurabilityDefenseDatabase instance;
+    public static DurabilityDefenseDatabase instance;
 
     private void Awake()
     {
@@ -60,6 +62,7 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
 
     public int GetValueByID(int id)
     {
+        //Debug.LogWarning("Id in get  " + id);
         for (int i = 0; i < allValues.Count; i++) 
         {
             if (i + 1 == id) 
@@ -72,6 +75,7 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
     }
     public void SubDurabilAmmount(int id,int damage) 
     {
+        //Debug.LogWarning("Id in sub " + id);
         for (int i = 0; i < id; i++)
         {
             if (i + 1 == id)
@@ -134,44 +138,41 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
         allValues[i] = value;
     }
     [PunRPC]
-    async Task AddNewItemInOnline(string ID)
-    {
-        if (itemDatabase == null) 
-        {
-            await WaitForItemDatabase();
-        }
-        ItemScriptableObject item = itemDatabase.GetItemByID(ID);
-        switch (item)
-        {
-            case HelmetItem:
-                {
-                    allValues.Add((item as HelmetItem).defense);
-                    break;
-                }
-            case ArmorItem:
-                {
-                    allValues.Add((item as ArmorItem).defense);
-                    break;
-                }
-            case BootsItem:
-                {
-                    allValues.Add((item as BootsItem).defense);
-                    break;
-                }
-        }       
+    void AddNewItemInOnline(string ID)
+    {      
+        ItemScriptableObject item = ItemDatabase.GetItemByID(ID);
 
-        allItems.Add(item);
+        AddNewItemWithType(item);
     }
-    private async Task WaitForItemDatabase() 
-    {
-        while (itemDatabase == null)
-        {
-            await Task.Yield();
-        }
+    [PunRPC]
+    void AddInExistedItemInOnline(string ID, int defenseId)
+    {        
+        ItemScriptableObject item = ItemDatabase.GetItemByID(ID);
+
+        AddinExistedItemWithType(item, defenseId);
     }
     public int OnNewDefenseItemAdded(string ID) 
     {
-        ItemScriptableObject item = itemDatabase.GetItemByID(ID);
+        ItemScriptableObject item = ItemDatabase.GetItemByID(ID);
+
+        for (int i = 0; i < allItems.Count; i++) 
+        {
+            if (allItems[i] == null) 
+            {
+                AddinExistedItemWithType(item, i);
+                photonView.RPC("AddInExistedItemInOnline", RpcTarget.Others, item.itemID, i);
+                //Debug.LogWarning("Existed defense Id " + i);
+                return i; //return defense ID
+            }
+        }
+        AddNewItemWithType(item);
+
+        photonView.RPC("AddNewItemInOnline", RpcTarget.Others,item.itemID);
+        //Debug.LogWarning("New defense Id " + (allItems.Count));
+        return allItems.Count;  //return defense ID
+    }
+    void AddNewItemWithType(ItemScriptableObject item) 
+    {
         switch (item)
         {
             case HelmetItem:
@@ -191,14 +192,56 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
                 }
         }
         allItems.Add(item);
-
-        photonView.RPC("AddNewItemInOnline", RpcTarget.Others,item.itemID);
-
-        return allItems.Count;  //return defense ID
     }
-   
+    void AddinExistedItemWithType(ItemScriptableObject item, int defenseID)
+    {
+        switch (item)
+        {
+            case HelmetItem:
+                {
+                    allValues[defenseID] = (item as HelmetItem).defense;
+                    allItems[defenseID] = item;
+                    break;
+                }
+            case ArmorItem:
+                {
+                    allValues[defenseID] = (item as ArmorItem).defense;
+                    break;
+                }
+            case BootsItem:
+                {
+                    allValues[defenseID] = (item as BootsItem).defense;
+                    break;
+                }
+            default:
+                Debug.LogWarning("Error unknown defense");
+                break;
+        }
+        allItems[defenseID] = item;        
+    }
+    public void ClearNotNeededItems() 
+    {
+        for (int i = allItems.Count - 1; i > -1; i--) 
+        {
+            if (allItems[i] == null)
+            {
+                allItems.RemoveAt(i);
+                allValues.RemoveAt(i);
+            }
+            else 
+            {
+                return;
+            }
+        }
+    }
+
     public void DestroySelf() 
     {
         Destroy(gameObject);
+    }
+    public void RemoveItemFromList(int defenseID) 
+    {
+        allItems[defenseID] = null;
+        allValues[defenseID] = -1;
     }
 }

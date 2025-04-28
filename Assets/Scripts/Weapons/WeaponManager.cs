@@ -244,12 +244,11 @@ namespace Objects.Weapon
             }
 
             photonView.RPC("SetForOthers", RpcTarget.Others, index, obj.GetComponent<PhotonView>().ViewID, activ);
-            weapons[index].InitializeAnimation(posTarget.transform.GetChild(index).GetChild(0).GetComponent<Animation>());
+            weapons[index].InitializeAnimation(obj.GetComponent<Animation>());
 
             if (weapons[index] as SimpleSword) 
             {
-                (weapons[index] as SimpleSword).SetTrigger(posTarget.transform
-                    .GetChild(index).GetChild(0).GetChild(0).GetComponent<SwordTrigger>());
+                (weapons[index] as SimpleSword).SetTrigger(obj.transform.GetChild(0).GetComponent<SwordTrigger>());
             }
         }
         [PunRPC]
@@ -338,13 +337,13 @@ namespace Objects.Weapon
 
             Destroy(weapons[numberOfSlot]);
 
-            if (weapons[currentWeaponIndex] != null) 
-            {
-                if (weapons[currentWeaponIndex] == weapons[numberOfSlot])
-                {
-                    weapons[currentWeaponIndex].ClearAmmo();
-                }
-            }
+            //if (weapons[currentWeaponIndex] != null) 
+            //{
+            //    if (weapons[currentWeaponIndex] == weapons[numberOfSlot])
+            //    {
+            //        weapons[currentWeaponIndex].ClearAmmo();
+            //    }
+            //}
             
             weapons[numberOfSlot] = null;
         }

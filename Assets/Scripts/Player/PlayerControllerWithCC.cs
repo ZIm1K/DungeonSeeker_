@@ -78,7 +78,7 @@ namespace Objects.PlayerScripts
             else
             {
                 DurabilityDefenseDatabase durabilDatabase = GameObject.FindWithTag("DurabilBase").GetComponent<DurabilityDefenseDatabase>();               
-                durabilDatabase.itemDatabase = gameObject.GetComponent<ItemDatabase>();
+                //durabilDatabase.itemDatabase = gameObject.GetComponent<ItemDatabase>();
                 model = gameObject.AddComponent<CharacterModel>();
                 model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
 

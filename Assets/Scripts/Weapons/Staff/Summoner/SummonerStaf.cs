@@ -57,7 +57,7 @@ public class SummonerStaf : Weapon
     {
         animationClip = data.data.animationClip;
         animation_ = animation;
-        animation_.clip = animationClip;
+        animation_.clip = animationClip;        
     }
     public override void Use()
     {
@@ -86,7 +86,7 @@ public class SummonerStaf : Weapon
                 gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, attackSoundPath);
             }
             animation_.Play();
-            model.SpendMana(manaCost);;
+            model.SpendMana(manaCost);
         }               
     }
     private void OnDisable()

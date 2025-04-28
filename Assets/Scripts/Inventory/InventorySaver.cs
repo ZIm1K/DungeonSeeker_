@@ -117,12 +117,10 @@ public class InventorySaver : MonoBehaviour
             Debug.LogError("One or more slot lists are null.");
             return;
         }
-        Debug.LogWarning("Not returned");
         ClearSlots(defenseSlots);
         ClearSlots(charmSlots);
         ClearSlots(weaponSlots);
         ClearSlots(defaultSlots);
-        Debug.LogWarning("Start loading");
         foreach (var savedSlot in savedSlotsData)
         {
             if (savedSlot.itemID != "0")
@@ -158,7 +156,7 @@ public class InventorySaver : MonoBehaviour
                             AssignItemToSlotAtIndex(defaultSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
                             break;
                     }
-                    Debug.LogWarning("you loaded something");
+                    //Debug.LogWarning("you loaded something");
                 }
             }
         }

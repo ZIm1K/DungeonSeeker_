@@ -20,7 +20,7 @@ namespace Inventory
         [SerializeField] private Transform inventoryPanel;
         [SerializeField] private float reachDistance = 3f;
         
-        [SerializeField] private ItemDatabase itemDatabase;
+        //[SerializeField] private ItemDatabase itemDatabase;
 
         private List<InventorySlot> slots = new List<InventorySlot>();
         private Camera mainCamera;
@@ -196,7 +196,7 @@ namespace Inventory
 
                                         if (hit.collider.GetComponent<Chest>().saveChestItems[i].isEmpty == false)
                                         {
-                                            ItemScriptableObject item = itemDatabase.GetItemByID(hit.collider.GetComponent<Chest>().saveChestItems[i].ID);
+                                            ItemScriptableObject item = ItemDatabase.GetItemByID(hit.collider.GetComponent<Chest>().saveChestItems[i].ID);
                                             slot.item = item;
                                             slot.defenseID = hit.collider.GetComponent<Chest>().saveChestItems[i].defenseID;
                                             slot.amount = hit.collider.GetComponent<Chest>().saveChestItems[i].ammount;
@@ -230,7 +230,7 @@ namespace Inventory
                                 {
                                     if (hit.collider.GetComponent<Crafter>().saveCraftItems[i].isEmpty == false)
                                     {
-                                        ItemScriptableObject item = itemDatabase.GetItemByID(hit.collider.GetComponent<Crafter>().saveCraftItems[i].ID);
+                                        ItemScriptableObject item = ItemDatabase.GetItemByID(hit.collider.GetComponent<Crafter>().saveCraftItems[i].ID);
                                         craftSlots[i].item = item;
                                         craftSlots[i].defenseID = 0;
                                         craftSlots[i].amount = 1;
@@ -304,7 +304,7 @@ namespace Inventory
         }
         public ItemScriptableObject ItemReturner(string id)
         {
-            return itemDatabase.GetItemByID(id);
+            return ItemDatabase.GetItemByID(id);
         }
         public bool CheckEmptyInInventory() 
         {
@@ -344,7 +344,7 @@ namespace Inventory
         }
         void AddItem(string itemID, int amount, int defenseID)
         {
-            ItemScriptableObject item = itemDatabase.GetItemByID(itemID);
+            ItemScriptableObject item = ItemDatabase.GetItemByID(itemID);
             if (item != null)
             {
                 foreach (InventorySlot slot in slots)
@@ -417,7 +417,7 @@ namespace Inventory
                     {
                         slot = CraftInventoryPanel.transform.GetChild(0).GetChild(slotID).GetComponent<InventorySlot>();
                         
-                        item = itemDatabase.GetItemByID(currentCrafter.GetComponent<Crafter>().saveCraftItems[slotID].ID);
+                        item = ItemDatabase.GetItemByID(currentCrafter.GetComponent<Crafter>().saveCraftItems[slotID].ID);
                     }
                 }
                 else 
@@ -433,7 +433,7 @@ namespace Inventory
             {
                 slot = ChestInventoryPanel.transform.GetChild(0).GetChild(slotID).GetComponent<InventorySlot>();
 
-                item = itemDatabase.GetItemByID(currentChest.GetComponent<Chest>().saveChestItems[slotID].ID);
+                item = ItemDatabase.GetItemByID(currentChest.GetComponent<Chest>().saveChestItems[slotID].ID);
             }
             if (item != null)
             {

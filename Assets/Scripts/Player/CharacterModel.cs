@@ -1,6 +1,7 @@
 using Inventory;
 using Photon.Pun;
 using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -39,6 +40,8 @@ namespace Objects.PlayerScripts
         private float jumpForce;
         private CharacterView view;
         private PlayerControllerWithCC playerController;
+
+        private float currentMultiplier;
 
         public int Health
         {
@@ -149,11 +152,13 @@ namespace Objects.PlayerScripts
         public void Initialize(int health, int mana, CharacterView view, float speed, PlayerControllerWithCC playerController,
      float jumpForce, DurabilityDefenseDatabase durabilDatabase)
         {
-            int level = LevelHandler.Level;
-            float multiplier = Mathf.Pow(1.03f, level - 1); 
+            //int level = LevelHandler.Level;
+            //currentMultiplier = Mathf.Pow(1.03f, level - 1);
 
-            maxHealth = Mathf.RoundToInt(health * multiplier);
-            maxMana = Mathf.RoundToInt(mana * multiplier);
+            //maxHealth = Mathf.RoundToInt(health * currentMultiplier); //don`t need to buff speed because of overpower
+            //maxMana = Mathf.RoundToInt(mana * currentMultiplier); //don`t need to buff speed because of overpower
+            maxHealth = health;
+            maxMana = mana;
             this.health = maxHealth;
             this.mana = maxMana;
             this.speed = speed;
@@ -394,6 +399,19 @@ namespace Objects.PlayerScripts
                 timer -= 1;
             }
             curManaRegenInterval = manaRegenInterval;
+        }
+        private void OnDisable()
+        {
+            List<Item> listOfDefense = new List<Item>(GameObject.FindObjectsOfType<Item>());
+            foreach (Item item in listOfDefense) 
+            {
+                ItemType typeOfitem = item.item.itemType;
+                if (typeOfitem == ItemType.Helmet || typeOfitem == ItemType.Armor || typeOfitem == ItemType.Boots) 
+                {
+                    DurabilityDefenseDatabase.instance.RemoveItemFromList((item as DefenseItem).ID - 1);
+                }
+            }
+            DurabilityDefenseDatabase.instance.ClearNotNeededItems();
         }
     }    
 }

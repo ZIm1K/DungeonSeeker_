@@ -7,7 +7,7 @@ namespace Inventory
     {
         public List<ItemScriptableObject> allItems;
 
-        private Dictionary<string, ItemScriptableObject> itemDictionary;
+        private static Dictionary<string, ItemScriptableObject> itemDictionary;
 
         private void Awake()
         {
@@ -21,7 +21,7 @@ namespace Inventory
             }
         }
 
-        public ItemScriptableObject GetItemByID(string id)
+        public static ItemScriptableObject GetItemByID(string id)
         {
             if (itemDictionary.TryGetValue(id, out ItemScriptableObject item))
             {

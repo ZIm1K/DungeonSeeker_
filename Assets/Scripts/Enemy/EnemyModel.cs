@@ -56,14 +56,14 @@ namespace Objects.Enemies
             this.attackInterval = attackInterval;
             this.level = level;
 
-            float multiplier = Mathf.Pow(1.15f, level - 1);
+            float multiplier = Mathf.Pow(1.02f, level - 1);
             Health = Mathf.RoundToInt(baseHealth * multiplier);
             Damage = Mathf.RoundToInt(baseDamage * multiplier);
         }
 
         private void ApplyLevelBonuses()
         {
-            float multiplier = Mathf.Pow(1.15f, level - 1);
+            float multiplier = Mathf.Pow(1.02f, level - 1);
             Health = Mathf.RoundToInt(health * multiplier);
             Damage = Mathf.RoundToInt(damage * multiplier);
         }

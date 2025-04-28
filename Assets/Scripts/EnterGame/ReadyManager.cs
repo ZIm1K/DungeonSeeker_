@@ -9,9 +9,9 @@ public class ReadyManager : MonoBehaviourPunCallbacks
 {
     public TextMeshProUGUI readyCountText; 
     public ZoneTrigger zoneTrigger; 
-    public int nextSceneIndex = 2;
-    private bool isReady = false; 
-    private int readyPlayers = 0;
+    public int nextSceneIndex = 1;
+    protected bool isReady = false; 
+    protected int readyPlayers = 0;
 
     private void Start()
     {
@@ -26,7 +26,7 @@ public class ReadyManager : MonoBehaviourPunCallbacks
         }
     }
 
-    void ToggleReady()
+    protected void ToggleReady()
     {
         if (!PhotonNetwork.IsConnected) return;
 

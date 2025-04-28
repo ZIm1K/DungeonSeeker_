@@ -9,6 +9,7 @@ namespace LevelGenerator
     public class LevelGenerator : MonoBehaviourPun
     {
         [SerializeField] private GameObject[] roomPrefabs;
+        //[SerializeField] private GameObject bossRoomPrefab;
         [SerializeField] private GameObject finalRoomPrefab;
         [SerializeField] private GameObject wallRoomPrefab;
         [SerializeField] private int baseRooms = 15;
@@ -33,10 +34,17 @@ namespace LevelGenerator
                 int currentLevel = LevelHandler.Level;
                 int maxRooms = baseRooms + (currentLevel - 1);
 
-                GenerateLevel(maxRooms);
-                PlaceFinalRoom();
-                PlaceWalls();
-                photonView.RPC("SynchronizeLevel", RpcTarget.Others, usedPositions.ToArray());
+                //if (currentLevel % 10 == 0)
+                //{
+                //    PhotonNetwork.Instantiate(bossRoomPrefab.name,Vector3.zero,Quaternion.identity);
+                //}
+                //else 
+                //{
+                    GenerateLevel(maxRooms);
+                    PlaceFinalRoom();
+                    PlaceWalls();
+                    photonView.RPC("SynchronizeLevel", RpcTarget.Others, usedPositions.ToArray());
+                //}
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Enemy.StateMachine;
 using Interfaces;
@@ -20,6 +21,7 @@ namespace Objects.Enemies
         private NavMeshAgent agent;
         private GameObject currentTarget;
         private float attackTimer;
+        public Action OnDieEvent;
 
         [Header("MVC")]
         [SerializeField] private EnemyView view;
@@ -30,6 +32,7 @@ namespace Objects.Enemies
         [SerializeField] private float chaseRange = 5f;
         [SerializeField] private float attackRange = 2;
         [SerializeField] private float attackInterval = 1;
+        public bool isBoss;
        //never used [SerializeField] private float changePositionTime = 5f;
         [SerializeField] private float moveDistance = 10f;
 
@@ -209,7 +212,8 @@ namespace Objects.Enemies
             if (PhotonNetwork.IsMasterClient)
             {
                 PhotonNetwork.Destroy(this.gameObject);
+                OnDieEvent?.Invoke();
             }
-        }
+        }      
     }
 }

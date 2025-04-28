@@ -13,7 +13,6 @@ public class Spawner : MonoBehaviour
             GameObject selectedEnemy = enemyPrefabs[randomIndex];
 
             PhotonNetwork.Instantiate(selectedEnemy.name, transform.position, transform.rotation);
-            Debug.LogWarning("Instatntiated");
         }
     }
 }

@@ -65,6 +65,5 @@ public class BinarySaveSystem : ISaveManager
         {
             new BinaryFormatter().Serialize(file, data);
         }
-        Debug.LogWarning("Saved");
     }
 }

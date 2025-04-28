@@ -48,7 +48,7 @@ public class SimpleSword : Weapon
     public void SetTrigger(SwordTrigger trigger) 
     {
         this.trigger = trigger;
-        Debug.LogWarning("Triggered");
+        //Debug.LogWarning("Triggered");
     }
 
 

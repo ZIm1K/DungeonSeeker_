@@ -543,8 +543,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 015fd9fd0599f412c8432e0b37c5ca85, type: 3}
   stepInterval: 0.1
   view: {fileID: -4128584846684513814}
-  maxHealth: 100
-  maxMana: 100
+  maxHealth: 300
+  maxMana: 200
   canvas: {fileID: 2703990947504820435}
   model: {fileID: 0}
   playerModel: {fileID: 3158500122533464705}
@@ -680,7 +680,6 @@ MonoBehaviour:
   CharacterTextsPanel: {fileID: 4085403285235152276}
   inventoryPanel: {fileID: 8675772997558594319}
   reachDistance: 3
-  itemDatabase: {fileID: 455487175894009716}
   isItemOnDrag: 0
   slotPrefab: {fileID: 4118200696008253200, guid: 4dc78baaa169f024487ed129f39bf874, type: 3}
   rangeOfOpen: 3
@@ -3767,7 +3766,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3033808326766768980
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4316,7 +4315,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4a1bef79d736a2044a53730fd6074c16, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9674dd06318dfc5468e31f9024c8c166, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6507,7 +6506,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7785320366677817631
 RectTransform:
   m_ObjectHideFlags: 0

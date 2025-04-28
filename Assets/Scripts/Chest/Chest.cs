@@ -29,8 +29,6 @@ public class SaveChestItem
 
 public class Chest : MonoBehaviourPun
 {
-    public List<ItemScriptableObject> allItems;
-
     public int CountOfItems;
 
     public SaveChestItem[] saveChestItems;
@@ -73,11 +71,7 @@ public class Chest : MonoBehaviourPun
                             if (allItems[i].itemType == ItemType.Helmet ||
                                 allItems[i].itemType == ItemType.Armor ||
                                 allItems[i].itemType == ItemType.Boots)
-                            {
-                                //if (durabilDatabase.allItems == null) 
-                                //{
-                                //    durabilDatabase.allItems = allItems;
-                                //}
+                            {                              
                                 defenseID = durabilDatabase.OnNewDefenseItemAdded(allItems[i].itemID);
                             }
                             
@@ -103,4 +97,19 @@ public class Chest : MonoBehaviourPun
     {
         saveChestItems[slotID] = new SaveChestItem(" ", 0, 0, true);
     }
+
+    private void OnDisable()
+    {        
+        for (int i = 0; i < saveChestItems.Length; i++)
+        {
+            if (!saveChestItems[i].isEmpty)
+            {
+                ItemType itemType = ItemDatabase.GetItemByID(saveChestItems[i].ID).itemType;
+                if (itemType == ItemType.Helmet || itemType == ItemType.Armor || itemType == ItemType.Boots)
+                {
+                    DurabilityDefenseDatabase.instance.RemoveItemFromList(saveChestItems[i].defenseID - 1);
+                }
+            }
+        }       
+    }    
 }

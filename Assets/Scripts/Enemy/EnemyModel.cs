@@ -81,7 +81,8 @@ namespace Objects.Enemies
             }
             else 
             {
-                PhotonNetwork.Destroy(gameObject);
+                GameObject.FindGameObjectWithTag("EnemyKillCounter").GetComponent<EnemyKillCount>().NewEnemyKilled();
+                PhotonNetwork.Destroy(gameObject);               
             }
         }
     }

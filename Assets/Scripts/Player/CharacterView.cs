@@ -19,11 +19,11 @@ namespace Objects.PlayerScripts
         public Slider HealthBar;
         public Slider ManaBar;
         private float time;      
-        public TMP_Text Level;       
-
+        public TMP_Text Level;
+       
         public void UpdateLevelText(int level)
         {
-            Level.text = $"{level}";
+            Level.text = $"Floor: {level}";
         }
         public void UpdateHealthText(int health)
         {
@@ -46,7 +46,7 @@ namespace Objects.PlayerScripts
         public void UpdateJumpForceText(float force)
         {
             JumpForceText.text = $"{force}";
-        }
+        }       
         public void UpdateTimerText(float time)
         {
             if (time > 0)

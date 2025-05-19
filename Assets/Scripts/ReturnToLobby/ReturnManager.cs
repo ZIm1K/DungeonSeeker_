@@ -8,6 +8,7 @@ using UnityEngine;
 public class ReturnManager : MonoBehaviourPunCallbacks
 {
     public TextMeshProUGUI exitCountText;
+    private EnemyKillCount enemyKillCount;
     public ZoneTrigger exitZoneTrigger;
     public int exitSceneIndex = 1;
     private bool isReadyToExit = false;
@@ -16,18 +17,27 @@ public class ReturnManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         exitCountText.gameObject.SetActive(false);
+        enemyKillCount = GameObject.FindGameObjectWithTag("EnemyKillCounter").GetComponent<EnemyKillCount>();
         UpdateExitText();
     }
 
-    void Update()
-    {
+    void LateUpdate()
+    {        
         if (exitZoneTrigger.IsPlayerInZone())
         {
-            exitCountText.gameObject.SetActive(true);
             if (Input.GetKeyDown(KeyCode.F))
             {
-                ToggleExitReady();
-            }
+                exitCountText.gameObject.SetActive(true);
+                if (enemyKillCount.curEnemiesKilled >= enemyKillCount.enemiesToKill)
+                {
+                    UpdateExitText();
+                    ToggleExitReady();
+                }
+                else
+                {
+                    exitCountText.text = $"The path awaits {enemyKillCount.enemiesToKill - enemyKillCount.curEnemiesKilled} more sacrifices...";
+                }
+            }            
         }
         else
         {

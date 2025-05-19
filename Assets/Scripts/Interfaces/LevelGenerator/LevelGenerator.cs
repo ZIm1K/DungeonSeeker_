@@ -11,6 +11,7 @@ namespace LevelGenerator
         [SerializeField] private GameObject[] roomPrefabs;
         //[SerializeField] private GameObject bossRoomPrefab;
         [SerializeField] private GameObject finalRoomPrefab;
+        [SerializeField] private GameObject startlRoomPrefab;
         [SerializeField] private GameObject wallRoomPrefab;
         [SerializeField] private int baseRooms = 15;
         [SerializeField] private int branchFrequency = 3; 
@@ -18,6 +19,8 @@ namespace LevelGenerator
 
         private List<Vector3> usedPositions = new List<Vector3>();
         private List<GameObject> spawnedRooms = new List<GameObject>();
+
+        [SerializeField] private EnemyKillCount enemyKillCount;
 
         private Vector3[] directions = new Vector3[]
         {
@@ -51,8 +54,9 @@ namespace LevelGenerator
         void GenerateLevel(int maxRooms)
         {
             Quaternion randomRotation = Quaternion.Euler(0, 90 * Random.Range(0, 4), 0);
+           
             GameObject startRoom = PhotonNetwork.Instantiate(
-                roomPrefabs[Random.Range(0, roomPrefabs.Length)].name,
+                startlRoomPrefab.name,
                 Vector3.zero,
                 randomRotation
             );
@@ -95,6 +99,11 @@ namespace LevelGenerator
                 selectedPosition,
                 randomRotation
             );
+
+            if (newRoom.GetComponent<Spawner>()) 
+            {
+                enemyKillCount.enemiesToKill++;
+            }
 
             usedPositions.Add(selectedPosition);
             spawnedRooms.Add(newRoom);
@@ -145,6 +154,8 @@ namespace LevelGenerator
                 );
 
                 spawnedRooms[spawnedRooms.Count - 1] = finalRoom;
+
+                enemyKillCount.NormalizeEnemyToKill();
             }
         }
 

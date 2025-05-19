@@ -1,3 +1,4 @@
+using Objects.Enemies;
 using Photon.Pun;
 using UnityEngine;
 
@@ -14,5 +15,5 @@ public class Spawner : MonoBehaviour
 
             PhotonNetwork.Instantiate(selectedEnemy.name, transform.position, transform.rotation);
         }
-    }
+    }    
 }

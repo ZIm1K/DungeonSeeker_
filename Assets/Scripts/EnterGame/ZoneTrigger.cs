@@ -10,8 +10,8 @@ public class ZoneTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            isPlayerInZone = true;
-            readyPanel.SetActive(true);
+            isPlayerInZone = true;            
+            readyPanel.SetActive(true);            
         }
     }
 

@@ -10,6 +10,7 @@ TagManager:
   - Crafter
   - Item
   - PlayerViewManager
+  - EnemyKillCounter
   layers:
   - Default
   - TransparentFX

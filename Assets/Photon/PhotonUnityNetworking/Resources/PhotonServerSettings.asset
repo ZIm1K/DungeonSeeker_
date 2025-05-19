@@ -84,6 +84,8 @@ MonoBehaviour:
   - SetParenter
   - UpdateExitStatus
   - AddInExistedItemInOnline
+  - OnNewSoulAdd
+  - UpdateEnemyKilled
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

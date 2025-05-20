@@ -50,7 +50,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -141,12 +141,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 2864947511503434656}
-  maxHealth: 1
-  damage: 100
+  maxHealth: 400
+  damage: 50
   chaseRange: 15
-  attackRange: 5
-  attackInterval: 0.5
-  isBoss: 0
+  attackRange: 3
+  attackInterval: 1
   moveDistance: 20
   animator: {fileID: 0}
 --- !u!65 &8893396288545502103

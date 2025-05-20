@@ -21,7 +21,7 @@ public class PlayerManager : MonoBehaviour
     private void CreateController()
     {
         PhotonView player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"),
-            new Vector3(Random.Range(-1.5f, 1.5f), 1.1f, Random.Range(-1.5f, 1.5f)), Quaternion.identity).GetPhotonView();
+            new Vector3(Random.Range(-1.5f, 1.5f), 2f, Random.Range(-1.5f, 1.5f)), Quaternion.identity).GetPhotonView();
         
         PlayerViewManager.Instance.photonView.RPC("AddToList", RpcTarget.All, player.ViewID);
     }

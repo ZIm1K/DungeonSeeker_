@@ -138,6 +138,37 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 8905603e6684d974d9f40e84d03b58d7, type: 2}
   m_BuildHeightMesh: 0
+--- !u!1 &6961459830431952297
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4176005012720518676}
+  m_Layer: 6
+  m_Name: PosToSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4176005012720518676
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6961459830431952297}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8325651426463509218}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8910824823167293543
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,6 +208,7 @@ Transform:
   - {fileID: 1788498405434674363}
   - {fileID: 1640413268152995847}
   - {fileID: 961763977781926056}
+  - {fileID: 4176005012720518676}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4743893444662678537
@@ -217,6 +249,7 @@ MonoBehaviour:
   - {fileID: 8558768284876094490, guid: b5abcb0121d204998959d67e37057181, type: 3}
   - {fileID: 8558768284876094490, guid: 5e25c63c2d8df54409693b76340fcd6e, type: 3}
   - {fileID: 8558768284876094490, guid: ae534f0fb7c534041ac5fb19ccbce5f6, type: 3}
+  placeToSpawn: {fileID: 4176005012720518676}
 --- !u!205 &9042936829521604599
 LODGroup:
   m_ObjectHideFlags: 0

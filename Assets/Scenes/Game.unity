@@ -1049,6 +1049,7 @@ MonoBehaviour:
   - {fileID: 8910824823167293543, guid: 2803e8b05d06a8d4bb30f355fd7d07db, type: 3}
   - {fileID: 8910824823167293543, guid: e132749664d2a55459e125934f23baf6, type: 3}
   - {fileID: 8910824823167293543, guid: 782850608e9965240b93e6d7a79da2e7, type: 3}
+  bossRoomPrefab: {fileID: 4373305083260565357, guid: c1c852110cc31c641981a50366d605e9, type: 3}
   finalRoomPrefab: {fileID: 8910824823167293543, guid: c7112750c4744a343a807c534c7a280c, type: 3}
   startlRoomPrefab: {fileID: 5549797878658237557, guid: d7c1d400a7cfb51499dcb48f6c3fc4a9, type: 3}
   wallRoomPrefab: {fileID: 8910824823167293543, guid: 425cddb2dff496d44b93446cfc888046, type: 3}

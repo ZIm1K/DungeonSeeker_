@@ -59,7 +59,7 @@ namespace Objects.PlayerScripts
 
         [SerializeField] private GameObject playerModel;
         private void Start()
-        {
+        {            
             _photonView = GetComponent<PhotonView>();
 
             controller = GetComponent<CharacterController>();

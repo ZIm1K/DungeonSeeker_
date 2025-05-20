@@ -7,7 +7,7 @@ public class LevelHandler : MonoBehaviour
     public static int Level
     {
         get => PlayerPrefs.GetInt("PlayerLevel", 1);
-        set => PlayerPrefs.SetInt("PlayerLevel", value);
+        set => PlayerPrefs.SetInt("PlayerLevel", value);        
     }
 
     public static void IncreaseLevel()

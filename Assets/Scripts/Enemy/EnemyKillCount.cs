@@ -19,10 +19,15 @@ public class EnemyKillCount : MonoBehaviour
     void UpdateEnemyKilled() 
     {
         curEnemiesKilled++;
-    }
-    public void NormalizeEnemyToKill() 
+    }    
+    public void NormalizeEnemyToKillLocal() 
     {
-        Debug.LogWarning(enemiesToKill);
         enemiesToKill = Mathf.RoundToInt(enemiesToKill / 3);
+        GetComponent<PhotonView>().RPC("UpdateEnemyToKillForAll", RpcTarget.Others, enemiesToKill);
+    }
+    [PunRPC]
+    void UpdateEnemyToKillForAll(int enemiesToKill) 
+    {
+        this.enemiesToKill = enemiesToKill;
     }
 }

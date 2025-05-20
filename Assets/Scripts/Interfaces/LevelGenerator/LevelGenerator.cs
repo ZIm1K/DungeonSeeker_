@@ -9,7 +9,7 @@ namespace LevelGenerator
     public class LevelGenerator : MonoBehaviourPun
     {
         [SerializeField] private GameObject[] roomPrefabs;
-        //[SerializeField] private GameObject bossRoomPrefab;
+        [SerializeField] private GameObject bossRoomPrefab;
         [SerializeField] private GameObject finalRoomPrefab;
         [SerializeField] private GameObject startlRoomPrefab;
         [SerializeField] private GameObject wallRoomPrefab;
@@ -34,20 +34,22 @@ namespace LevelGenerator
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                int currentLevel = LevelHandler.Level;
+                int currentLevel = LevelHandler.Level;                
                 int maxRooms = baseRooms + (currentLevel - 1);
 
-                //if (currentLevel % 10 == 0)
-                //{
-                //    PhotonNetwork.Instantiate(bossRoomPrefab.name,Vector3.zero,Quaternion.identity);
-                //}
-                //else 
-                //{
+                if (currentLevel % 10 == 0)
+                {
+                    PhotonNetwork.Instantiate(bossRoomPrefab.name, Vector3.zero, Quaternion.identity);
+                    enemyKillCount.enemiesToKill++;
+                    enemyKillCount.GetComponent<PhotonView>().RPC("UpdateEnemyToKillForAll", RpcTarget.Others, enemyKillCount.enemiesToKill);                
+                }    
+                else
+                {
                     GenerateLevel(maxRooms);
                     PlaceFinalRoom();
                     PlaceWalls();
                     photonView.RPC("SynchronizeLevel", RpcTarget.Others, usedPositions.ToArray());
-                //}
+                }
             }
         }
 
@@ -155,7 +157,7 @@ namespace LevelGenerator
 
                 spawnedRooms[spawnedRooms.Count - 1] = finalRoom;
 
-                enemyKillCount.NormalizeEnemyToKill();
+                enemyKillCount.NormalizeEnemyToKillLocal();
             }
         }
 

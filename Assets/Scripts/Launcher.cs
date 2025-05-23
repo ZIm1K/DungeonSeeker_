@@ -54,8 +54,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        MenuManager.Instance.OpenMenu("main");
-        PhotonNetwork.NickName = $"CoolGuy {Random.Range(0, 1338)}";
+        MenuManager.Instance.OpenMenu("main");       
     }
 
     public void OnPlayButton()

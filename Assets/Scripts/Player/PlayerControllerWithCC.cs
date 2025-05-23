@@ -7,6 +7,7 @@ using System.Net.Http;
 using Inventory;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 namespace Objects.PlayerScripts
 {
@@ -44,6 +45,7 @@ namespace Objects.PlayerScripts
 
         [Header("UI")]
         [SerializeField] private GameObject canvas;
+        [SerializeField] private TextMeshPro playerNameText;
 
         private CharacterController controller;
         private Vector3 velocity;
@@ -99,6 +101,7 @@ namespace Objects.PlayerScripts
                 }
 
                 SetRenderLayer();
+                photonView.RPC("SetPlayerName",RpcTarget.All, PhotonNetwork.NickName);
             }
 
             materialSounds = new Dictionary<PhysicMaterial, AudioClip[]>
@@ -107,6 +110,11 @@ namespace Objects.PlayerScripts
                 { Resources.Load<PhysicMaterial>("Materials/PhysicalMaterials/Concrete"), concreteClips },
                 { Resources.Load<PhysicMaterial>("Materials/PhysicalMaterials/Metal"), metalClips }
             };
+        }
+        [PunRPC]
+        private void SetPlayerName(string name) 
+        {
+            playerNameText.text = name;
         }
         void SetRenderLayer() 
         {

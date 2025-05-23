@@ -139,16 +139,12 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
     [PunRPC]
     void AddNewItemInOnline(string ID)
     {      
-        ItemScriptableObject item = ItemDatabase.GetItemByID(ID);
-
-        AddNewItemWithType(item);
+        AddNewItemWithType(ID);
     }
     [PunRPC]
     void AddInExistedItemInOnline(string ID, int defenseId)
     {        
-        ItemScriptableObject item = ItemDatabase.GetItemByID(ID);
-
-        AddinExistedItemWithType(item, defenseId);
+        AddinExistedItemWithType(ID, defenseId);
     }
     public int OnNewDefenseItemAdded(string ID) 
     {
@@ -158,20 +154,19 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
         {
             if (allItems[i] == null) 
             {
-                AddinExistedItemWithType(item, i);
+                AddinExistedItemWithType(item.itemID, i);
                 photonView.RPC("AddInExistedItemInOnline", RpcTarget.Others, item.itemID, i);
-                //Debug.LogWarning("Existed defense Id " + i);
                 return i; //return defense ID
             }
         }
-        AddNewItemWithType(item);
+        AddNewItemWithType(item.itemID);
 
         photonView.RPC("AddNewItemInOnline", RpcTarget.Others,item.itemID);
-        //Debug.LogWarning("New defense Id " + (allItems.Count));
         return allItems.Count;  //return defense ID
     }
-    void AddNewItemWithType(ItemScriptableObject item) 
+    void AddNewItemWithType(string ID) 
     {
+        ItemScriptableObject item = ItemDatabase.GetItemByID(ID);
         switch (item)
         {
             case HelmetItem:
@@ -192,8 +187,9 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
         }
         allItems.Add(item);
     }
-    void AddinExistedItemWithType(ItemScriptableObject item, int defenseID)
+    void AddinExistedItemWithType(string ID, int defenseID)
     {
+        ItemScriptableObject item = ItemDatabase.GetItemByID(ID);
         switch (item)
         {
             case HelmetItem:

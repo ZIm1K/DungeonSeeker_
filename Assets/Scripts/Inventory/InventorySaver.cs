@@ -134,7 +134,6 @@ public class InventorySaver : MonoBehaviour
                             AssignItemToSlotAtIndex(defenseSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
                             await defenseSlots[savedSlot.slotIndex].gameObject.transform.GetChild(0)
                                 .GetComponent<DragAndDropItem>().LoadWearItem(item, savedSlot.defenseID);
-                            //AssignItemToSlotAtIndex(defenseSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
                             break;
                         case "Charm":
                             AssignItemToSlotAtIndex(charmSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
@@ -143,30 +142,28 @@ public class InventorySaver : MonoBehaviour
                             break;
                         case "Weapon":
                             AssignItemToSlotAtIndex(weaponSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
+                            //if (savedSlot.slotIndex == 0)
+                            //{
+                            //    gameObject.GetComponent<WeaponManager>().OnKeyDown1();
+                            //}
+                            //else if (savedSlot.slotIndex == 1)
+                            //{
+                            //    gameObject.GetComponent<WeaponManager>().OnKeyDown2();
+                            //}
                             if (savedSlot.slotIndex == 0)
                             {
                                 gameObject.GetComponent<WeaponManager>().OnKeyDown1();
-                            }
-                            else if (savedSlot.slotIndex == 1)
-                            {
-                                gameObject.GetComponent<WeaponManager>().OnKeyDown2();
                             }
                             break;
                         case "Default":
                             AssignItemToSlotAtIndex(defaultSlots, savedSlot.slotIndex, item, savedSlot.amount, savedSlot.defenseID);
                             break;
                     }
-                    //Debug.LogWarning("you loaded something");
                 }
             }
-        }
-        //savedSlotsData.Clear();
-        //_saveSystem.Save(savedSlotsData);
-        //_saveSystem.DeleteFile();
-        //Debug.LogWarning("Cleared");
+        }        
         loadingPanel.transform.GetChild(0).gameObject.SetActive(false);
         gameObject.GetComponent<InventoryManager>().InvLoaded();
-        //Debug.LogWarning("End load");
     }
 
     private void AssignItemToSlotAtIndex(List<InventorySlot> slots, int index, ItemScriptableObject item, int amount, int defenseID)

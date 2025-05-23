@@ -214,7 +214,39 @@ namespace Inventory
 
                 if (isChanged)
                 {
-                    if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == "ChestInventory")
+                    if (oldSlot.transform.parent.parent.name == "ChestInventory") 
+                    {
+                        GameObject chestSlots = oldSlot.transform.parent.gameObject;
+                        for (int i = 0; i < chestSlots.transform.childCount; i++)
+                        {
+                            if (chestSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
+                            {
+                                if (oldSlot.isEmpty == false)
+                                {
+                                    player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,
+                                        oldSlot.defenseID, oldSlot.amount, oldSlot.isEmpty, i);
+                                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
+                                }
+                            }                            
+                        }
+                    }
+                    else if (oldSlot.transform.parent.parent.name == "CraftInventory")
+                    {
+                        GameObject craftSlots = oldSlot.transform.parent.gameObject;
+                        for (int i = 0; i < craftSlots.transform.childCount; i++)
+                        {
+                            if (craftSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
+                            {
+                                if (oldSlot.isEmpty == false)
+                                {
+                                    player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, oldSlot.item.itemID,
+                                            oldSlot.isEmpty, i);
+                                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
+                                }
+                            }
+                        }
+                    }
+                    else if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == "ChestInventory")
                     {
                         int canBreakIndex = 0;
 
@@ -235,8 +267,8 @@ namespace Inventory
                                 {
                                     player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,
                                         oldSlot.defenseID, oldSlot.amount, oldSlot.isEmpty, i);
+                                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
                                 }
-                                player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
                                 canBreakIndex++;
                             }
 
@@ -274,8 +306,8 @@ namespace Inventory
                                     {
                                         player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, oldSlot.item.itemID,
                                             oldSlot.isEmpty, i);
+                                        player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
                                     }
-                                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
                                     canBreakIndex++;
                                 }
                                 if (canBreakIndex == 2)

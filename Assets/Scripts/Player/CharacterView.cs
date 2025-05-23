@@ -19,7 +19,7 @@ namespace Objects.PlayerScripts
         public Slider HealthBar;
         public Slider ManaBar;
         private float time;      
-        public TMP_Text Level;
+        public TMP_Text Level;        
        
         public void UpdateLevelText(int level)
         {

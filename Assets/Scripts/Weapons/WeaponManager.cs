@@ -59,7 +59,7 @@ namespace Objects.Weapon
                 weapons[currentWeaponIndex].Use();
             }
 
-            if (Input.GetKeyDown(KeyCode.R) && weapons[currentWeaponIndex] != null)
+            if (Input.GetKeyDown(KeyCode.T) && weapons[currentWeaponIndex] != null)
             {
                 weapons[currentWeaponIndex].Reload();
             }

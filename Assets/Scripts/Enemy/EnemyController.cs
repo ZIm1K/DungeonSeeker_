@@ -71,7 +71,7 @@ namespace Objects.Enemies
             }
         }
 
-        void Update()
+        void LateUpdate()
         {
             if (!PhotonNetwork.IsMasterClient) return;
 
@@ -92,29 +92,32 @@ namespace Objects.Enemies
 
             currentTarget = FindNearestPlayer();
 
-            float distanceToPlayer = Vector3.Distance(gameObject.transform.position, currentTarget.transform.position);
+            if (currentTarget != null) 
+            {
+                float distanceToPlayer = Vector3.Distance(gameObject.transform.position, currentTarget.transform.position);
 
-            if (distanceToPlayer <= chaseRange && distanceToPlayer > attackRange)
-            {
-                if (stateMachine.CurrentState != chaseState)
+                if (distanceToPlayer <= chaseRange && distanceToPlayer > attackRange)
                 {
-                    stateMachine.ChangeState(chaseState);
+                    if (stateMachine.CurrentState != chaseState)
+                    {
+                        stateMachine.ChangeState(chaseState);
+                    }
                 }
-            }
-            else if (distanceToPlayer <= attackRange)
-            {
-                if (stateMachine.CurrentState != attackState)
+                else if (distanceToPlayer <= attackRange)
                 {
-                    stateMachine.ChangeState(attackState);
+                    if (stateMachine.CurrentState != attackState)
+                    {
+                        stateMachine.ChangeState(attackState);
+                    }
                 }
-            }
-            else
-            {
-                if (stateMachine.CurrentState != patrolState)
+                else
                 {
-                    stateMachine.ChangeState(patrolState);
+                    if (stateMachine.CurrentState != patrolState)
+                    {
+                        stateMachine.ChangeState(patrolState);
+                    }
                 }
-            }            
+            }                               
         }
 
         private GameObject FindNearestPlayer()

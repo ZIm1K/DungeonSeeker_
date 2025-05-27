@@ -103,8 +103,8 @@ public class ReturnManager : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient) 
             {
                 LevelHandler.IncreaseLevel();
+                PhotonNetwork.LoadLevel(exitSceneIndex);
             }
-            PhotonNetwork.LoadLevel(exitSceneIndex);
         }
     }
 }

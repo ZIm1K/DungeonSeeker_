@@ -19,4 +19,5 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 1ff18920df7230a4dbc8e9e75c4ed7e5, type: 3}
   itemType: 4
   itemDescription: Worn over the mind, not the head.
-  defense: 50
+  dropChanse: 0
+  defense: 75

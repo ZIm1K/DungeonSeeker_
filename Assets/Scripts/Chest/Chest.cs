@@ -73,6 +73,7 @@ public class Chest : MonoBehaviourPun
                                 allItems[i].itemType == ItemType.Boots)
                             {                              
                                 defenseID = durabilDatabase.OnNewDefenseItemAdded(allItems[i].itemID);
+                                saveChestItems[slot].defenseID = defenseID;
                             }
                             
                             photonView.RPC("AddItemToChest", RpcTarget.All, allItems[i].itemID, defenseID, amount, false, slot);

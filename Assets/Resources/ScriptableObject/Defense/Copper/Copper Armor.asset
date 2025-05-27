@@ -21,5 +21,5 @@ MonoBehaviour:
   itemDescription: "Worn by those who didn\u2019t flee. Their courage still clings
     to it."
   dropChanse: 15
-  defense: 50
-  nerfSpeed: 2
+  defense: 80
+  nerfSpeed: 1

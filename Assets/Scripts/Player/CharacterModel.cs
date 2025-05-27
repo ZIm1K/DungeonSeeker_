@@ -1,14 +1,17 @@
 using Inventory;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.CompilerServices;
+using UnityEditorInternal.VR;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Objects.PlayerScripts
 {
-    public class CharacterModel : MonoBehaviourPun
+    public class CharacterModel : MonoBehaviourPunCallbacks
     {
         [SerializeField] private int health;
         [SerializeField] private int maxHealth;
@@ -17,7 +20,7 @@ namespace Objects.PlayerScripts
         [SerializeField] private int healthaRegenAmount = 1;
 
         private int defense;
-        
+
         [SerializeField] int helmetDefense;
         [SerializeField] private int armorDefense;
         [SerializeField] private int bootsDefense;
@@ -42,6 +45,8 @@ namespace Objects.PlayerScripts
         private PlayerControllerWithCC playerController;
 
         private float currentMultiplier;
+
+        private bool isAlive = true;
 
         public int Health
         {
@@ -68,7 +73,7 @@ namespace Objects.PlayerScripts
                 defense = value;
                 view.UpdateDefenseText(defense);
             }
-        }      
+        }
         public int HelmetDefense
         {
             get { return helmetDefense; }
@@ -131,7 +136,7 @@ namespace Objects.PlayerScripts
                 maxMana = value;
             }
         }
-        public float Speed 
+        public float Speed
         {
             get { return speed; }
             set
@@ -177,11 +182,11 @@ namespace Objects.PlayerScripts
 
             StartCoroutine(RegenerateMana());
             StartCoroutine(RegenerateHealth());
-        }               
-        
+        }
+
 
         [PunRPC]
-        public void WearDefense(ItemScriptableObject item, int ID) 
+        public void WearDefense(ItemScriptableObject item, int ID)
         {
             switch (item)
             {
@@ -202,18 +207,18 @@ namespace Objects.PlayerScripts
                         bootsID = ID;
                         BootsDefense += durabilDatabase.GetValueByID(bootsID);
                         break;
-                    }               
+                    }
             }
             Defense = HelmetDefense + ArmorDefense + BootsDefense;
         }
         [PunRPC]
-        public int UnWearDefense(ItemScriptableObject item) 
+        public int UnWearDefense(ItemScriptableObject item)
         {
             int returnID = 0;
             switch (item)
             {
                 case HelmetItem:
-                    {                       
+                    {
                         returnID = helmetID;
                         HelmetDefense = 0;
                         helmetID = 0;
@@ -235,7 +240,7 @@ namespace Objects.PlayerScripts
                         bootsID = 0;
                         Defense = ArmorDefense + BootsDefense;
                         break;
-                    }               
+                    }
             }
             return returnID;
         }
@@ -292,10 +297,40 @@ namespace Objects.PlayerScripts
             }
             else
             {
-                Health = Mathf.Max(Health - damage, 0);
+                if (Health > 0) 
+                {
+                    Health = Mathf.Max(Health - damage, 0);
+                    if (Health == 0)
+                    {
+                        DisconectManager.disconectInstance.ChangingScenes(3);
+                    }
+                }               
             }
         }
 
+        private void Die() 
+        {
+            //PhotonNetwork.AutomaticallySyncScene = false;
+            DisconectManager.disconectInstance.ChangingScenes(3);
+
+            //isAlive = false;
+            //FindObjectOfType<DurabilityDefenseDatabase>().DestroySelf();
+            //if (PhotonNetwork.IsConnected)
+            //{
+            //    PhotonNetwork.Disconnect();
+            //}
+            //else
+            //{
+            //    SceneManager.LoadScene(3);
+            //}
+        }
+        //public override void OnDisconnected(DisconnectCause cause)
+        //{
+        //    if (!isAlive) 
+        //    {
+        //        SceneManager.LoadScene(3);
+        //    }           
+        //}
 
         public int SubtractTypeDefense(int defense, int damage) 
         {

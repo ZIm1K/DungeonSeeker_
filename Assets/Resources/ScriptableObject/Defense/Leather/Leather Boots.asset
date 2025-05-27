@@ -20,5 +20,5 @@ MonoBehaviour:
   itemType: 6
   itemDescription: Worn thin by long escapes.
   dropChanse: 15
-  defense: 5
+  defense: 25
   buffSpeed: 2

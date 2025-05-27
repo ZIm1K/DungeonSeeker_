@@ -19,5 +19,6 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: e1ba674e14010ec4580da105317b7b77, type: 3}
   itemType: 5
   itemDescription: It bends with thought. Hardens with fear.
-  defense: 70
+  dropChanse: 0
+  defense: 125
   nerfSpeed: 0

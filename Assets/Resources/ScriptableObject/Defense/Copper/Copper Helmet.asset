@@ -20,4 +20,4 @@ MonoBehaviour:
   itemType: 4
   itemDescription: The inside is warm, like someone just took it off.
   dropChanse: 18
-  defense: 25
+  defense: 60

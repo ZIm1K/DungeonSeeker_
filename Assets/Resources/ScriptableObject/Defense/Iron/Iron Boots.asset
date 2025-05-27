@@ -20,5 +20,5 @@ MonoBehaviour:
   itemType: 6
   itemDescription: "They drag slightly\u2026 like something holds them back."
   dropChanse: 25
-  defense: 10
+  defense: 30
   buffSpeed: 1

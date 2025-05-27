@@ -1,14 +1,17 @@
 using Inventory;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Objects.PlayerScripts
 {
     public class CharacterView : MonoBehaviour
     {
+        [Header("UI")]
         public TMP_Text HealthText;
         public TMP_Text ManaText;
         public TMP_Text DefenseText;
@@ -20,7 +23,6 @@ namespace Objects.PlayerScripts
         public Slider ManaBar;
         private float time;      
         public TMP_Text Level;        
-       
         public void UpdateLevelText(int level)
         {
             Level.text = $"Floor: {level}";

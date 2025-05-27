@@ -20,5 +20,5 @@ MonoBehaviour:
   itemType: 6
   itemDescription: The soles are worn, but the path remembers.
   dropChanse: 18
-  defense: 15
+  defense: 45
   buffSpeed: 2

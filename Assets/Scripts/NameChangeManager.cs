@@ -17,6 +17,8 @@ public class NameChangeManager : MonoBehaviour
     {
         playerNameText.text = PlayerPrefs.GetString("PlayerName", "Player123456789");
         PhotonNetwork.NickName = playerNameText.text;
+        namePanel.SetActive(true);
+        reWritePanel.SetActive(false);
     }
     public void OpenClosePanels(bool isOpen) 
     {

@@ -20,4 +20,4 @@ MonoBehaviour:
   itemType: 4
   itemDescription: Soft outside, but it remembers the bite.
   dropChanse: 15
-  defense: 10
+  defense: 45

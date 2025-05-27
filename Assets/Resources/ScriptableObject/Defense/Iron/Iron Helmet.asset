@@ -20,4 +20,4 @@ MonoBehaviour:
   itemType: 4
   itemDescription: "You see less \u2014 but hear them more."
   dropChanse: 25
-  defense: 15
+  defense: 40

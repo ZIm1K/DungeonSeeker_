@@ -43,7 +43,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             MenuManager.Instance.OpenMenu("loading");
         }
-
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public override void OnConnectedToMaster()

@@ -20,5 +20,5 @@ MonoBehaviour:
   itemType: 5
   itemDescription: Stitched from things that once breathed.
   dropChanse: 15
-  defense: 10
-  nerfSpeed: 0
+  defense: 55
+  nerfSpeed: 1

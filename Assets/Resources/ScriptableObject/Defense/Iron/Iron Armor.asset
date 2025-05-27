@@ -20,5 +20,5 @@ MonoBehaviour:
   itemType: 5
   itemDescription: Too heavy for a coward. Too cursed for a hero.
   dropChanse: 25
-  defense: 35
-  nerfSpeed: 3
+  defense: 75
+  nerfSpeed: 2

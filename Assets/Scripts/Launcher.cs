@@ -98,10 +98,10 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        if (SceneManager.GetActiveScene().buildIndex == 0) 
+        if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-        }
+        }       
     }
 
     public void LeaveRoom()
@@ -111,7 +111,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             Debug.LogWarning("Not in a room!");
             return;
         }
-        Debug.Log("LeaveRoom() called");
         PhotonNetwork.LeaveRoom();
         if (MenuManager.Instance != null)
         {

@@ -32,18 +32,6 @@ public class SetRandomText : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(0.1f);            
         }
         yield return new WaitForSeconds(4f);
-        DisconectManager.disconectInstance.ChangingScenes(0);
-        //if (PhotonNetwork.IsConnected)
-        //{
-        //    PhotonNetwork.Disconnect();
-        //}
-        //else
-        //{
-        //    SceneManager.LoadScene(0);
-        //}
+        DisconectManager.disconectInstance.ChangingScenes(0);        
     }
-    //public override void OnDisconnected(DisconnectCause cause)
-    //{
-    //    SceneManager.LoadScene(0);        
-    //}
 }

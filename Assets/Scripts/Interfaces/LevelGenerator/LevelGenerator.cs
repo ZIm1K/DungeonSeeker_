@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 namespace LevelGenerator
 {
-    public class LevelGenerator : MonoBehaviourPun
+    public class LevelGenerator : MonoBehaviourPunCallbacks
     {
         [SerializeField] private GameObject[] roomPrefabs;
         [SerializeField] private GameObject bossRoomPrefab;
@@ -61,7 +62,7 @@ namespace LevelGenerator
                 startlRoomPrefab.name,
                 Vector3.zero,
                 randomRotation
-            );
+            );           
 
             usedPositions.Add(Vector3.zero);
             spawnedRooms.Add(startRoom);
@@ -183,6 +184,10 @@ namespace LevelGenerator
         void SynchronizeLevel(Vector3[] positions)
         {
             usedPositions.AddRange(positions);
+        }
+        public override void OnMasterClientSwitched(Player newMasterClient)
+        {
+            DisconectManager.disconectInstance.ChangingScenes(0);
         }
     }
 }

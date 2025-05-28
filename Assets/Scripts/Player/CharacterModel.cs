@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.CompilerServices;
-using UnityEditorInternal.VR;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -310,27 +309,8 @@ namespace Objects.PlayerScripts
 
         private void Die() 
         {
-            //PhotonNetwork.AutomaticallySyncScene = false;
             DisconectManager.disconectInstance.ChangingScenes(3);
-
-            //isAlive = false;
-            //FindObjectOfType<DurabilityDefenseDatabase>().DestroySelf();
-            //if (PhotonNetwork.IsConnected)
-            //{
-            //    PhotonNetwork.Disconnect();
-            //}
-            //else
-            //{
-            //    SceneManager.LoadScene(3);
-            //}
-        }
-        //public override void OnDisconnected(DisconnectCause cause)
-        //{
-        //    if (!isAlive) 
-        //    {
-        //        SceneManager.LoadScene(3);
-        //    }           
-        //}
+        }       
 
         public int SubtractTypeDefense(int defense, int damage) 
         {

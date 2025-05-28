@@ -6,6 +6,7 @@ using Objects.PlayerScripts;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Objects.Enemies
 {
@@ -123,7 +124,7 @@ namespace Objects.Enemies
         private GameObject FindNearestPlayer()
         {
             GameObject nearestPlayer = null;
-            float nearestDistance = Mathf.Infinity;
+            float nearestDistance = Mathf.Infinity;            
 
             foreach (PhotonView player in photonViewsOfPlayers)
             {
@@ -178,12 +179,19 @@ namespace Objects.Enemies
             {
                 if (currentTarget != null)
                 {
-                    PhotonView targetPhotonView = currentTarget.GetComponent<PhotonView>();
-
-                    if (targetPhotonView != null)
+                    Vector3 direction = (currentTarget.transform.position - transform.position).normalized;
+                    if (Physics.Raycast(transform.position, direction, out RaycastHit hit))
                     {
-                        targetPhotonView.RPC("TakeDamage", targetPhotonView.Owner, model.Damage);
-                        attackTimer = attackInterval;
+                        if (hit.collider.tag == "Player")
+                        {
+                            PhotonView targetPhotonView = currentTarget.GetComponent<PhotonView>();
+
+                            if (targetPhotonView != null)
+                            {
+                                targetPhotonView.RPC("TakeDamage", targetPhotonView.Owner, model.Damage);
+                                attackTimer = attackInterval;
+                            }
+                        }
                     }
                 }
             }

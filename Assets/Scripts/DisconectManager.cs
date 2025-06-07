@@ -33,27 +33,21 @@ public class DisconectManager : MonoBehaviourPunCallbacks
     {
         fixebleCamera.SetActive(true);
         isLeaving = true;        
-        Debug.LogWarning("Leaving");
         if(FindObjectOfType<DurabilityDefenseDatabase>()) FindObjectOfType<DurabilityDefenseDatabase>().DestroySelf();
-        Debug.LogWarning("Destroying DDD");
         if (PhotonNetwork.IsConnected)
         {
-            Debug.LogWarning("You are connected waiting....");
             this.sceneID = sceneID;
             PhotonNetwork.Disconnect();
         }
         else
         {
-            Debug.LogWarning("You are disconected and left, cool");
             SceneManager.LoadScene(sceneID);
         }
     }
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.LogWarning("Final pros of leaving");
         if (isLeaving) 
         {
-            Debug.LogWarning("Loading scene");
             SceneManager.LoadScene(sceneID);   
         }       
     }

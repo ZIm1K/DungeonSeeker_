@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Leather Boots
   m_EditorClassIdentifier: 
   itemID: 22
-  itemName: Copper Boots
+  itemName: Leather Boots
   maximumAmount: 1
   itemPrefab: {fileID: 2063684310926323246, guid: 2ef16a49952b98b4886c311da8761627, type: 3}
   icon: {fileID: 21300000, guid: ef630bd2e9341ec4e955ee2eedcf33d1, type: 3}

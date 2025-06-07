@@ -43,7 +43,6 @@ namespace Objects.Enemies
         {
             model = gameObject.AddComponent<EnemyModel>();
             int level = LevelHandler.Level;
-            Debug.LogWarning("Level in enemyController " + level);
             model.Initialize(maxHealth, damage, attackRange, attackInterval, view, level);
 
 

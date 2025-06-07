@@ -1,7 +1,9 @@
+using ExitGames.Client.Photon;
 using Inventory;
 using Objects.PlayerScripts;
 using Photon.Pun;
 using Photon.Pun.Demo.Cockpit;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using TMPro;
@@ -23,6 +25,16 @@ namespace Inventory
 
         private bool isItemFromCrafter;
 
+        public enum NameOfAddFunction
+        {
+            AddItemToChest,
+            AddItemToCrafter,
+        }
+        public enum NameOfInventorySpace
+        {
+            ChestInventory,
+            CraftInventory,
+        }
         private void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -39,6 +51,18 @@ namespace Inventory
             GetComponent<RectTransform>().position += new Vector3(eventData.delta.x, eventData.delta.y);
         }
 
+        int SlotIndexReturner(GameObject slots, GameObject slotToFind) 
+        {
+            for (int i = 0; i < slots.transform.childCount; i++)
+            {
+                if (slots.transform.GetChild(i).gameObject == slotToFind)
+                {
+                    return i;
+                }
+            }
+            Debug.LogWarning("Error unknown slot");
+            return 0;
+        }       
         public void OnPointerDown(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
@@ -48,40 +72,23 @@ namespace Inventory
                 return;
 
             player.GetComponent<InventoryManager>().isItemOnDrag = true;
-            if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == "ChestInventory")
+            if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == NameOfInventorySpace.ChestInventory.ToString())
             {
                 isItemFromChest = true;
                 isItemFromCrafter = false;
 
                 GameObject chestSlots = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.gameObject;
 
-                for (int i = 0; i < chestSlots.transform.childCount; i++)
-                {
-                    if (chestSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                    {
-                        player.GetComponent<InventoryManager>().currentChest.RPC("RemoveItemFromChest", RpcTarget.All, i);
-                        player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                        break;
-                    }
-                }
+                RemoveItemFromChest(chestSlots, oldSlot);             
             }
-            else if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == "CraftInventory")
+            else if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == NameOfInventorySpace.CraftInventory.ToString())
             {
                 isItemFromChest = false;
                 isItemFromCrafter = true;
 
-                GameObject crafterSlots = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.gameObject;
+                GameObject craftSlots = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.gameObject;
 
-                for (int i = 0; i < crafterSlots.transform.childCount; i++)
-                {
-                    if (crafterSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                    {
-                        player.GetComponent<InventoryManager>().currentCrafter.RPC("RemoveItemFromCrafter", RpcTarget.All, i);
-                        player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                        break;
-                    }
-                }
-
+                RemoveItemFromCrafter(craftSlots, oldSlot);
             }
             else 
             {
@@ -95,10 +102,7 @@ namespace Inventory
         
         public async void OnPointerUp(PointerEventData eventData)
         {
-            if (eventData.button != PointerEventData.InputButton.Left)
-                return;
-
-            if (oldSlot.isEmpty)
+            if (eventData.button != PointerEventData.InputButton.Left || oldSlot.isEmpty || eventData.pointerCurrentRaycast.gameObject == null)
                 return;
 
             GetComponentInChildren<Image>().color = new Color(1, 1, 1, 1f);
@@ -113,38 +117,21 @@ namespace Inventory
                 {
                     GameObject chestSlots = eventData.pointerCurrentRaycast.gameObject.transform.parent.gameObject;
 
-                    for (int i = 0; i < chestSlots.transform.childCount; i++)
-                    {
-                        if (chestSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                        {
-                            player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,
-                            oldSlot.defenseID, oldSlot.amount, oldSlot.isEmpty, i);
-                            player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                            break;
-                        }
-                    }
+                    AddItemToChest(chestSlots, oldSlot);
                 }
-                else if (isItemFromCrafter) 
+                else if (isItemFromCrafter)
                 {
                     GameObject craftSlots = eventData.pointerCurrentRaycast.gameObject.transform.parent.gameObject;
 
-                    for (int i = 0; i < craftSlots.transform.childCount; i++)
-                    {
-                        if (craftSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                        {
-                            player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, oldSlot.item.itemID,
-                                oldSlot.isEmpty, i);
-                            player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                            break;
-                        }
-                    }
+                    AddItemToCrafter(craftSlots, oldSlot);                   
                 }
+                return;
             }
             
-            player.GetComponent<InventoryManager>().isItemOnDrag = false;
-            if (eventData.pointerCurrentRaycast.gameObject == null) return;
+            player.GetComponent<InventoryManager>().isItemOnDrag = false;            
             if (eventData.pointerCurrentRaycast.gameObject.name == "UIPanel")
             {
+                //Drop item
                 GameObject itemObject = PhotonNetwork.Instantiate(oldSlot.item.itemPrefab.name,
                     player.position + Vector3.up + player.forward, Quaternion.identity);
                 itemObject.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.MasterClient);
@@ -168,6 +155,7 @@ namespace Inventory
             }
             else if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.GetComponent<InventorySlot>() != null)
             {
+                //Wear item logic
                 InventorySlot newSlot = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.GetComponent<InventorySlot>();
                 bool isChanged = false;
                 if (newSlot.itemTypeToGet == oldSlot.itemTypeToGet)
@@ -178,18 +166,18 @@ namespace Inventory
                     }
                     else
                     {
-                        OnUnWearItem(newSlot.item);
-                        OnUnWearItem(oldSlot.item);
+                        await OnUnWearItem(newSlot.item);
+                        await OnUnWearItem(oldSlot.item);
                         isChanged = ExchangeSlotData(newSlot);
                         await OnWearItem(newSlot.item, newSlot.defenseID);
                         await OnWearItem(oldSlot.item, oldSlot.defenseID);
-                    }                    
+                    }
                 }
                 else
                 {
                     if (newSlot.itemTypeToGet == oldSlot.item.itemType && oldSlot.itemTypeToGet == ItemType.Default)
                     {
-                        OnUnWearItem(newSlot.item);
+                        await OnUnWearItem(newSlot.item);
                         isChanged = ExchangeSlotData(newSlot);
                         await OnWearItem(newSlot.item, newSlot.defenseID);
                     }
@@ -199,167 +187,57 @@ namespace Inventory
                         {
                             if (oldSlot.itemTypeToGet == newSlot.item.itemType)
                             {
-                                OnUnWearItem(newSlot.item);
+                                await OnUnWearItem(newSlot.item);
                                 isChanged = ExchangeSlotData(newSlot);
                                 await OnWearItem(newSlot.item, newSlot.defenseID);
                             }
                         }
                         else
                         {
-                            OnUnWearItem(oldSlot.item);
+                            await OnUnWearItem(oldSlot.item);
                             isChanged = ExchangeSlotData(newSlot);
                         }
-                    }                   
+                    }
                 }
 
                 if (isChanged)
                 {
-                    if (oldSlot.transform.parent.parent.name == "ChestInventory") 
+                    if (oldSlot.transform.parent.parent.name == NameOfInventorySpace.ChestInventory.ToString() 
+                        || newSlot.transform.parent.parent.name == NameOfInventorySpace.ChestInventory.ToString())
                     {
-                        GameObject chestSlots = oldSlot.transform.parent.gameObject;
-                        for (int i = 0; i < chestSlots.transform.childCount; i++)
-                        {
-                            if (chestSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                            {
-                                if (oldSlot.isEmpty == false)
-                                {
-                                    player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,
-                                        oldSlot.defenseID, oldSlot.amount, oldSlot.isEmpty, i);
-                                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                                }
-                            }                            
-                        }
+                        ChangeItemsInSomething(NameOfInventorySpace.ChestInventory.ToString(), NameOfAddFunction.AddItemToChest, newSlot);
                     }
-                    else if (oldSlot.transform.parent.parent.name == "CraftInventory")
+                    else if (oldSlot.transform.parent.parent.name == NameOfInventorySpace.CraftInventory.ToString() 
+                        || newSlot.transform.parent.parent.name == NameOfInventorySpace.CraftInventory.ToString())
                     {
-                        GameObject craftSlots = oldSlot.transform.parent.gameObject;
-                        for (int i = 0; i < craftSlots.transform.childCount; i++)
-                        {
-                            if (craftSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                            {
-                                if (oldSlot.isEmpty == false)
-                                {
-                                    player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, oldSlot.item.itemID,
-                                            oldSlot.isEmpty, i);
-                                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                                }
-                            }
-                        }
-                    }
-                    else if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == "ChestInventory")
-                    {
-                        int canBreakIndex = 0;
-
-                        GameObject chestSlots = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.gameObject;
-
-                        for (int i = 0; i < chestSlots.transform.childCount; i++)
-                        {
-                            if (chestSlots.transform.GetChild(i).gameObject == newSlot.gameObject)
-                            {
-                                player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, newSlot.item.itemID,
-                                newSlot.defenseID, newSlot.amount, newSlot.isEmpty, i);
-                                player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                                canBreakIndex++;
-                            }
-                            else if (chestSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                            {
-                                if (oldSlot.isEmpty == false)
-                                {
-                                    player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,
-                                        oldSlot.defenseID, oldSlot.amount, oldSlot.isEmpty, i);
-                                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                                }
-                                canBreakIndex++;
-                            }
-
-                            if (canBreakIndex == 2)
-                            {
-                                break;
-                            }
-
-                        }
-
-                        isItemFromChest = true;
-
-                        return;
-                    }
-                    else if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == "CraftInventory")
-                    {
-                        int canBreakIndex = 0;
-
-                        GameObject craftSlots = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.gameObject;
-
-                        for (int i = 0; i < craftSlots.transform.childCount; i++)
-                        {
-                            if (newSlot.item != null)
-                            {
-                                if (craftSlots.transform.GetChild(i).gameObject == newSlot.gameObject)
-                                {
-                                    player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, newSlot.item.itemID,
-                                        newSlot.isEmpty, i);
-                                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                                    canBreakIndex++;
-                                }
-                                else if (craftSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                                {
-                                    if (oldSlot.isEmpty == false)
-                                    {
-                                        player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, oldSlot.item.itemID,
-                                            oldSlot.isEmpty, i);
-                                        player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                                    }
-                                    canBreakIndex++;
-                                }
-                                if (canBreakIndex == 2)
-                                {
-                                    break;
-                                }
-                            }
-
-                        }
-
-                        isItemFromCrafter = true;
-
-                        return;
+                        ChangeItemsInSomething(NameOfInventorySpace.CraftInventory.ToString(), NameOfAddFunction.AddItemToCrafter, newSlot);
                     }
                 }
                 else 
                 {
                     if (isItemFromChest)
                     {
-                        GameObject chestSlots = oldSlot.gameObject.transform.parent.gameObject;
-                        for (int i = 0; i < chestSlots.transform.childCount; i++)
+                        if (!oldSlot.isEmpty)
                         {
-                            if (chestSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                            {
-                                if (!oldSlot.isEmpty)
-                                {
-                                    player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,
-                                    oldSlot.defenseID, oldSlot.amount, oldSlot.isEmpty, i);
-                                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                                    isItemFromChest = false;
-                                    return;
-                                }
-                            }
+                            GameObject chestSlots = oldSlot.gameObject.transform.parent.gameObject;
+
+                            AddItemToChest(chestSlots, oldSlot);;
+
+                            isItemFromChest = false;
+                            return;
                         }
                     }
                     else if (isItemFromCrafter) 
                     {
-                        GameObject craftSlots = oldSlot.gameObject.transform.parent.gameObject;
-                        for (int i = 0; i < craftSlots.transform.childCount; i++)
+                        if (!oldSlot.isEmpty)
                         {
-                            if (craftSlots.transform.GetChild(i).gameObject == oldSlot.gameObject)
-                            {
-                                if (!oldSlot.isEmpty)
-                                {
-                                    player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, oldSlot.item.itemID,
-                                             oldSlot.isEmpty, i);
-                                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(i);
-                                    isItemFromCrafter = false;
-                                    return;
-                                }
-                            }
-                        }
+                            GameObject craftSlots = oldSlot.gameObject.transform.parent.gameObject;
+
+                            AddItemToCrafter(craftSlots, oldSlot);
+
+                            isItemFromCrafter = false;
+                            return;
+                        }                      
                     }
                 }             
             }
@@ -367,36 +245,93 @@ namespace Inventory
             {
                 if (isItemFromChest)
                 {
-                    int id = CheckForID();
-                    player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, oldSlot.item.itemID,oldSlot.defenseID
-                        ,oldSlot.amount,oldSlot.isEmpty, id);
-                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(id);
+                    GameObject slots = transform.parent.parent.gameObject;
+                    AddItemToChest(slots, oldSlot);
                 }
                 else if(isItemFromCrafter)
                 {
-                    int id = CheckForID();
-                    player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, oldSlot.item.itemID,
-                                    oldSlot.isEmpty, id);
-                    player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(id);
+                    GameObject slots = transform.parent.parent.gameObject;
+                    AddItemToCrafter(slots, oldSlot);
                 }
             }            
         }
 
-        int CheckForID() 
+
+        void AddItemToChest(GameObject chestSlots,InventorySlot slotToFind)
         {
-            int slotId = 0;
+            int index = SlotIndexReturner(chestSlots, slotToFind.gameObject);  
 
-            GameObject slots = transform.parent.parent.gameObject;
+            player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, slotToFind.item.itemID,
+                        slotToFind.defenseID, slotToFind.amount, slotToFind.isEmpty, index);
+            player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(index);
+        }       
+        void AddItemToCrafter(GameObject craftSlots, InventorySlot slotToFind)
+        {
+            int index = SlotIndexReturner(craftSlots, slotToFind.gameObject);  
+            
+            player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, slotToFind.item.itemID,
+                             slotToFind.isEmpty, index);
+            player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(index);
+        }        
 
-            for (int i = 0; i < slots.transform.childCount; i++)
+        void RemoveItemFromChest(GameObject chestSlots, InventorySlot slotToFind) 
+        {
+            int index = SlotIndexReturner(chestSlots, slotToFind.gameObject);
+
+            player.GetComponent<InventoryManager>().currentChest.RPC("RemoveItemFromChest", RpcTarget.All, index);
+            player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(index);
+        }
+        void RemoveItemFromCrafter(GameObject craftSlots, InventorySlot slotToFind)
+        {
+            int index = SlotIndexReturner(craftSlots, slotToFind.gameObject);
+
+            player.GetComponent<InventoryManager>().currentCrafter.RPC("RemoveItemFromCrafter", RpcTarget.All, index);
+            player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(index);
+        }
+
+
+        void ChangeItemsInSomething(string nameOfSpace, NameOfAddFunction nameOfAddFunction, InventorySlot newSlot) 
+        {
+            if (oldSlot.transform.parent.parent.name == nameOfSpace && newSlot.transform.parent.parent.name != nameOfSpace) //Item from something to inv
             {
-                if (slots.transform.GetChild(i).gameObject == oldSlot.gameObject)
+                if (!oldSlot.isEmpty)
                 {
-                    slotId = i;
-                    return slotId;
+                    GameObject slots = oldSlot.transform.parent.gameObject;
+                    FunctionChooser(nameOfAddFunction, slots, oldSlot);
                 }
             }
-            return 0;
+            else if (oldSlot.transform.parent.parent.name == nameOfSpace && newSlot.transform.parent.parent.name == nameOfSpace) //Items transfer in something
+            {
+                GameObject slots = newSlot.transform.parent.gameObject;
+
+                if (oldSlot.isEmpty == false)
+                {
+                    FunctionChooser(nameOfAddFunction, slots, oldSlot);                    
+                }
+
+                FunctionChooser(nameOfAddFunction, slots, newSlot);                
+            }
+            else if (oldSlot.transform.parent.parent.name != nameOfSpace && newSlot.transform.parent.parent.name == nameOfSpace) //Items from inventory to something
+            {
+                GameObject slots = newSlot.transform.parent.gameObject;
+
+                FunctionChooser(nameOfAddFunction, slots, newSlot);               
+            }
+        }
+        void FunctionChooser(NameOfAddFunction nameOfFunc, GameObject slots, InventorySlot slotToFind) 
+        {
+            switch (nameOfFunc) 
+            {
+                case NameOfAddFunction.AddItemToChest:
+                    AddItemToChest(slots, slotToFind);
+                    break;
+                case NameOfAddFunction.AddItemToCrafter:
+                    AddItemToCrafter(slots, slotToFind);
+                    break;
+                default:
+                    Debug.LogWarning("Error unknown func");                    
+                    break;
+            }             
         }
         private async Task WaitForPlayerView()
         {
@@ -453,7 +388,7 @@ namespace Inventory
             }
             await Task.Yield();
         }
-        private void OnUnWearItem(ItemScriptableObject item)
+        private async Task OnUnWearItem(ItemScriptableObject item)
         {
             switch (item)
             {
@@ -490,6 +425,7 @@ namespace Inventory
                         break;
                     }
             }
+            await Task.Yield();
         }       
         void NullifySlotData()
         {
@@ -503,69 +439,72 @@ namespace Inventory
         }
         bool ExchangeSlotData(InventorySlot newSlot)
         {
-            ItemScriptableObject item = newSlot.item;
-            int amount = newSlot.amount;
-            bool isEmpty = newSlot.isEmpty;
-            Sprite iconGO = newSlot.iconGO.GetComponent<Image>().sprite;
-            TMP_Text itemAmountText = newSlot.itemAmountText;
-            int defenseID = newSlot.defenseID;
+            InventorySlot savedSlot = new InventorySlot();
+            Sprite savedIcon = newSlot.iconGO.GetComponent<Image>().sprite;
+            
+            SavedSlotSaver(savedSlot, newSlot);
 
             if (newSlot.item == oldSlot.item && newSlot.item.maximumAmount > 1) 
-            {
-                if (newSlot.amount + oldSlot.amount <= newSlot.item.maximumAmount)
-                {
-                    newSlot.amount += oldSlot.amount;
-                    newSlot.itemAmountText.text = newSlot.amount.ToString();
-                    NullifySlotData();
-                }
-                else 
-                {
-                    int changedAmmount = newSlot.item.maximumAmount - newSlot.amount;
-                    newSlot.amount += changedAmmount;
-                    newSlot.itemAmountText.text = newSlot.amount.ToString();
-                    oldSlot.amount -= changedAmmount;
-                    oldSlot.itemAmountText.text = oldSlot.amount.ToString();
-                }
-                return true;
-            }
+            {                
+                return AddItemToSameSlot(newSlot);
+            }           
 
-            newSlot.item = oldSlot.item;
-            newSlot.amount = oldSlot.amount;
-            if (oldSlot.isEmpty == false)
-            {
-                newSlot.SetIcon(oldSlot.iconGO.GetComponent<Image>().sprite);
-                newSlot.itemAmountText.text = oldSlot.amount.ToString();                
-            }
-            else
-            {
-                newSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 0);
-                oldSlot.SetBasedIcon();
-                newSlot.itemAmountText.text = "";
-            }
+            SlotExchange(newSlot, oldSlot, oldSlot.iconGO.GetComponent<Image>().sprite);           
 
-            newSlot.defenseID = oldSlot.defenseID;
-            newSlot.isEmpty = oldSlot.isEmpty;
-            oldSlot.item = item;
-            oldSlot.amount = amount;
-            if (isEmpty == false)
-            {
-                oldSlot.SetIcon(iconGO);
-                oldSlot.itemAmountText.text = amount.ToString();
-                
-            }
-            else
-            {
-                oldSlot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                oldSlot.SetBasedIcon();
-                oldSlot.itemAmountText.text = "";
-            }
-
-            oldSlot.defenseID = defenseID;
-            oldSlot.isEmpty = isEmpty;
-
-            newSlot.OnSlotItemChanged();
-            oldSlot.OnSlotItemChanged();
+            SlotExchange(oldSlot, savedSlot, savedIcon);            
+            
             return true;
         }
-    }
+        void SavedSlotSaver(InventorySlot savedSlot, InventorySlot newSlot) 
+        {
+            savedSlot.item = newSlot.item;
+            savedSlot.amount = newSlot.amount;
+            savedSlot.isEmpty = newSlot.isEmpty;
+
+            savedSlot.itemAmountText = newSlot.itemAmountText;
+            savedSlot.defenseID = newSlot.defenseID;
+        }
+        void SlotExchange(InventorySlot slotToSet, InventorySlot slotToGet, Sprite icon) 
+        {
+            slotToSet.item = slotToGet.item;
+            slotToSet.amount = slotToGet.amount;
+
+            slotToSet.defenseID = slotToGet.defenseID;
+            slotToSet.isEmpty = slotToGet.isEmpty;            
+
+            if (slotToGet.isEmpty == false)
+            { 
+                slotToSet.SetIcon(icon);
+                slotToSet.itemAmountText.text = slotToGet.amount.ToString();               
+            }
+            else
+            {
+                slotToSet.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                slotToSet.SetBasedIcon();
+                slotToSet.itemAmountText.text = "";
+            }
+
+
+            slotToSet.OnSlotItemChanged();
+        }
+
+        bool AddItemToSameSlot(InventorySlot newSlot)
+        {
+            if (newSlot.amount + oldSlot.amount <= newSlot.item.maximumAmount)
+            {
+                newSlot.amount += oldSlot.amount;
+                newSlot.itemAmountText.text = newSlot.amount.ToString();
+                NullifySlotData();
+            }
+            else
+            {
+                int changedAmmount = newSlot.item.maximumAmount - newSlot.amount;
+                newSlot.amount += changedAmmount;
+                newSlot.itemAmountText.text = newSlot.amount.ToString();
+                oldSlot.amount -= changedAmmount;
+                oldSlot.itemAmountText.text = oldSlot.amount.ToString();
+            }
+            return true;
+        }
+    }  
 }

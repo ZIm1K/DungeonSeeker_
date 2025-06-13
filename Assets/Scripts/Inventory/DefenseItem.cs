@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Inventory
 {
@@ -18,9 +19,9 @@ namespace Inventory
         {
             ID = newDefenseID;
         }
-        private void OnDisable()
+        public void RemoveFromListOnDestory() 
         {
             DurabilityDefenseDatabase.instance.RemoveItemFromList(ID);
-        }
+        }        
     }
 }

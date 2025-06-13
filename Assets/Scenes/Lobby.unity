@@ -3005,6 +3005,67 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1001 &2099259985
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 75623112061516450, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.5944085
+      objectReference: {fileID: 0}
+    - target: {fileID: 75623112061516450, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.798
+      objectReference: {fileID: 0}
+    - target: {fileID: 75623112061516450, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.6552907
+      objectReference: {fileID: 0}
+    - target: {fileID: 75623112061516450, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 75623112061516450, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75623112061516450, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75623112061516450, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75623112061516450, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75623112061516450, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75623112061516450, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141937508319605936, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: sceneViewId
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6309434210401165414, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
+      propertyPath: m_Name
+      value: Defense Staff
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 77260f4dbea81324ebace947a7f235d9, type: 3}
 --- !u!1001 &2141218158
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3574,3 +3635,4 @@ SceneRoots:
   - {fileID: 1189501692}
   - {fileID: 1352245538}
   - {fileID: 1021667276}
+  - {fileID: 2099259985}

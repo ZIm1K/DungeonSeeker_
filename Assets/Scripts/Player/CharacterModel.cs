@@ -415,18 +415,5 @@ namespace Objects.PlayerScripts
             }
             curManaRegenInterval = manaRegenInterval;
         }
-        private void OnDisable()
-        {
-            List<Item> listOfDefense = new List<Item>(GameObject.FindObjectsOfType<Item>());
-            foreach (Item item in listOfDefense) 
-            {
-                ItemType typeOfitem = item.item.itemType;
-                if (typeOfitem == ItemType.Helmet || typeOfitem == ItemType.Armor || typeOfitem == ItemType.Boots) 
-                {
-                    DurabilityDefenseDatabase.instance.RemoveItemFromList((item as DefenseItem).ID - 1);
-                }
-            }
-            DurabilityDefenseDatabase.instance.ClearNotNeededItems();
-        }
     }    
 }

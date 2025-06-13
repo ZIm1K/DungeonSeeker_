@@ -108,9 +108,10 @@ public class Chest : MonoBehaviourPun
                 ItemType itemType = ItemDatabase.GetItemByID(saveChestItems[i].ID).itemType;
                 if (itemType == ItemType.Helmet || itemType == ItemType.Armor || itemType == ItemType.Boots)
                 {
-                    DurabilityDefenseDatabase.instance.RemoveItemFromList(saveChestItems[i].defenseID - 1);
+                    DurabilityDefenseDatabase.instance.RemoveItemFromList(saveChestItems[i].defenseID/* - 1*/);
                 }
             }
-        }       
+        }
+        DurabilityDefenseDatabase.instance.ClearNotNeededItems();
     }    
 }

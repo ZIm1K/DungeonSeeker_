@@ -61,10 +61,9 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
 
     public int GetValueByID(int id)
     {
-        //Debug.LogWarning("Id in get  " + id);
         for (int i = 0; i < allValues.Count; i++) 
         {
-            if (i + 1 == id) 
+            if (i == id) 
             {
                 return allValues[i];
             }
@@ -74,10 +73,9 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
     }
     public void SubDurabilAmmount(int id,int damage) 
     {
-        //Debug.LogWarning("Id in sub " + id);
         for (int i = 0; i < id; i++)
         {
-            if (i + 1 == id)
+            if (i == id)
             {
                 if (allValues[i] > damage)
                 {
@@ -159,10 +157,11 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
                 return i; //return defense ID
             }
         }
-        AddNewItemWithType(item.itemID);
 
+        AddNewItemWithType(item.itemID);      
         photonView.RPC("AddNewItemInOnline", RpcTarget.Others,item.itemID);
-        return allItems.Count;  //return defense ID
+
+        return allItems.Count - 1;  //return defense ID
     }
     void AddNewItemWithType(string ID) 
     {
@@ -195,7 +194,6 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
             case HelmetItem:
                 {
                     allValues[defenseID] = (item as HelmetItem).defense;
-                    allItems[defenseID] = item;
                     break;
                 }
             case ArmorItem:
@@ -212,7 +210,7 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
                 Debug.LogWarning("Error unknown defense");
                 break;
         }
-        allItems[defenseID] = item;        
+        allItems[defenseID] = item;
     }
     public void ClearNotNeededItems() 
     {
@@ -237,6 +235,6 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
     public void RemoveItemFromList(int defenseID) 
     {
         allItems[defenseID] = null;
-        allValues[defenseID] = -1;
+        allValues[defenseID] = 0;
     }
 }

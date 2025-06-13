@@ -18,5 +18,9 @@ namespace Inventory
         {
             ID = newDefenseID;
         }
+        private void OnDisable()
+        {
+            DurabilityDefenseDatabase.instance.RemoveItemFromList(ID);
+        }
     }
 }

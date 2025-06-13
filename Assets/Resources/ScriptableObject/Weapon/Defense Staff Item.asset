@@ -20,7 +20,7 @@ MonoBehaviour:
   itemType: 2
   itemDescription: "It does not mend the metal \u2014 it recalls what it once was.
     Every whisper brings the armor closer to its first forge.  //Equipped defense
-    items will not be restocked"
+    items won't restock until re-equipped reequip"
   dropChanse: 15
   data: {fileID: 11400000, guid: 65e8cc71afa45224a840a4dbd6f4ae97, type: 2}
   usePrefab: {fileID: 4760012153550416352, guid: d5ee4bf5f5a3b37418a5c8ef25a6d2e6, type: 3}

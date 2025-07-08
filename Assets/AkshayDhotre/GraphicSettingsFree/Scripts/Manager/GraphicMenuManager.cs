@@ -5,9 +5,7 @@ using UnityEngine;
 namespace AkshayDhotre.GraphicSettingsMenu
 {
     [RequireComponent(typeof(GraphicSettingSaveManager))]
-    /// <summary>
     /// Handles the toggling of menu and the saving/loading and applying of the graphic settings.
-    /// </summary>
     public class GraphicMenuManager : MonoBehaviour
     {
         //Reference to the options in the scene
@@ -26,7 +24,6 @@ namespace AkshayDhotre.GraphicSettingsMenu
         
         private void Start()
         {
-
             graphicSettingSaveManager = GetComponent<GraphicSettingSaveManager>();
 
             //It is necessary to load the data in Start() rather than in Awake() because we generate the resolution suboption list
@@ -55,17 +52,13 @@ namespace AkshayDhotre.GraphicSettingsMenu
             }
         }
 
-        /// <summary>
         /// Called when the UI apply button is pressed
-        /// </summary>
         public void OnApplyButtonPress()
         {
             ApplySettings();
         }
 
-        /// <summary>
         /// Applies the settings and saves the new settings
-        /// </summary>
         private void ApplySettings()
         {
             
@@ -77,9 +70,7 @@ namespace AkshayDhotre.GraphicSettingsMenu
             Save();
         }
 
-        /// <summary>
         /// Get the values from the option, assign them in the GraphicSettingDataContainer and saves the data into a XML file
-        /// </summary>
         public void Save()
         {
             //Assign values to dataToSave
@@ -91,17 +82,13 @@ namespace AkshayDhotre.GraphicSettingsMenu
             graphicSettingSaveManager.SaveSettings(dataToSave);
         }
 
-        /// <summary>
         /// Load the settings in dataToLoad(graphicSettingsDataContainer)
-        /// </summary>
         public void Load()
         {
             graphicSettingSaveManager.LoadSettings(out dataToLoad);
         }
 
-        /// <summary>
         /// Updates the UI suboption text and also sets the currentSubOption equal to the value from the loaded data
-        /// </summary>
         private void UpdateUIFromLoadedData()
         {
             //so that the player will see the current settings on the menu

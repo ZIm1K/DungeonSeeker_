@@ -19,28 +19,27 @@ namespace Inventory
         [SerializeField] private Transform inventoryPanel;
         [SerializeField] private float reachDistance = 3f;
 
-        //[SerializeField] private ItemDatabase itemDatabase;
-
         private List<InventorySlot> slots = new List<InventorySlot>();
         private Camera mainCamera;
         private bool isOpened;
-        public bool isItemOnDrag = false;
+        public bool IsItemOnDrag = false;
+        public bool IsOnPause;
 
         [SerializeField] private GameObject slotPrefab;
 
         [SerializeField] private float rangeOfOpen;
 
+        [SerializeField] private Camera _camera;
+
         [Header("Chest Inventory")]
         [SerializeField] private GameObject ChestInventoryPanel;
 
-        [SerializeField] private Camera _camera;
-
-        public PhotonView currentChest;
+        public PhotonView CurrentChest;
 
         [Header("Craft Inventory")]
         [SerializeField] private GameObject CraftInventoryPanel;
 
-        public PhotonView currentCrafter;
+        public PhotonView CurrentCrafter;
 
         private bool isOpenedCrafter;
 
@@ -69,16 +68,82 @@ namespace Inventory
         {
             UIPanel.SetActive(false);
         }
+        
+        void Update()
+        {
+            if (!photonView.IsMine) return;
 
-        void Setter() 
+            if (IsItemOnDrag == false)
+            {
+                if (!IsOnPause)
+                {
+                    if (Input.GetKeyDown(KeyCode.R))
+                    {
+                        if (ChestInventoryPanel.activeSelf)
+                        {
+                            ClearChestSlots();
+                            return;
+                        }
+                        else if (CraftInventoryPanel.activeSelf)
+                        {
+                            ClearCraftSlots();
+                            return;
+                        }
+
+                        Setter();
+                        gameObject.GetComponent<PlayerControllerWithCC>().EnableRotateAndMove(!isOpened);
+                    }
+                    if (Input.GetKeyDown(KeyCode.Z))
+                    {
+                        if (UIPanel.activeSelf)
+                        {
+                            if (CraftInventoryPanel.activeSelf)
+                            {
+                                ClearCraftSlots();
+                                return;
+                            }
+                            else if (ChestInventoryPanel.activeSelf)
+                            {
+                                ClearChestSlots();
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            Ray ray = new Ray(_camera.transform.position, _camera.transform.forward);
+
+                            if (Physics.Raycast(ray, out RaycastHit hit, rangeOfOpen))
+                            {
+                                if (hit.transform.CompareTag("Chest"))
+                                {
+                                    ChestSlotsSetter(hit);
+                                }
+                                else if (hit.transform.CompareTag("Crafter"))
+                                {
+                                    CraftSlotsSetter(hit);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (!UIPanel.activeSelf)
+                {
+                    TryPickupItem();
+                }
+            }
+        }
+        void Setter()
         {
             isOpened = !isOpened;
-            UIPanel.SetActive(isOpened);            
+            UIPanel.SetActive(isOpened);
             CharacterTextsPanel.SetActive(!isOpened);
             Cursor.lockState = isOpened ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = isOpened;
         }
-        void ClearChestSlots() 
+        void ClearChestSlots()
         {
             Setter();
             ChestInventoryPanel.SetActive(isOpened);
@@ -86,11 +151,11 @@ namespace Inventory
             {
                 Destroy(ChestInventoryPanel.transform.GetChild(0).GetChild(i).gameObject);
             }
-            currentChest = null;
-            gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = true;
+            CurrentChest = null;
+            gameObject.GetComponent<PlayerControllerWithCC>().EnableRotateAndMove(true);
             gameObject.GetComponent<ShowItemStats>().CloseStatsPanel();
         }
-        void ClearCraftSlots() 
+        void ClearCraftSlots()
         {
             Setter();
             CraftInventoryPanel.SetActive(isOpened);
@@ -104,15 +169,15 @@ namespace Inventory
                 craftSlots[i].SetBasedIcon();
                 craftSlots[i].itemAmountText.text = " ";
             }
-            currentCrafter = null;
-            gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = true;
+            CurrentCrafter = null;
+            gameObject.GetComponent<PlayerControllerWithCC>().EnableRotateAndMove(true);
             gameObject.GetComponent<ShowItemStats>().CloseStatsPanel();
         }
-        void ChestSlotsSetter(RaycastHit hit) 
+        void ChestSlotsSetter(RaycastHit hit)
         {
             Setter();
             ChestInventoryPanel.SetActive(isOpened);
-            currentChest = hit.collider.GetComponent<PhotonView>();
+            CurrentChest = hit.collider.GetComponent<PhotonView>();
 
             int countOfItems = hit.collider.GetComponent<Chest>().CountOfItems;
             if (countOfItems > 0)
@@ -141,13 +206,13 @@ namespace Inventory
                     }
                 }
             }
-            gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = false;
+            gameObject.GetComponent<PlayerControllerWithCC>().EnableRotateAndMove(false);
         }
-        void CraftSlotsSetter(RaycastHit hit) 
+        void CraftSlotsSetter(RaycastHit hit)
         {
             Setter();
             CraftInventoryPanel.SetActive(isOpened);
-            currentCrafter = hit.collider.GetComponent<PhotonView>();
+            CurrentCrafter = hit.collider.GetComponent<PhotonView>();
 
             for (int i = 0; i < craftSlots.Length; i++)
             {
@@ -160,73 +225,10 @@ namespace Inventory
                     craftSlots[i].isEmpty = false;
                     craftSlots[i].SetIcon(item.icon);
                     craftSlots[i].itemAmountText.text = "1";
-                }                
+                }
             }
             photonView.RPC("CheckForCraftButtonLocaly", photonView.Owner);
-            gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = false;
-        }
-        void Update()
-        {
-            if (!photonView.IsMine) return;
-
-            if (isItemOnDrag == false)
-            {
-                if (Input.GetKeyDown(KeyCode.R))
-                {
-                    if (ChestInventoryPanel.activeSelf)
-                    {
-                        ClearChestSlots();
-                        return;
-                    }
-                    else if (CraftInventoryPanel.activeSelf)
-                    {
-                        ClearCraftSlots();
-                        return;
-                    }
-
-                    Setter();
-                    gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = !isOpened;
-                }
-                if (Input.GetKeyDown(KeyCode.Z))
-                {
-                    if (UIPanel.activeSelf)
-                    {
-                        if (CraftInventoryPanel.activeSelf)
-                        {
-                            ClearCraftSlots();
-                            return;
-                        }
-                        else if (ChestInventoryPanel.activeSelf)
-                        {
-                            ClearChestSlots();
-                            return;
-                        }
-                    }
-                    else 
-                    {
-                        Ray ray = new Ray(_camera.transform.position, _camera.transform.forward);
-
-                        if (Physics.Raycast(ray, out RaycastHit hit, rangeOfOpen))
-                        {
-                            if (hit.transform.CompareTag("Chest"))
-                            {
-                                ChestSlotsSetter(hit);
-                            }
-                            else if (hit.transform.CompareTag("Crafter"))
-                            {
-                                CraftSlotsSetter(hit);
-                            }
-                        }
-                    }                   
-                }               
-            }
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                if (!UIPanel.activeSelf)
-                {
-                    TryPickupItem();
-                }
-            }
+            gameObject.GetComponent<PlayerControllerWithCC>().EnableRotateAndMove(false);
         }
 
         void TryPickupItem()
@@ -353,14 +355,14 @@ namespace Inventory
             {
                 if (playerPhotonView.ViewID != photonView.ViewID)
                 {
-                    if (currentChest != null)
+                    if (CurrentChest != null)
                     {
-                        playerPhotonView.RPC("UpdateSlotInOnlineLocaly", RpcTarget.Others, currentChest.ViewID, 0, slotID);
+                        playerPhotonView.RPC("UpdateSlotInOnlineLocaly", RpcTarget.Others, CurrentChest.ViewID, 0, slotID);
 
                     }
-                    else if (currentCrafter != null)
+                    else if (CurrentCrafter != null)
                     {
-                        playerPhotonView.RPC("UpdateSlotInOnlineLocaly", RpcTarget.Others, 0, currentCrafter.ViewID, slotID);
+                        playerPhotonView.RPC("UpdateSlotInOnlineLocaly", RpcTarget.Others, 0, CurrentCrafter.ViewID, slotID);
                     }
                     else 
                     {
@@ -375,11 +377,11 @@ namespace Inventory
         {
             InventorySlot slot;
             ItemScriptableObject item;
-            if (currentChest == null)
+            if (CurrentChest == null)
             {
-                if (currentCrafter != null)
+                if (CurrentCrafter != null)
                 {
-                    if (currentCrafter.ViewID != crafterID)
+                    if (CurrentCrafter.ViewID != crafterID)
                     {
                         return;
                     }
@@ -387,7 +389,7 @@ namespace Inventory
                     {
                         slot = CraftInventoryPanel.transform.GetChild(0).GetChild(slotID).GetComponent<InventorySlot>();
                         
-                        item = ItemDatabase.GetItemByID(currentCrafter.GetComponent<Crafter>().saveCraftItems[slotID].ID);
+                        item = ItemDatabase.GetItemByID(CurrentCrafter.GetComponent<Crafter>().saveCraftItems[slotID].ID);
                     }
                 }
                 else 
@@ -395,7 +397,7 @@ namespace Inventory
                     return;
                 }
             }            
-            else if (currentChest.ViewID != chestID)
+            else if (CurrentChest.ViewID != chestID)
             {
                 return;
             }
@@ -403,17 +405,17 @@ namespace Inventory
             {
                 slot = ChestInventoryPanel.transform.GetChild(0).GetChild(slotID).GetComponent<InventorySlot>();
 
-                item = ItemDatabase.GetItemByID(currentChest.GetComponent<Chest>().saveChestItems[slotID].ID);
+                item = ItemDatabase.GetItemByID(CurrentChest.GetComponent<Chest>().saveChestItems[slotID].ID);
             }
             if (item != null)
             {
                 slot.item = item;
-                if (currentChest != null)
+                if (CurrentChest != null)
                 {
-                    slot.defenseID = currentChest.GetComponent<Chest>().saveChestItems[slotID].defenseID;
-                    slot.amount = currentChest.GetComponent<Chest>().saveChestItems[slotID].ammount;
+                    slot.defenseID = CurrentChest.GetComponent<Chest>().saveChestItems[slotID].defenseID;
+                    slot.amount = CurrentChest.GetComponent<Chest>().saveChestItems[slotID].ammount;
                 }
-                else if (currentCrafter != null) 
+                else if (CurrentCrafter != null) 
                 {
                     slot.defenseID = 0;
                     slot.amount = 1;
@@ -432,7 +434,7 @@ namespace Inventory
                 slot.itemAmountText.text = "";
                 slot.defenseID = 0;
             }
-            if (currentCrafter != null)
+            if (CurrentCrafter != null)
             { 
                 photonView.RPC("CheckForCraftButtonLocaly", photonView.Owner);
             }

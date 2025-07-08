@@ -18,7 +18,7 @@ namespace Objects.Weapon.Fireball
 
         void Start()
         {
-            // Знаходимо гравця по тегу
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
@@ -32,7 +32,6 @@ namespace Objects.Weapon.Fireball
 
             Vector3 direction = (target.position - firePoint.position).normalized;
 
-            // Поворот до гравця
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 5f * Time.deltaTime);
 
             if (Time.time > lastShootTime + shootCooldown)

@@ -92,7 +92,7 @@ namespace Objects.Weapon.Bow
 
                         if (shotSound != null)
                         {
-                            PlayAudioLocally();
+                            PlayAudioLocally(shotSound);
                             gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, shotSoundPath);
                         }
                         animation_.Play();
@@ -103,18 +103,7 @@ namespace Objects.Weapon.Bow
                     }
                 }
             }
-        }        
-        private void PlayAudioLocally()
-        {
-            AudioSource source = gameObject.AddComponent<AudioSource>();
-            source.clip = shotSound;
-            source.maxDistance = 30f;
-            source.spatialBlend = 1f;
-            source.volume = 0.1f;
-            source.Play();
-            Destroy(source, shotSound.length);
-        }
-
+        }                
         public override void Reload()
         {
             if (countOfBulletsInBackpack > 0 && !isReloading)

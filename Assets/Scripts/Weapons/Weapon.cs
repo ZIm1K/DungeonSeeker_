@@ -61,5 +61,9 @@ namespace Objects.Weapon
         {
             WeaponEvents.OnClearAmmo.Invoke();
         }
+        protected void PlayAudioLocally(AudioClip attackSound)
+        {
+            gameObject.GetComponent<AudioSource>().PlayOneShot(attackSound);
+        }
     }
 }

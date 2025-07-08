@@ -29,10 +29,7 @@ namespace AkshayDhotre.GraphicSettingsMenu
             }
         }
 
-        /// <summary>
         /// Sets the menu canvas component enabled value equal to active.
-        /// </summary>
-        /// <param name="active"></param>
         private void SetMenuActive(bool active)
         {
             menuCanvasComponent.enabled = active;

@@ -8,6 +8,7 @@ using Inventory;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.EventSystems;
 
 namespace Objects.PlayerScripts
 {
@@ -26,8 +27,9 @@ namespace Objects.PlayerScripts
         [SerializeField] private float slopeForceRayLength = 1.5f;
         [SerializeField] private GameObject durabilytyDatabase;
         
-        public bool isCanRotate = true;
-        
+        private bool isCanRotate = true;
+        private bool isCanMove= true;
+
         [Header("Footstep Sounds")]
         [SerializeField] private AudioClip[] dirtClips;
         [SerializeField] private AudioClip[] concreteClips;
@@ -80,7 +82,6 @@ namespace Objects.PlayerScripts
             else
             {
                 DurabilityDefenseDatabase durabilDatabase = GameObject.FindWithTag("DurabilBase").GetComponent<DurabilityDefenseDatabase>();               
-                //durabilDatabase.itemDatabase = gameObject.GetComponent<ItemDatabase>();
                 model = gameObject.AddComponent<CharacterModel>();
                 model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
 
@@ -128,7 +129,11 @@ namespace Objects.PlayerScripts
                 }
             }
         }
-
+        public void EnableRotateAndMove(bool enable) 
+        {
+            gameObject.GetComponent<PlayerControllerWithCC>().isCanRotate = enable;
+            gameObject.GetComponent<PlayerControllerWithCC>().isCanMove = enable;
+        }
         private void Update()
         {
             if (!_photonView.IsMine) return;
@@ -166,7 +171,11 @@ namespace Objects.PlayerScripts
         {
             if (!_photonView.IsMine) return;
 
-            PlayerMovement();
+            if (isCanMove)
+            {
+                PlayerMovement();
+            }
+            ApplyGravity();
         }
 
         private void PlayerMovement()
@@ -187,14 +196,16 @@ namespace Objects.PlayerScripts
                 }
             }
 
-            if (isGrounded && velocity.y < 0)
-            {
-                velocity.y = -2f;
-            }
-
             if ((horizontalInput != 0 || verticalInput != 0) && OnSlope())
             {
                 moveDirection += Vector3.down * slopeForce;
+            }           
+        }
+        private void ApplyGravity() 
+        {
+            if (isGrounded && velocity.y < 0)
+            {
+                velocity.y = -2f;
             }
 
             velocity.y += gravity * Time.deltaTime;
@@ -240,25 +251,25 @@ namespace Objects.PlayerScripts
 
                 if (audioSource == null)
                 {
-                    Debug.LogError("AudioSource не знайдений.");
+                    Debug.LogError("AudioSource not founded.");
                     return;
                 }
 
                 if (audioSource.isPlaying)
                 {
-                    Debug.LogWarning("Аудіо вже відтворюється.");
+                    Debug.LogWarning("Audio is playing.");
                     return;
                 }
 
                 if (hit.collider == null)
                 {
-                    Debug.LogWarning("Raycast не вдарив в об'єкт.");
+                    Debug.LogWarning("Raycast not touched obj");
                     return;
                 }
 
                 if (material == null)
                 {
-                    Debug.LogWarning("Немає PhysicMaterial.");
+                    Debug.LogWarning("None PhysicMaterial.");
                 }
 
                 AudioClip[] clips;
@@ -279,12 +290,12 @@ namespace Objects.PlayerScripts
                 }
                 else
                 {
-                    Debug.LogWarning("Немає доступних кліпів для матеріалу.");
+                    Debug.LogWarning("None acsesiable materials.");
                 }
             }
             else
             {
-                Debug.LogWarning("Raycast не знайде матеріал.");
+                Debug.LogWarning("Raycast not founded material");
             }
         }
 
@@ -292,7 +303,7 @@ namespace Objects.PlayerScripts
         {
             if (clips == null || clips.Length == 0)
             {
-                Debug.LogError("Немає кліпів для відтворення.");
+                Debug.LogError("No clips for play");
                 return;
             }
 
@@ -300,69 +311,12 @@ namespace Objects.PlayerScripts
 
             if (clip == null)
             {
-                Debug.LogError("Вибраний кліп — null.");
+                Debug.LogError("Current clip — null.");
                 return;
             }
 
             audioSource.clip = clip;
             audioSource.Play();
         }
-
-        //private IEnumerator RegenerateMana()
-        //{
-        //    while (true)
-        //    {
-        //        yield return new WaitForSeconds(curManaRegenInterval);
-        //        if (model.Mana < maxMana)
-        //        {
-        //            int newMana = Mathf.Min(model.Mana + manaRegenAmount, maxMana);
-        //            model.AddMana(newMana - model.Mana);
-        //        }
-        //    }
-        //}
-        //private IEnumerator RegenerateHealth()
-        //{
-        //    while (true)
-        //    {
-        //        yield return new WaitForSeconds(healthRegenInterval);
-        //        if (model.Health < maxHealth)
-        //        {
-        //            int newHealth = Mathf.Min(model.Health + healthaRegenAmount, maxHealth);
-        //            model.AddHealth(newHealth - model.Health);
-        //        }
-        //    }
-        //}
-        //public void EnableRegen(float manaRegenInterval, float duration) 
-        //{
-        //    if (curManaRegenInterval == manaRegenInterval) //if poition had the same buff
-        //    {
-        //        if (timer < 1)
-        //        {
-        //            curManaRegenInterval = manaRegenInterval;
-        //            StartCoroutine(WaitForDuration(duration));
-        //        }
-        //        else
-        //        {
-        //            timer += duration;
-        //        }
-        //    }
-        //    else 
-        //    {
-        //        timer = duration;
-        //        curManaRegenInterval = manaRegenInterval;
-        //        StartCoroutine(WaitForDuration(duration));
-        //    }
-        //}        
-        //private IEnumerator WaitForDuration(float duration) 
-        //{
-        //    timer = duration;
-        //    while (timer >= 0)
-        //    {               
-        //        view.UpdateTimerText(timer);
-        //        yield return new WaitForSeconds(1f);
-        //        timer -= 1;               
-        //    }            
-        //    curManaRegenInterval = manaRegenInterval;
-        //}
     }
 }

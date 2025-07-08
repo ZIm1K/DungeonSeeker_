@@ -55,7 +55,7 @@ public class CraftItem : MonoBehaviourPun
         {
             indexs.Add((craftSlots[i].item as OreItem).indexOfOre);
             NullifySlotData(craftSlots[i]);
-            inventoryManager.currentCrafter.RPC("RemoveItemFromCrafter", RpcTarget.All, i);
+            inventoryManager.CurrentCrafter.RPC("RemoveItemFromCrafter", RpcTarget.All, i);
             inventoryManager.UpdateSlotInOnlineLocalySent(i);
         }
       

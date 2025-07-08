@@ -12,26 +12,27 @@ public class DisconectManager : MonoBehaviourPunCallbacks
     public static DisconectManager disconectInstance;
     private int sceneID;
     private bool isLeaving = false;
-    [SerializeField] private GameObject fixebleCamera;
+    //[SerializeField] private GameObject fixebleCamera;
     private void Awake()
     {
         if (disconectInstance == null)
         {
             disconectInstance = this;
+            DontDestroyOnLoad(gameObject);
         }
-        else
+        else if (disconectInstance != this)
         {
-            Destroy(disconectInstance);
+            Destroy(gameObject);
         }
     }
-    private void Start()
-    {
-        fixebleCamera.SetActive(false);
-    }
+    //private void Start()
+    //{
+    //    fixebleCamera.SetActive(false);
+    //}
 
     public void ChangingScenes(int sceneID) 
     {
-        fixebleCamera.SetActive(true);
+        //fixebleCamera.SetActive(true);
         isLeaving = true;        
         if(FindObjectOfType<DurabilityDefenseDatabase>()) FindObjectOfType<DurabilityDefenseDatabase>().DestroySelf();
         if (PhotonNetwork.IsConnected)
@@ -48,7 +49,8 @@ public class DisconectManager : MonoBehaviourPunCallbacks
     {
         if (isLeaving) 
         {
-            SceneManager.LoadScene(sceneID);   
+            isLeaving = false;
+            SceneManager.LoadScene(sceneID);
         }       
     }
 }

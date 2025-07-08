@@ -71,7 +71,7 @@ namespace Inventory
             if (oldSlot.isEmpty)
                 return;
 
-            player.GetComponent<InventoryManager>().isItemOnDrag = true;
+            player.GetComponent<InventoryManager>().IsItemOnDrag = true;
             if (eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name == NameOfInventorySpace.ChestInventory.ToString())
             {
                 isItemFromChest = true;
@@ -128,7 +128,7 @@ namespace Inventory
                 return;
             }
             
-            player.GetComponent<InventoryManager>().isItemOnDrag = false;            
+            player.GetComponent<InventoryManager>().IsItemOnDrag = false;            
             if (eventData.pointerCurrentRaycast.gameObject.name == "UIPanel")
             {
                 //Drop item
@@ -147,7 +147,7 @@ namespace Inventory
                         oldSlot.itemTypeToGet == ItemType.Boots ||
                         oldSlot.itemTypeToGet == ItemType.Charm)
                     {
-                        OnUnWearItem(oldSlot.item);
+                        await OnUnWearItem(oldSlot.item);
                     }
                 }
                 NullifySlotData();
@@ -261,7 +261,7 @@ namespace Inventory
         {
             int index = SlotIndexReturner(chestSlots, slotToFind.gameObject);  
 
-            player.GetComponent<InventoryManager>().currentChest.RPC("AddItemToChest", RpcTarget.All, slotToFind.item.itemID,
+            player.GetComponent<InventoryManager>().CurrentChest.RPC("AddItemToChest", RpcTarget.All, slotToFind.item.itemID,
                         slotToFind.defenseID, slotToFind.amount, slotToFind.isEmpty, index);
             player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(index);
         }       
@@ -269,7 +269,7 @@ namespace Inventory
         {
             int index = SlotIndexReturner(craftSlots, slotToFind.gameObject);  
             
-            player.GetComponent<InventoryManager>().currentCrafter.RPC("AddItemToCrafter", RpcTarget.All, slotToFind.item.itemID,
+            player.GetComponent<InventoryManager>().CurrentCrafter.RPC("AddItemToCrafter", RpcTarget.All, slotToFind.item.itemID,
                              slotToFind.isEmpty, index);
             player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(index);
         }        
@@ -278,14 +278,14 @@ namespace Inventory
         {
             int index = SlotIndexReturner(chestSlots, slotToFind.gameObject);
 
-            player.GetComponent<InventoryManager>().currentChest.RPC("RemoveItemFromChest", RpcTarget.All, index);
+            player.GetComponent<InventoryManager>().CurrentChest.RPC("RemoveItemFromChest", RpcTarget.All, index);
             player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(index);
         }
         void RemoveItemFromCrafter(GameObject craftSlots, InventorySlot slotToFind)
         {
             int index = SlotIndexReturner(craftSlots, slotToFind.gameObject);
 
-            player.GetComponent<InventoryManager>().currentCrafter.RPC("RemoveItemFromCrafter", RpcTarget.All, index);
+            player.GetComponent<InventoryManager>().CurrentCrafter.RPC("RemoveItemFromCrafter", RpcTarget.All, index);
             player.GetComponent<InventoryManager>().UpdateSlotInOnlineLocalySent(index);
         }
 

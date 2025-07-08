@@ -68,7 +68,7 @@ public class CrucifixWeapon : Weapon
                         targetPhotonView.RPC("TakeDamage", RpcTarget.All, damage);
                         if (attackSound != null)
                         {
-                            PlayAudioLocally();
+                            PlayAudioLocally(attackSound);
                             gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, attackSoundPath);
                         }
                         gameObject.GetComponent<WeaponManager>().NullifySlotData(gameObject.GetComponent<WeaponManager>().currentWeaponIndex);
@@ -86,15 +86,5 @@ public class CrucifixWeapon : Weapon
         {
             await Task.Yield(); 
         }
-    }
-    private void PlayAudioLocally()
-    {
-        AudioSource source = gameObject.AddComponent<AudioSource>();
-        source.clip = attackSound;
-        source.maxDistance = 20f;
-        source.spatialBlend = 1f;
-        source.volume = 0.1f;
-        source.Play();
-        Destroy(source, attackSound.length);
     }   
 }

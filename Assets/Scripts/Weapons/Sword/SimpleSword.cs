@@ -48,7 +48,6 @@ public class SimpleSword : Weapon
     public void SetTrigger(SwordTrigger trigger) 
     {
         this.trigger = trigger;
-        //Debug.LogWarning("Triggered");
     }
 
 
@@ -94,43 +93,11 @@ public class SimpleSword : Weapon
 
                 if (attackSound != null)
                 {
-                    PlayAudioLocally();
+                    PlayAudioLocally(attackSound);
                     gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, attackSoundPath);
                 }
-                animation_.Play();
-
-                //Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-                //RaycastHit hit;
-                //if (Physics.Raycast(ray, out hit, rangeOfAttack))
-                //{
-                //    EnemyModel enemy = hit.collider.gameObject.GetComponent<EnemyModel>();
-                //    if (enemy != null)
-                //    {
-                //        PhotonView targetPhotonView = hit.collider.gameObject.GetComponent<PhotonView>();
-                //        if (targetPhotonView != null)
-                //        {
-                //            targetPhotonView.RPC("TakeDamage", RpcTarget.All, swordDamage);
-                //        }
-                //    }                   
-                //}
-
-                //if (attackSound != null)
-                //{
-                //    PlayAudioLocally();
-                //    gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, attackSoundPath);
-                //}
-                //animation_.Play();
+                animation_.Play();               
             }
         }
     }
-    private void PlayAudioLocally()
-    {
-        AudioSource source = gameObject.AddComponent<AudioSource>();
-        source.clip = attackSound;
-        source.maxDistance = 20f;
-        source.spatialBlend = 1f;
-        source.volume = 0.1f;
-        source.Play();
-        Destroy(source, attackSound.length);
-    }   
 }

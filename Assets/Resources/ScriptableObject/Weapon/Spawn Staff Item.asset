@@ -19,7 +19,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: ed0a32aeeb2bf0f40ad22e944d930018, type: 3}
   itemType: 2
   itemDescription: "From the deep, it summons a creature \u2014 no enemy, but a silent
-    healer. Its touch is cold, yet kind."
+    healer. Its touch is cold, yet kind.(Mana cost: 100)"
   dropChanse: 15
   data: {fileID: 11400000, guid: 8aa4f8cc2e32ac44a9f8e2719a6f911b, type: 2}
   usePrefab: {fileID: 5599359591697352976, guid: c035901ccd856ec49915fcd69a92b586, type: 3}

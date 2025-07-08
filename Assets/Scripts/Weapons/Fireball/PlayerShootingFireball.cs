@@ -36,7 +36,6 @@ namespace Objects.Weapon.Fireball
             fireballDamage = data.data.fireballDamage;
             explosionPrefab = data.data.explosionPrefab;
             decalPrefab = data.data.decalPrefab;
-            //shotSound = data.data.shotSound;
             shotTimeout = data.data.shotTimeout;
 
             base.Initialize("Fireball", fireballDamage, false, 0f, shotSound, shotTimeout);

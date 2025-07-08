@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 using Random = UnityEngine.Random;
 
 namespace Objects.PlayerScripts
@@ -20,12 +21,12 @@ namespace Objects.PlayerScripts
         public GameObject ManaBuffEmpty;
         public TMP_Text ManaBuffText;
         public Slider HealthBar;
-        public Slider ManaBar;
-        private float time;      
-        public TMP_Text Level;        
+        public Slider ManaBar;   
+        public TMP_Text LevelText;      
+
         public void UpdateLevelText(int level)
         {
-            Level.text = $"Floor: {level}";
+            LevelText.text = $"Floor: {level}";
         }
         public void UpdateHealthText(int health)
         {
@@ -61,6 +62,6 @@ namespace Objects.PlayerScripts
                 return;
             }
             ManaBuffText.text = $"{time}";
-        }
+        }       
     }
 }

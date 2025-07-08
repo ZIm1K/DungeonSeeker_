@@ -61,20 +61,10 @@ public class DefenseStaff : Weapon
 
             if (attackSound != null)
             {
-                PlayAudioLocally();
+                PlayAudioLocally(attackSound);
                 gameObject.GetComponent<InventoryManager>().photonView.RPC("PlayAudio", RpcTarget.Others, shotSoundPath);
             }
             animation_.Play();
         }
-    }
-    private void PlayAudioLocally()
-    {
-        AudioSource source = gameObject.AddComponent<AudioSource>();
-        source.clip = attackSound;
-        source.maxDistance = 30f;
-        source.spatialBlend = 1f;
-        source.volume = 0.1f;
-        source.Play();
-        Destroy(source, attackSound.length);
     }
 }

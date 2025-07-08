@@ -73,7 +73,7 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
     }
     public void SubDurabilAmmount(int id,int damage) 
     {
-        for (int i = 0; i < id; i++)
+        for (int i = 0; i < allValues.Count; i++)
         {
             if (i == id)
             {

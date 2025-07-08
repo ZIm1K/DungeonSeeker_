@@ -16,4 +16,8 @@ public class PlayerCallbacks : MonoBehaviourPunCallbacks
             playerViewManager.photonView.RPC("RemoveFromList",RpcTarget.All,viewToRemove.ViewID);
         }
     }
+    public override void OnMasterClientSwitched(Player newMasterClient) //When host left
+    {
+        DisconectManager.disconectInstance.ChangingScenes(0);
+    }
 }

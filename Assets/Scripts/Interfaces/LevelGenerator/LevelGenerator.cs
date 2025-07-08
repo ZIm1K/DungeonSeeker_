@@ -184,10 +184,6 @@ namespace LevelGenerator
         void SynchronizeLevel(Vector3[] positions)
         {
             usedPositions.AddRange(positions);
-        }
-        public override void OnMasterClientSwitched(Player newMasterClient)
-        {
-            DisconectManager.disconectInstance.ChangingScenes(0);
-        }
+        }       
     }
 }

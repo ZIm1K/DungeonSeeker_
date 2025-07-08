@@ -45,8 +45,6 @@ namespace Objects.PlayerScripts
 
         private float currentMultiplier;
 
-        private bool isAlive = true;
-
         public int Health
         {
             get { return health; }
@@ -156,20 +154,12 @@ namespace Objects.PlayerScripts
         public void Initialize(int health, int mana, CharacterView view, float speed, PlayerControllerWithCC playerController,
      float jumpForce, DurabilityDefenseDatabase durabilDatabase)
         {
-            //int level = LevelHandler.Level;
-            //currentMultiplier = Mathf.Pow(1.03f, level - 1);
-
-            //maxHealth = Mathf.RoundToInt(health * currentMultiplier); //don`t need to buff speed because of overpower
-            //maxMana = Mathf.RoundToInt(mana * currentMultiplier); //don`t need to buff speed because of overpower
             maxHealth = health;
             maxMana = mana;
             this.health = maxHealth;
             this.mana = maxMana;
             this.speed = speed;
             this.jumpForce = jumpForce;
-
-            //this.speed = speed * (1 + 0.05f * (level - 1));   //don`t need to buff speed because of overpower
-            //this.jumpForce = jumpForce * (1 + 0.03f * (level - 1));   //don`t need to buff jump force because of overpower
 
             this.view = view;
             this.playerController = playerController;
@@ -305,12 +295,7 @@ namespace Objects.PlayerScripts
                     }
                 }               
             }
-        }
-
-        private void Die() 
-        {
-            DisconectManager.disconectInstance.ChangingScenes(3);
-        }       
+        }           
 
         public int SubtractTypeDefense(int defense, int damage) 
         {

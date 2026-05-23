@@ -68,14 +68,12 @@ namespace Objects.Weapon
         {
             if (weapons[currentWeaponIndex] != null)
             {
-                if (!weapons[currentWeaponIndex].IsReloading && !weapons[currentWeaponIndex].animation_.isPlaying)
+                if (CanSwitchCurrentWeapon())
                 {
-                    if (posTarget.transform.GetChild(1).childCount > 0)
+                    if (GetWeaponObject(1) != null)
                     {                        
                         currentWeaponIndex = 0;
-                        posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
-                        photonView.RPC("Activator", RpcTarget.Others,
-                            posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                        SetWeaponObjectActive(1, false);
                     }
                 }
             }
@@ -84,25 +82,21 @@ namespace Objects.Weapon
                 currentWeaponIndex = 0;
             }
 
-            if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading && !weapons[currentWeaponIndex].animation_.isPlaying)
+            if (weapons[currentWeaponIndex] != null && CanSwitchCurrentWeapon())
             {
-                posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
-                photonView.RPC("Activator", RpcTarget.Others,
-                        posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
+                SetWeaponObjectActive(0, true);
             }
         }
         public void OnKeyDown2()
         {
             if (weapons[currentWeaponIndex] != null)
             {
-                if (!weapons[currentWeaponIndex].IsReloading && !weapons[currentWeaponIndex].animation_.isPlaying)
+                if (CanSwitchCurrentWeapon())
                 {
-                    if (posTarget.transform.GetChild(0).childCount > 0)
+                    if (GetWeaponObject(0) != null)
                     {
                         currentWeaponIndex = 1;
-                        posTarget.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
-                        photonView.RPC("Activator", RpcTarget.Others,
-                            posTarget.transform.GetChild(0).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, false);
+                        SetWeaponObjectActive(0, false);
                     }
                 }
             }
@@ -111,11 +105,9 @@ namespace Objects.Weapon
                 currentWeaponIndex = 1;
             }
 
-            if (weapons[currentWeaponIndex] != null && !weapons[currentWeaponIndex].IsReloading && !weapons[currentWeaponIndex].animation_.isPlaying)
+            if (weapons[currentWeaponIndex] != null && CanSwitchCurrentWeapon())
             {
-                posTarget.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
-                photonView.RPC("Activator", RpcTarget.Others,
-                        posTarget.transform.GetChild(1).GetChild(0).gameObject.GetComponent<PhotonView>().ViewID, true);
+                SetWeaponObjectActive(1, true);
             }
         }
         private void OnChangeSlot1()
@@ -156,16 +148,16 @@ namespace Objects.Weapon
                 }
                 SelectWeapon();
 
-                if (posTarget.transform.GetChild(0).childCount > 0)
-                {
-                    PhotonNetwork.Destroy(posTarget.transform.GetChild(0).GetChild(0).gameObject);
-                }
+                DestroyWeaponObject(0);
 
-                SetObj(0, weaponSlot1, usePref);
+                if (usePref != null)
+                {
+                    SetObj(0, weaponSlot1, usePref);
+                }
             }
             else
             {
-                PhotonNetwork.Destroy(posTarget.transform.GetChild(0).GetChild(0).gameObject);
+                DestroyWeaponObject(0);
             }
 
             UpdateAmmoUI();
@@ -208,16 +200,16 @@ namespace Objects.Weapon
                 }
                 SelectWeapon();
 
-                if (posTarget.transform.GetChild(1).childCount > 0)
-                {
-                    PhotonNetwork.Destroy(posTarget.transform.GetChild(1).GetChild(0).gameObject);
-                }
+                DestroyWeaponObject(1);
 
-                SetObj(1, weaponSlot2, usePref);
+                if (usePref != null)
+                {
+                    SetObj(1, weaponSlot2, usePref);
+                }
             }
             else
             {
-                PhotonNetwork.Destroy(posTarget.transform.GetChild(1).GetChild(0).gameObject);
+                DestroyWeaponObject(1);
             }
 
             UpdateAmmoUI();
@@ -225,6 +217,12 @@ namespace Objects.Weapon
 
         private void SetObj(int index, GameObject curSlot, GameObject usePrefab)
         {
+            if (usePrefab == null || posTarget == null || weapons[index] == null)
+            {
+                Debug.LogWarning("Can not set weapon object because required data is missing.");
+                return;
+            }
+
             GameObject obj = PhotonNetwork.Instantiate(usePrefab.name,
                         posTarget.transform.GetChild(index).transform.position, Quaternion.identity);
             obj.transform.SetParent(posTarget.transform.GetChild(index));
@@ -243,18 +241,33 @@ namespace Objects.Weapon
                 obj.SetActive(false);
             }
 
-            photonView.RPC("SetForOthers", RpcTarget.Others, index, obj.GetComponent<PhotonView>().ViewID, activ);
-            weapons[index].InitializeAnimation(obj.GetComponent<Animation>());
+            PhotonView objPhotonView = obj.GetComponent<PhotonView>();
+            if (objPhotonView != null)
+            {
+                photonView.RPC("SetForOthers", RpcTarget.Others, index, objPhotonView.ViewID, activ);
+            }
+
+            Animation animation = obj.GetComponent<Animation>();
+            if (animation != null)
+            {
+                weapons[index].InitializeAnimation(animation);
+            }
 
             if (weapons[index] as SimpleSword) 
             {
-                (weapons[index] as SimpleSword).SetTrigger(obj.transform.GetChild(0).GetComponent<SwordTrigger>());
+                if (obj.transform.childCount > 0)
+                {
+                    (weapons[index] as SimpleSword).SetTrigger(obj.transform.GetChild(0).GetComponent<SwordTrigger>());
+                }
             }
         }
         [PunRPC]
         private void SetForOthers(int index, int viewID, bool isActive)
         {
-            GameObject obj = PhotonView.Find(viewID).gameObject;
+            PhotonView targetView = PhotonView.Find(viewID);
+            if (targetView == null || posTarget == null || index < 0 || index >= posTarget.transform.childCount) return;
+
+            GameObject obj = targetView.gameObject;
             obj.transform.SetParent(posTarget.transform.GetChild(index));
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localEulerAngles = Vector3.zero;
@@ -263,8 +276,11 @@ namespace Objects.Weapon
         [PunRPC]
         private void Activator(int viewID, bool isActive) 
         {
-            GameObject obj = PhotonView.Find(viewID).gameObject;
-            obj.SetActive(isActive);
+            PhotonView targetView = PhotonView.Find(viewID);
+            if (targetView != null)
+            {
+                targetView.gameObject.SetActive(isActive);
+            }
         }
         public void AddBow(int numberOfSlot)
         {
@@ -347,6 +363,51 @@ namespace Objects.Weapon
             
             weapons[numberOfSlot] = null;
         }
+
+        private void SetWeaponObjectActive(int slotIndex, bool isActive)
+        {
+            GameObject weaponObject = GetWeaponObject(slotIndex);
+            if (weaponObject == null) return;
+
+            weaponObject.SetActive(isActive);
+            PhotonView weaponView = weaponObject.GetComponent<PhotonView>();
+            if (weaponView != null)
+            {
+                photonView.RPC("Activator", RpcTarget.Others, weaponView.ViewID, isActive);
+            }
+        }
+
+        private void DestroyWeaponObject(int slotIndex)
+        {
+            GameObject weaponObject = GetWeaponObject(slotIndex);
+            if (weaponObject != null)
+            {
+                PhotonNetwork.Destroy(weaponObject);
+            }
+        }
+
+        private GameObject GetWeaponObject(int slotIndex)
+        {
+            if (posTarget == null || slotIndex < 0 || slotIndex >= posTarget.transform.childCount)
+            {
+                return null;
+            }
+
+            Transform slotTransform = posTarget.transform.GetChild(slotIndex);
+            if (slotTransform.childCount == 0)
+            {
+                return null;
+            }
+
+            return slotTransform.GetChild(0).gameObject;
+        }
+
+        private bool CanSwitchCurrentWeapon()
+        {
+            Weapon weapon = weapons[currentWeaponIndex];
+            return weapon != null && !weapon.IsReloading && (weapon.animation_ == null || !weapon.animation_.isPlaying);
+        }
+
         GameObject CreateBullet() 
         {
             ItemScriptableObject item = gameObject.GetComponent<InventoryManager>().ItemReturner("14"); //pistol bullet ID

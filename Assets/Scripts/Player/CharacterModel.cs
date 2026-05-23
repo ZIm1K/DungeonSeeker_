@@ -291,7 +291,14 @@ namespace Objects.PlayerScripts
                     Health = Mathf.Max(Health - damage, 0);
                     if (Health == 0)
                     {
-                        DisconectManager.disconectInstance.ChangingScenes(3);
+                        if (DisconectManager.disconectInstance != null)
+                        {
+                            DisconectManager.disconectInstance.ChangingScenes(3);
+                        }
+                        else
+                        {
+                            SceneManager.LoadScene(3);
+                        }
                     }
                 }               
             }

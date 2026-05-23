@@ -99,7 +99,11 @@ public class ReturnManager : MonoBehaviourPunCallbacks
 
         if (readyPlayers.Count == PhotonNetwork.PlayerList.Length)
         {
-            PlayerViewManager.Instance.SavePlayerInventory();
+            if (PlayerViewManager.Instance != null)
+            {
+                PlayerViewManager.Instance.SavePlayerInventory();
+            }
+
             if (PhotonNetwork.IsMasterClient) 
             {
                 LevelHandler.IncreaseLevel();

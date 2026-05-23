@@ -4,18 +4,19 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using System.Collections.Generic;
 
 public class ReadyManager : MonoBehaviourPunCallbacks
 {
     public TextMeshProUGUI readyCountText; 
     public ZoneTrigger zoneTrigger; 
-    public int nextSceneIndex = 1;
+    public int nextSceneIndex = 2;
     protected bool isReady = false; 
-    protected int readyPlayers = 0;
+    private readonly HashSet<int> readyPlayers = new HashSet<int>();
 
     private void Start()
     {
-        readyCountText.text = $"Ready: {readyPlayers}/{PhotonNetwork.PlayerList.Length}";
+        UpdateReadyText();
     }
 
     void Update()
@@ -31,16 +32,24 @@ public class ReadyManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsConnected) return;
 
         isReady = !isReady; 
-        photonView.RPC("UpdateReadyStatus", RpcTarget.All, isReady ? 1 : -1);
+        photonView.RPC("UpdateReadyStatus", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, isReady);
     }
 
     [PunRPC]
-    void UpdateReadyStatus(int change)
+    void UpdateReadyStatus(int playerId, bool ready)
     {
-        readyPlayers += change;
-        readyCountText.text = $"Ready: {readyPlayers}/{PhotonNetwork.PlayerList.Length}";
+        if (ready)
+        {
+            readyPlayers.Add(playerId);
+        }
+        else
+        {
+            readyPlayers.Remove(playerId);
+        }
 
-        if (readyPlayers == PhotonNetwork.PlayerList.Length)
+        UpdateReadyText();
+
+        if (readyPlayers.Count == PhotonNetwork.PlayerList.Length)
         {
             StartCoroutine(StartGameCountdown());
         }
@@ -52,9 +61,9 @@ public class ReadyManager : MonoBehaviourPunCallbacks
 
         while (countdown > 0)
         {
-            if (readyPlayers != PhotonNetwork.PlayerList.Length)
+            if (readyPlayers.Count != PhotonNetwork.PlayerList.Length)
             {
-                readyCountText.text = $"Ready: {readyPlayers}/{PhotonNetwork.PlayerList.Length}";
+                UpdateReadyText();
                 yield break;
             }
 
@@ -63,10 +72,28 @@ public class ReadyManager : MonoBehaviourPunCallbacks
             countdown--;
         }
 
-        if (readyPlayers == PhotonNetwork.PlayerList.Length)
+        if (readyPlayers.Count == PhotonNetwork.PlayerList.Length)
         {
-            PlayerViewManager.Instance.SavePlayerInventory();
-            PhotonNetwork.LoadLevel(nextSceneIndex);
+            if (PlayerViewManager.Instance != null)
+            {
+                PlayerViewManager.Instance.SavePlayerInventory();
+            }
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.LoadLevel(nextSceneIndex);
+            }
         }
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        readyPlayers.Remove(otherPlayer.ActorNumber);
+        UpdateReadyText();
+    }
+
+    private void UpdateReadyText()
+    {
+        readyCountText.text = $"Ready: {readyPlayers.Count}/{PhotonNetwork.PlayerList.Length}";
     }
 }

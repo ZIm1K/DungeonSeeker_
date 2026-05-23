@@ -219,6 +219,11 @@ namespace Inventory
                 if (hit.collider.GetComponent<Crafter>().saveCraftItems[i].isEmpty == false)
                 {
                     ItemScriptableObject item = ItemDatabase.GetItemByID(hit.collider.GetComponent<Crafter>().saveCraftItems[i].ID);
+                    if (item == null)
+                    {
+                        continue;
+                    }
+
                     craftSlots[i].item = item;
                     craftSlots[i].defenseID = 0;
                     craftSlots[i].amount = 1;
@@ -247,11 +252,17 @@ namespace Inventory
                     {                        
                         defenseID = hit.collider.gameObject.GetComponent<DefenseItem>().ID;
                     }
-                    string itemID = hit.collider.gameObject.GetComponent<Item>().item.itemID;
-                    int amount = hit.collider.gameObject.GetComponent<Item>().amount;
+                    Item itemComponent = hit.collider.gameObject.GetComponent<Item>();
+                    if (itemComponent.item == null)
+                    {
+                        Debug.LogWarning("Picked item has no item data assigned.");
+                        return;
+                    }
 
-                    if (CheckEmptyInInventory() || CheckForTheSameInInventory(hit.collider.gameObject.GetComponent<Item>().item, 
-                        hit.collider.gameObject.GetComponent<Item>().amount))
+                    string itemID = itemComponent.item.itemID;
+                    int amount = itemComponent.amount;
+
+                    if (CheckEmptyInInventory() || CheckForTheSameInInventory(itemComponent.item, amount))
                     {
                         photonView.RPC("RPC_AddItemToInventory", RpcTarget.All, itemID, amount, defenseID);
 
@@ -353,7 +364,7 @@ namespace Inventory
 
             foreach (PhotonView playerPhotonView in playerPhotonViews) 
             {
-                if (playerPhotonView.ViewID != photonView.ViewID)
+                if (playerPhotonView != null && playerPhotonView.ViewID != photonView.ViewID)
                 {
                     if (CurrentChest != null)
                     {
@@ -448,6 +459,12 @@ namespace Inventory
         }
         private void PlayAudioLocally(AudioClip attackSound)
         {
+            if (attackSound == null)
+            {
+                Debug.LogWarning("Audio clip was not found.");
+                return;
+            }
+
             AudioSource source = gameObject.AddComponent<AudioSource>();
             source.clip = attackSound;
             source.maxDistance = 20f;

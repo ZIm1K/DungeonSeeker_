@@ -100,7 +100,12 @@ public class Chest : MonoBehaviourPun
     }
 
     private void OnDisable()
-    {        
+    {
+        if (saveChestItems == null || DurabilityDefenseDatabase.instance == null)
+        {
+            return;
+        }
+
         for (int i = 0; i < saveChestItems.Length; i++)
         {
             if (!saveChestItems[i].isEmpty)

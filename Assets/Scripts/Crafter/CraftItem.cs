@@ -51,9 +51,22 @@ public class CraftItem : MonoBehaviourPun
         }
 
         InventoryManager inventoryManager = gameObject.GetComponent<InventoryManager>();
+        if (inventoryManager == null || inventoryManager.CurrentCrafter == null)
+        {
+            Debug.LogWarning("Can not craft because current crafter is missing.");
+            return;
+        }
+
         for (int i = 0; i < craftSlots.Count; i++)
         {
-            indexs.Add((craftSlots[i].item as OreItem).indexOfOre);
+            OreItem oreItem = craftSlots[i].item as OreItem;
+            if (oreItem == null)
+            {
+                Debug.LogWarning("Craft slot contains a non-ore item.");
+                return;
+            }
+
+            indexs.Add(oreItem.indexOfOre);
             NullifySlotData(craftSlots[i]);
             inventoryManager.CurrentCrafter.RPC("RemoveItemFromCrafter", RpcTarget.All, i);
             inventoryManager.UpdateSlotInOnlineLocalySent(i);
@@ -216,12 +229,24 @@ public class CraftItem : MonoBehaviourPun
     }
     void AddDefenseItem(string ID) 
     {
+        if (playerPhotonView == null || playerPhotonView.GetComponent<CharacterModel>() == null)
+        {
+            Debug.LogWarning("Can not craft defense item because player model is missing.");
+            return;
+        }
+
         int createdDefenseID = playerPhotonView.GetComponent<CharacterModel>().durabilDatabase.OnNewDefenseItemAdded(ID);
         AddItemCheck(ID, 1, createdDefenseID);
     }
 
     void AddItemCheck(string itemID, int ammount, int createdDefenseID) 
     {
+        if (playerPhotonView == null || playerPhotonView.GetComponent<InventoryManager>() == null)
+        {
+            Debug.LogWarning("Can not add crafted item because inventory manager is missing.");
+            return;
+        }
+
         if (playerPhotonView.GetComponent<InventoryManager>().CheckEmptyInInventory() == true)
         {
             playerPhotonView.RPC("RPC_AddItemToInventory", RpcTarget.All, itemID, ammount, createdDefenseID);

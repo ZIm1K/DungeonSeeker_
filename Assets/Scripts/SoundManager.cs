@@ -36,7 +36,8 @@ public class SoundManager : MonoBehaviour
 
     public void OnChangeSliderValue(Slider slider) 
     {
-        var volume = Mathf.Log10(slider.value) * _multiplier;
+        float safeSliderValue = Mathf.Max(slider.value, 0.0001f);
+        var volume = Mathf.Log10(safeSliderValue) * _multiplier;
         foreach (var soundSet in soundSetList) 
         {
             if (soundSet._slider == slider) 

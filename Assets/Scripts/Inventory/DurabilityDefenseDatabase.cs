@@ -132,6 +132,12 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
     [PunRPC]
     void UpdateValueInOnline(int i, int value) 
     {
+        if (i < 0 || i >= allValues.Count)
+        {
+            Debug.LogWarning($"Can not update durability value. Index {i} is out of range.");
+            return;
+        }
+
         allValues[i] = value;
     }
     [PunRPC]
@@ -234,6 +240,12 @@ public class DurabilityDefenseDatabase : MonoBehaviourPun
     }
     public void RemoveItemFromList(int defenseID) 
     {
+        if (defenseID < 0 || defenseID >= allItems.Count || defenseID >= allValues.Count)
+        {
+            Debug.LogWarning($"Can not remove defense item. Index {defenseID} is out of range.");
+            return;
+        }
+
         allItems[defenseID] = null;
         allValues[defenseID] = 0;
     }

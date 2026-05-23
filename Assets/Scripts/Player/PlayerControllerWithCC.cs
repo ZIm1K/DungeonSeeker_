@@ -81,7 +81,14 @@ namespace Objects.PlayerScripts
             }
             else
             {
-                DurabilityDefenseDatabase durabilDatabase = GameObject.FindWithTag("DurabilBase").GetComponent<DurabilityDefenseDatabase>();               
+                GameObject durabilityDatabaseObject = GameObject.FindWithTag("DurabilBase");
+                if (durabilityDatabaseObject == null ||
+                    !durabilityDatabaseObject.TryGetComponent(out DurabilityDefenseDatabase durabilDatabase))
+                {
+                    Debug.LogError("Durability database was not found in the scene.");
+                    return;
+                }
+
                 model = gameObject.AddComponent<CharacterModel>();
                 model.Initialize(maxHealth, maxMana, view, moveSpeed, this, jumpForce, durabilDatabase);
 

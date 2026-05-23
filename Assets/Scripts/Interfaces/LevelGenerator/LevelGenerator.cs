@@ -136,6 +136,11 @@ namespace LevelGenerator
                     randomRotation
                 );
 
+                if (branchRoom.GetComponent<Spawner>())
+                {
+                    enemyKillCount.enemiesToKill++;
+                }
+
                 usedPositions.Add(branchPosition);
             }
         }

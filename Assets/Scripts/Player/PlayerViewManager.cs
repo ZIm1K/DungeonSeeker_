@@ -18,33 +18,49 @@ public class PlayerViewManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            photonView = GetComponent<PhotonView>();
         }
         else
         {
-            Destroy(Instance);
+            Destroy(gameObject);
         }
     }
     void Start()
     {
-        photonView = GetComponent<PhotonView>();       
+        if (photonView == null)
+        {
+            photonView = GetComponent<PhotonView>();
+        }
     }    
     [PunRPC]
     void AddToList(int id)
     {
-        playersPhotonViews.Add(PhotonView.Find(id));
+        PhotonView playerView = PhotonView.Find(id);
+        if (playerView != null && !playersPhotonViews.Contains(playerView))
+        {
+            playersPhotonViews.Add(playerView);
+        }
     }
     [PunRPC]
     void RemoveFromList(int id)
     {
-        playersPhotonViews.Remove(PhotonView.Find(id));
+        PhotonView playerView = PhotonView.Find(id);
+        if (playerView != null)
+        {
+            playersPhotonViews.Remove(playerView);
+        }
     }
     public void SavePlayerInventory() 
     {
         foreach (var player in playersPhotonViews) 
         {
-            if (player.Owner == PhotonNetwork.LocalPlayer) 
+            if (player != null && player.Owner == PhotonNetwork.LocalPlayer)
             {
-                player.GetComponent<InventorySaver>().SaveInventory();
+                InventorySaver saver = player.GetComponent<InventorySaver>();
+                if (saver != null)
+                {
+                    saver.SaveInventory();
+                }
             }
         }
     }

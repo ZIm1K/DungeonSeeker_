@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +18,10 @@ public class BinarySaveSystem : ISaveManager
         if (!Directory.Exists(_directoryPath))
             Directory.CreateDirectory(_directoryPath);
 
-        _filePath = Path.Combine(_directoryPath, "BinarySave_" + PhotonNetwork.LocalPlayer.NickName + ".dat");
+        string playerName = PhotonNetwork.LocalPlayer != null && !string.IsNullOrWhiteSpace(PhotonNetwork.LocalPlayer.NickName)
+            ? PhotonNetwork.LocalPlayer.NickName
+            : "OfflinePlayer";
+        _filePath = Path.Combine(_directoryPath, "BinarySave_" + SanitizeFileName(playerName) + ".dat");
 
     }
     public T Load<T>()
@@ -29,29 +33,38 @@ public class BinarySaveSystem : ISaveManager
 
         T saveData;
 
-        using (FileStream file = File.Open(_filePath, FileMode.Open))
+        try
         {
-            if (file.Length > 0)
+            using (FileStream file = File.Open(_filePath, FileMode.Open))
             {
-                object loadedData = new BinaryFormatter().Deserialize(file);
-                saveData = (T)loadedData;
-            }
-            else
-            {
-                return default;
+                if (file.Length > 0)
+                {
+                    object loadedData = new BinaryFormatter().Deserialize(file);
+                    saveData = (T)loadedData;
+                }
+                else
+                {
+                    return default;
+                }
             }
         }
-
-        DeleteFile();
+        catch (Exception exception)
+        {
+            Debug.LogWarning($"Failed to load save file: {exception.Message}");
+            return default;
+        }
 
         return saveData;
     }
-    private void DeleteFile() 
+
+    private string SanitizeFileName(string fileName)
     {
-        if (File.Exists(_filePath))
+        foreach (char invalidChar in Path.GetInvalidFileNameChars())
         {
-            File.Delete(_filePath);
+            fileName = fileName.Replace(invalidChar, '_');
         }
+
+        return fileName;
     }
 
     public void Save<T>(T data)
@@ -61,9 +74,16 @@ public class BinarySaveSystem : ISaveManager
             Directory.CreateDirectory(_directoryPath);
         }
 
-        using (FileStream file = File.Create(_filePath))
+        try
         {
-            new BinaryFormatter().Serialize(file, data);
+            using (FileStream file = File.Create(_filePath))
+            {
+                new BinaryFormatter().Serialize(file, data);
+            }
+        }
+        catch (Exception exception)
+        {
+            Debug.LogWarning($"Failed to save file: {exception.Message}");
         }
     }
 }

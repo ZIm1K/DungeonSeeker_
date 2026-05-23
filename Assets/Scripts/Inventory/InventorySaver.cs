@@ -65,6 +65,11 @@ public class InventorySaver : MonoBehaviour
 
     public void SaveInventory()
     {
+        if (_saveSystem == null)
+        {
+            _saveSystem = new BinarySaveSystem();
+        }
+
         savedSlotsData = new List<SavedSlotData>();        
 
         for (int i = 0; i < defenseSlots.Count; i++)

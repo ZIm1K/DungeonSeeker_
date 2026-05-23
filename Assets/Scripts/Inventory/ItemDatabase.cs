@@ -23,6 +23,18 @@ namespace Inventory
 
         public static ItemScriptableObject GetItemByID(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                Debug.LogWarning("Item id is empty.");
+                return null;
+            }
+
+            if (itemDictionary == null)
+            {
+                Debug.LogWarning("Item database is not initialized.");
+                return null;
+            }
+
             if (itemDictionary.TryGetValue(id, out ItemScriptableObject item))
             {
                 return item;

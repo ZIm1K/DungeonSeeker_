@@ -622,8 +622,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 4506649613556010636}
-  maxHealth: 80
-  damage: 20
+  maxHealth: 40
+  damage: 10
   chaseRange: 10
   attackRange: 2
   attackInterval: 1

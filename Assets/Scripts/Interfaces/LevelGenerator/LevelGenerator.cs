@@ -4,11 +4,16 @@ using Photon.Pun;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using Unity.AI.Navigation;
 
 namespace LevelGenerator
 {
     public class LevelGenerator : MonoBehaviourPunCallbacks
     {
+        [Header("NavMesh")]
+        [SerializeField] private NavMeshSurface navMeshSurface;
+
+        [Header("Prefabs")]
         [SerializeField] private GameObject[] roomPrefabs;
         [SerializeField] private GameObject bossRoomPrefab;
         [SerializeField] private GameObject finalRoomPrefab;
@@ -49,6 +54,12 @@ namespace LevelGenerator
                     GenerateLevel(maxRooms);
                     PlaceFinalRoom();
                     PlaceWalls();
+                    
+                    if (navMeshSurface != null)
+                    {
+                        navMeshSurface.BuildNavMesh();
+                    }
+
                     photonView.RPC("SynchronizeLevel", RpcTarget.Others, usedPositions.ToArray());
                 }
             }

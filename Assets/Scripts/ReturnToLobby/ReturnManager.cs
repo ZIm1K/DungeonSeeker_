@@ -106,6 +106,7 @@ public class ReturnManager : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient) 
             {
+                yield return new WaitForSeconds(1f);
                 LevelHandler.IncreaseLevel();
                 PhotonNetwork.LoadLevel(exitSceneIndex);
             }

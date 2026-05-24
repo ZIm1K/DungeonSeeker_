@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6078228649980123247}
   - component: {fileID: 2096656127205359997}
   - component: {fileID: 1999908632177131769}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dungeon_Big_Passage (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ GameObject:
   - component: {fileID: 7846453636845773118}
   - component: {fileID: 7922888917755251837}
   - component: {fileID: 2028632411769319045}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dungeon_Big_Passage (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -695,7 +695,6 @@ GameObject:
   - component: {fileID: 2984063816760318664}
   - component: {fileID: 6565129040148837568}
   - component: {fileID: 8327490446141221584}
-  - component: {fileID: 2531994358981216740}
   m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
@@ -790,37 +789,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &2531994358981216740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4487015176225298550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 8905603e6684d974d9f40e84d03b58d7, type: 2}
-  m_BuildHeightMesh: 0
 --- !u!1 &4921186092002694934
 GameObject:
   m_ObjectHideFlags: 0
@@ -1073,7 +1041,7 @@ GameObject:
   - component: {fileID: 3247909982191903626}
   - component: {fileID: 4457545044526368815}
   - component: {fileID: 8017423086602966912}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dungeon_Big_Passage (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1500,7 +1468,7 @@ GameObject:
   - component: {fileID: 575534684549453398}
   - component: {fileID: 52540068042676695}
   - component: {fileID: 4475345066201538835}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dungeon_Big_Passage (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

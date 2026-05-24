@@ -622,10 +622,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 4506649613556010636}
-  maxHealth: 100
-  damage: 30
-  chaseRange: 10
-  attackRange: 3
+  maxHealth: 50
+  damage: 15
+  chaseRange: 7
+  attackRange: 2
   attackInterval: 1
   moveDistance: 10
   animator: {fileID: 0}

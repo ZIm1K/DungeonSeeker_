@@ -67,7 +67,7 @@ public class InventorySaver : MonoBehaviour
     {
         if (_saveSystem == null)
         {
-            _saveSystem = new BinarySaveSystem();
+            _saveSystem = new JsonSaveSystem();
         }
 
         savedSlotsData = new List<SavedSlotData>();        
@@ -109,7 +109,7 @@ public class InventorySaver : MonoBehaviour
 
     public async void LoadInventory()
     {
-        _saveSystem = new BinarySaveSystem();
+        _saveSystem = new JsonSaveSystem();
         savedSlotsData = _saveSystem.Load<List<SavedSlotData>>();
         if (savedSlotsData == default) 
         {

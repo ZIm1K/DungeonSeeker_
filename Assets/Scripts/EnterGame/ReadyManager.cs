@@ -81,6 +81,7 @@ public class ReadyManager : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
             {
+                yield return new WaitForSeconds(1f);
                 PhotonNetwork.LoadLevel(nextSceneIndex);
             }
         }

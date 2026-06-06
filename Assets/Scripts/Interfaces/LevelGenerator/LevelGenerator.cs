@@ -54,14 +54,14 @@ namespace LevelGenerator
                     GenerateLevel(maxRooms);
                     PlaceFinalRoom();
                     PlaceWalls();
-                    
-                    if (navMeshSurface != null)
-                    {
-                        navMeshSurface.BuildNavMesh();
-                    }
-
-                    photonView.RPC("SynchronizeLevel", RpcTarget.Others, usedPositions.ToArray());
                 }
+
+                if (navMeshSurface != null)
+                {
+                    navMeshSurface.BuildNavMesh();
+                }
+
+                photonView.RPC("SynchronizeLevel", RpcTarget.Others, usedPositions.ToArray());
             }
         }
 
